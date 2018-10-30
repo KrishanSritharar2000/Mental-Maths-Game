@@ -3,7 +3,7 @@
 TITLE = "Demo"
 WIDTH = 360
 HEIGHT = 480
-FPS = 30
+FPS = 300
 
 # define colours
 WHITE = (255, 255, 255)

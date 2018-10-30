@@ -40,7 +40,7 @@ class sceneManager():
     def mainMenu(self):
         self.game.screen.fill(RED)
         self.game.drawText("This is the Main Menu", 25, BLACK, WIDTH/2, HEIGHT*1/4)
-        self.startScreenButton = Button(self.game, WIDTH/2, HEIGHT*3/4, 75, 50, GREEN, LIGHT_GREEN, "Go to start screen", 10)
+        self.startScreenButton = Button(self.game, "startScreen", WIDTH/2, HEIGHT*3/4, 75, 50, GREEN, LIGHT_GREEN, "Go to start screen", 25)
 
     def startScreen(self):
         #game spalsh/start screen
@@ -62,7 +62,8 @@ class sceneManager():
             self.game.clock.tick(FPS)
             for event in pg.event.get():
                 if event.type == pg.QUIT:
-                    waiting = self.running = False
+                    pg.quit()
+                    # waiting = self.game.running = False
                 if event.type == pg.KEYUP and key:
                     waiting = False
                 if event.type == pg.MOUSEBUTTONUP and click:
@@ -76,6 +77,10 @@ class sceneManager():
     def update(self):
         # pg.display.set_caption("{:.2f}".format(self.game.clock.get_fps()))
         self.game.buttons.update()
-        pg.display.flip()
-        if self.startScreenButton.clicked == True:
-            self.loadLevel('startScreen')
+        # pg.display.flip()
+        for button in self.game.buttons:
+            if button.clicked == True:
+                print("tag",button.tag)
+                if button.tag == "startScreen":
+                    self.loadLevel('startScreen')
+                button.kill()

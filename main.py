@@ -10,6 +10,7 @@ class Game:
         #initializes game window
         pg.init()
         pg.mixer.init()#This handles all the sound and music in the game
+        pg.font.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))#This creates the screen with the specified dimensions
         pg.display.set_caption(TITLE)#sets the title of the window
         self.clock = pg.time.Clock()#starts the internal clock to sync the program
@@ -20,13 +21,17 @@ class Game:
         gameFolder = path.dirname(__file__)
         imgFolder = path.join(gameFolder, 'img')
 
-    def drawText(self, text, size, colour, x, y):
-        font_type = "C:\WINDOWS\FONTS\ARIAL.TTF"
-        font = pg.font.Font(font_type, size)
-        text_surface = font.render(text, True, colour)
-        text_rect = text_surface.get_rect()
-        text_rect.center = (int(x),int(y))#aligns the text to the center
-        self.screen.blit(text_surface, text_rect)
+
+
+    def drawText(self, text, size, colour, x, y, surf=None):
+        if surf == None:
+            surf = self.screen
+        fontType = "C:\WINDOWS\FONTS\ARIAL.TTF"
+        font = pg.font.Font(fontType, size)
+        textSurface = font.render(text, True, colour)
+        textRect = textSurface.get_rect()
+        textRect.center = (int(x),int(y))#aligns the text to the center
+        surf.blit(textSurface, textRect)
 
     def new(self):
         #start a new Game
@@ -43,13 +48,12 @@ class Game:
         while self.playing:
             self.clock.tick(FPS)
             self.events()
-            self.sceneMan.update()
             self.update()
             self.draw()
 
     def update(self):
         #Game loop - Update
-        pass
+        self.sceneMan.update()
         # self.allSprites.update()#Updates all of the sprties at once
 
     def events(self):
