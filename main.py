@@ -21,13 +21,11 @@ class Game:
         gameFolder = path.dirname(__file__)
         imgFolder = path.join(gameFolder, 'img')
 
-
-
     def drawText(self, text, size, colour, x, y, surf=None):
         if surf == None:
             surf = self.screen
         fontType = "C:\WINDOWS\FONTS\ARIAL.TTF"
-        font = pg.font.Font(fontType, size)
+        font = pg.font.SysFont('arial', size)
         textSurface = font.render(text, True, colour)
         textRect = textSurface.get_rect()
         textRect.center = (int(x),int(y))#aligns the text to the center

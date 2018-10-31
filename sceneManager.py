@@ -29,18 +29,22 @@ class sceneManager():
         pass
 
     def levelSelect(self):
-        pass
+        self.game.screen.fill((160, 160, 160))
+        self.game.drawText("Select the Level you want to play!", 25, BLACK, WIDTH/2, HEIGHT*1/6)
 
     def stats(self):
         pass
 
     def shop(self):
-        pass
+        self.game.screen.fill((255, 180, 0))
+        self.game.drawText("Spend you coins in the shop", 25, BLACK, WIDTH/2, HEIGHT*1/6)
 
     def mainMenu(self):
         self.game.screen.fill(RED)
         self.game.drawText("This is the Main Menu", 25, BLACK, WIDTH/2, HEIGHT*1/4)
-        self.startScreenButton = Button(self.game, "startScreen", WIDTH/2, HEIGHT*3/4, 75, 50, GREEN, LIGHT_GREEN, "Go to start screen", 25)
+        self.startScreenButton = Button(self.game, "startScreen", WIDTH/2, HEIGHT*3/4, 125, 50, GREEN, LIGHT_GREEN, "Start Screen", 24)
+        self.levelSelectButton = Button(self.game, "levelSelect", WIDTH/2, HEIGHT/2, 150, 50, YELLOW, LIGHT_BLUE, "Select Level", 24)
+        self.shoptButton = Button(self.game, "shop", WIDTH/2, HEIGHT*5/8, 150, 50, YELLOW, LIGHT_BLUE, "Shop", 24)
 
     def startScreen(self):
         #game spalsh/start screen
@@ -80,7 +84,13 @@ class sceneManager():
         # pg.display.flip()
         for button in self.game.buttons:
             if button.clicked == True:
-                print("tag",button.tag)
+                # print("tag",button.tag)
                 if button.tag == "startScreen":
                     self.loadLevel('startScreen')
-                button.kill()
+                if button.tag == "levelSelect":
+                    self.loadLevel('levelSelect')
+                if button.tag == "shop":
+                    self.loadLevel('shop')
+                # button.kill()
+                for deletebutton in self.game.buttons:
+                    deletebutton.kill()
