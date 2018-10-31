@@ -17,16 +17,17 @@ class Button(pg.sprite.Sprite):
         self.text = text
         self.textSize = textSize
         self.pos = vec(x,y)
-        self.rectDimensions = (self.pos[0], self.pos[1], self.width, self.height)
-        self.image = pg.Surface((self.width, self.height)).convert_alpha()
-        self.image.fill(solidColour)
+        self.rectDimensions = (self.pos[0]-self.width/2, self.pos[1]-self.height/2, self.width, self.height)
+        self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
+        # self.image = pg.Surface((self.width, self.height)).convert_alpha()
+        # self.image.fill(solidColour)
         # prnt("self.rect", self.rect)
         # self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
         # self.game.screen.fill(self.solidColour, (self.pos[0]-self.width, self.pos[1]-self.height, self.width, self.height))
-        # self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
-        self.rect = self.image.get_rect()
+        # self.rect = self.image.get_rect()
+        # self.rect = self.rectDimensions
         # print(self.rect,"rect")
-        self.rect.center = self.pos
+        # self.rect.center = self.pos
         self.clicked = False
         self.first = True
         # font = pg.font.SysFont('arial', self.textSize)
@@ -59,45 +60,44 @@ class Button(pg.sprite.Sprite):
 
     def highlight(self):
         move = pg.mouse.get_pos()
-        prevcol = self.game.screen.get_at((int(self.pos[0]+1), int(self.pos[1]+1)))
+        prevcol = self.game.screen.get_at((int(self.pos[0]-self.width/2), int(self.pos[1]-self.height/2)))
         # print(prevcol)
         # mouseDown = False
         # for events in pg.event.get():
         #     if events.type == pg.MOUSEBUTTONUP:
         #         mouseDown = True
         colchange = False
-        if self.rect.center[0] - self.width/2 <= move[0] <= self.rect.center[0] + self.width/2 and \
-            self.rect.center[1] - self.height/2 <= move[1] <= self.rect.center[1] + self.height/2:
+        # if self.rect.center[0] - self.width/2 <= move[0] <= self.rect.center[0] + self.width/2 and \
+        #     self.rect.center[1] - self.height/2 <= move[1] <= self.rect.center[1] + self.height/2:
+        if self.pos[0] - self.width/2  <= move[0] <= self.pos[0] + self.width/2 and \
+            self.pos[1] - self.height/2 <= move[1] <= self.pos[1] + self.height/2:
             # print("OVER")
             if prevcol[0:3] != self.highlightColour:
-                self.image.fill(self.highlightColour)
+                self.image = pg.draw.rect(self.game.screen, self.highlightColour, self.rectDimensions , 0)
                 colchange = True
-                # self.image = pg.draw.rect(self.game.screen, self.highlightColour, self.rectDimensions , 0)
-                # self.game.screen.fill(self.highlightColour, (self.pos[0]-self.width, self.pos[1]-self.height, self.width, self.height))
-                # self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
             if pg.mouse.get_pressed()[0] == 1:
                 self.clicked = True
         else:
             if prevcol[0:3] != self.solidColour:
-                # self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
-                # self.game.screen.fill(self.solidColour, (self.pos[0]-self.width, self.pos[1]-self.height, self.width, self.height))
-                self.image.fill(self.solidColour)
+                self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
                 colchange = True
-        if colchange or self.first:
+        if colchange == True or self.first == True:
+            print(colchange, self.tag)
             if self.first:
+                print(self.first, "self.first")
                 self.first = False
-            self.game.screen.blit(self.image, self.rect)
+        #     # self.game.screen.blit(self.image, self.rect)
             self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
-            # self.drawTextToButton(self.text, self.textSize, self.pos[0], self.pos[1], BLACK, self.image)
-            print("text drawn", self.tag)
+        #     # self.drawTextToButton(self.text, self.textSize, self.pos[0], self.pos[1], BLACK, self.image)
+        #     print("text drawn", self.tag)
 
 
     def update(self):
         self.highlight()
-        # if self.clicked:
-        #     for button in self.game.buttons:
-        #         if button != self:
-        #             button.kill()
+        if self.clicked:
+            for button in self.game.buttons:
+                if button != self:
+                    button.kill()
 
     def draw(self):
         pass

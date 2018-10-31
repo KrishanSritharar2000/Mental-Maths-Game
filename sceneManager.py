@@ -10,45 +10,61 @@ class sceneManager():
 
     def loadLevel(self, level=None):
         self.level = level
-        if self.level == "settings":
+        if self.level == "settingsMenu":
             self.settingsMenu()
+        if self.level == "mainMenu":
+            self.mainMenu()
         if self.level == "levelSelect":
             self.levelSelect()
         if self.level == "stats":
             self.stats()
+        if self.level == "leaderboard":
+            self.leaderboard()
         if self.level == "shop":
             self.shop()
-        if self.level == "mainMenu":
-            self.mainMenu()
         if self.level == "startScreen":
             self.startScreen()
         if self.level == "gameOverScreen":
             self.gameOverScreen()
 
     def settingsMenu(self):
-        pass
+        self.game.screen.fill((30, 210, 110))
+        self.game.drawText("Change the Game Settings", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def levelSelect(self):
         self.game.screen.fill((160, 160, 160))
         self.game.drawText("Select the Level you want to play!", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def stats(self):
-        pass
+        self.game.screen.fill((220, 110, 250))
+        self.game.drawText("View your statistics", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
+
+    def leaderboard(self):
+        self.game.screen.fill((50, 250, 160))
+        self.game.drawText("Leader Board Tables", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def shop(self):
         self.game.screen.fill((255, 180, 0))
         self.game.drawText("Spend you coins in the shop", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def mainMenu(self):
-        self.game.screen.fill(RED)
+        self.game.screen.fill((255,90,70))
         self.game.drawText("This is the Main Menu", 25, BLACK, WIDTH/2, HEIGHT*1/4)
-        self.startScreenButton = Button(self.game, "startScreen", WIDTH/2, HEIGHT*3/4, 125, 50, GREEN, LIGHT_GREEN, "Start Screen", 24)
-        self.levelSelectButton = Button(self.game, "levelSelect", WIDTH/2, HEIGHT/2, 150, 50, YELLOW, LIGHT_BLUE, "Select Level", 24)
-        self.shoptButton = Button(self.game, "shop", WIDTH/2, HEIGHT*5/8, 150, 50, YELLOW, LIGHT_BLUE, "Shop", 24)
+        self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, 125, 50, YELLOW, LIGHT_BLUE, "Start Screen", 24)
+        self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*3/4, HEIGHT*3/8, 125, 50, YELLOW, LIGHT_BLUE, "Select Level", 24)
+        self.settingsMenuButton = Button(self.game, "settingsMenu", WIDTH/4, HEIGHT*5/8, 125, 50, YELLOW, LIGHT_BLUE, "Settings", 24)
+        self.shopButton = Button(self.game, "shop", WIDTH*3/4, HEIGHT*5/8, 125, 50, YELLOW, LIGHT_BLUE, "Shop", 24)
+        self.leaderboardButton = Button(self.game, "stats", WIDTH/4, HEIGHT*7/8, 125, 50, YELLOW, LIGHT_BLUE, "Stats", 24)
+        self.statsButton = Button(self.game, "leaderboard", WIDTH*3/4, HEIGHT*7/8, 125, 50, YELLOW, LIGHT_BLUE, "Leaderboard", 24)
 
     def startScreen(self):
         #game spalsh/start screen
-        self.game.screen.fill(BLUE)
+        self.game.screen.fill((70,210,255))
         self.game.drawText("Welome to my Game", 24, BLACK, WIDTH/2, HEIGHT*1/4)
         self.game.drawText("Press a button to conitnue!", 12, BLACK, WIDTH/2, HEIGHT*3/4)
         pg.display.flip()
@@ -91,6 +107,12 @@ class sceneManager():
                     self.loadLevel('levelSelect')
                 if button.tag == "shop":
                     self.loadLevel('shop')
-                # button.kill()
-                for deletebutton in self.game.buttons:
-                    deletebutton.kill()
+                if button.tag == 'mainMenu':
+                    self.loadLevel('mainMenu')
+                if button.tag == "settingsMenu":
+                    self.loadLevel('settingsMenu')
+                if button.tag == 'leaderboard':
+                    self.loadLevel('leaderboard')
+                if button.tag == 'stats':
+                    self.loadLevel('stats')
+                button.kill()

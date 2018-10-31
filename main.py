@@ -68,7 +68,7 @@ class Game:
         #Game loop - Draw
         # self.screen.fill(RED)
         # self.drawText("Start Game", 12, BLACK, WIDTH/2, HEIGHT/2)
-        self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
+        # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
 
