@@ -10,7 +10,6 @@ class Game:
         #initializes game window
         pg.init()
         pg.mixer.init()#This handles all the sound and music in the game
-        pg.font.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))#This creates the screen with the specified dimensions
         pg.display.set_caption(TITLE)#sets the title of the window
         self.clock = pg.time.Clock()#starts the internal clock to sync the program
@@ -70,10 +69,6 @@ class Game:
         # self.drawText("Start Game", 12, BLACK, WIDTH/2, HEIGHT/2)
         # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
-
-
-
-
 
 g = Game()
 

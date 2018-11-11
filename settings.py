@@ -1,11 +1,13 @@
 #Game options/settings
 
 TITLE = "Demo"
-WIDTH = 360
-HEIGHT = 480
-# WIDTH = 512
-# HEIGHT = 384
-FPS = 3000
+# WIDTH = 360
+# HEIGHT = 480
+WIDTH = 512
+HEIGHT = 384
+# WIDTH = 768
+# HEIGHT = 576
+FPS = 60
 
 # define colours
 WHITE = (255, 255, 255)
