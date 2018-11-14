@@ -15,35 +15,16 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(x,y)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
-        self.direction = "forward"
-
-    def jump(self):
-        self.vel.y = -20
 
     def update(self):
         if self.game.sceneMan.showPlayer:
             self.game.screen.fill(BLACK)
-            self.acc = vec(0, PLAYER_GRAV)
+            self.acc = vec(0,0)
             keys = pg.key.get_pressed()
-
-            if keys[pg.K_RIGHT] or keys[pg.K_d]:
-                if self.direction == "stopped" or self.direction == "forward":
-                    self.acc.x = PLAYER_ACC
-                    self.direction = "forward"
-            if keys[pg.K_DOWN] or keys[pg.K_s]:
-                if round(self.vel.x, 0) != 0:
-                    if self.vel.x > 0:
-                        self.acc.x = -BRAKE_ACC
-                    else:
-                        self.acc.x = BRAKE_ACC
-            if round(self.vel.x, 0) == 0:
-                self.direction = "stopped"
             if keys[pg.K_LEFT] or keys[pg.K_a]:
-                if self.direction == "stopped" or self.direction == "reverse":
-                    self.acc.x = -PLAYER_ACC
-                    self.direction = "reverse"
-
-
+                self.acc.x = -PLAYER_ACC
+            if keys[pg.K_RIGHT] or keys[pg.K_d]:
+                self.acc.x = PLAYER_ACC
 
             self.acc += self.vel * PLAYER_FRICTION
 
@@ -55,16 +36,9 @@ class Player(pg.sprite.Sprite):
             if self.pos.x < 0:
                 self.pos.x = WIDTH
 
-            self.rect.midbottom = self.pos
+            self.rect.center = self.pos
 
-class Platform(pg.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
-        self.groups = game.allSprites, game.platforms
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((w, h))
-        self.image.fill(GREEN)
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x, y
+
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None):
         self.groups = game.buttons

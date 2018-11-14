@@ -34,7 +34,6 @@ class Game:
         #start a new Game
         self.allSprites = pg.sprite.Group()#This groups all the sprties together
         self.buttons = pg.sprite.Group()
-        self.platforms = pg.sprite.Group()
         self.sceneMan = sceneManager(self)
         self.player = Player(self, WIDTH/2, HEIGHT/2)
         self.sceneMan.loadLevel('startScreen')
@@ -54,13 +53,6 @@ class Game:
         self.sceneMan.update()
         self.allSprites.update()#Updates all of the sprties at once
 
-        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
-        if hits:
-            self.player.pos.y = hits[0].rect.y
-            self.player.vel.y = 0
-
-
-
     def events(self):
         #Game loop - Events
         for event in pg.event.get():
@@ -69,9 +61,6 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.running = False
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE:
-                    self.player.jump()
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))

@@ -83,7 +83,6 @@ class sceneManager():
     def level1(self):
         self.game.screen.fill(BLACK)
         self.showPlayer = True
-        Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8)
 
     def waitForKey(self, key = True, click = True):#key contiues if a key is get_pressed
         pg.event.wait()#click continues if the mouse button is pressed

@@ -19,10 +19,8 @@ MENU_SCREENS = ["settingsMenu",
 
 
 #Player properties
-PLAYER_ACC = 0.6
-BRAKE_ACC = 0.2
-PLAYER_FRICTION = -0.05
-PLAYER_GRAV = 0.8
+PLAYER_ACC = 0.75
+PLAYER_FRICTION = -0.12
 
 #0.5
 #-0.12
