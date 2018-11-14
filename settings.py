@@ -8,6 +8,25 @@ HEIGHT = 384
 # WIDTH = 768
 # HEIGHT = 576
 FPS = 60
+MENU_SCREENS = ["settingsMenu",
+                "mainMenu",
+                "levelSelect",
+                "stats",
+                "leaderboard",
+                "shop",
+                "startScreen",
+                "gameOverScreen"]
+
+
+#Player properties
+PLAYER_ACC = 0.6
+BRAKE_ACC = 0.2
+PLAYER_FRICTION = -0.05
+PLAYER_GRAV = 0.8
+
+#0.5
+#-0.12
+
 
 # define colours
 WHITE = (255, 255, 255)
