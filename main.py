@@ -21,6 +21,8 @@ class Game:
         imgFolder = path.join(gameFolder, 'img')
         self.menuButtonSolid = pg.image.load(path.join(imgFolder, 'blue_button01.png')).convert_alpha()
         self.menuButtonHighlight = pg.image.load(path.join(imgFolder, 'green_button01.png')).convert_alpha()
+        self.interfaceFont = path.join(imgFolder, 'Future.ttf')
+        self.buttonFont = path.join(imgFolder, 'PixelSquare.ttf')
         self.menuImages = {}
         self.menuImages["startScreen"] =  pg.image.load(path.join(imgFolder, 'grey_background.jpg')).convert_alpha()
         self.menuImages["mainMenu"] =  pg.image.load(path.join(imgFolder, 'blue_background.jpg')).convert_alpha()
@@ -29,15 +31,21 @@ class Game:
         self.menuImages["stats"] =  pg.image.load(path.join(imgFolder, 'Grey_green_background.jpg')).convert_alpha()
         self.menuImages["leaderboard"] =  pg.image.load(path.join(imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
         self.menuImages["shop"] =  pg.image.load(path.join(imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
+        self.menuImages["pause"] =  pg.image.load(path.join(imgFolder, 'Grey_red_background.jpg')).convert_alpha()
+        self.pauseIMGWhite = pg.image.load(path.join(imgFolder, 'pauseWhite.png')).convert_alpha()
+        self.pauseIMGBlack = pg.image.load(path.join(imgFolder, 'pauseBlack.png')).convert_alpha()
 
 
 
-
-    def drawText(self, text, size, colour, x, y, surf=None, align=None):
+    def drawText(self, text, size, colour, x, y, surf=None, align=None, fontName=None):
         if surf == None:
             surf = self.screen
         fontType = "C:\WINDOWS\FONTS\ARIAL.TTF"
-        font = pg.font.SysFont('arial', size)
+        if fontName == None:
+            font = pg.font.SysFont('arial', size)
+            # font = pg.font.Font(self.interfaceFont, size)
+        else:
+            font = pg.font.Font(fontName, size)
         textSurface = font.render(text, True, colour)
         textRect = textSurface.get_rect()
         if align == None:
@@ -77,8 +85,6 @@ class Game:
             if hits:
                 self.player.pos.y = hits[0].rect.y
                 self.player.vel.y = 0
-
-
 
     def events(self):
         #Game loop - Events

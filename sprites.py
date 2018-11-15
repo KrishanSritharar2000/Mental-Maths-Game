@@ -67,7 +67,7 @@ class Platform(pg.sprite.Sprite):
         self.rect.x, self.rect.y = x, y
 
 class Button(pg.sprite.Sprite):
-    def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None):
+    def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):
         self.groups = game.buttons, game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -87,8 +87,13 @@ class Button(pg.sprite.Sprite):
         self.pos = vec(x,y)
         self.rectDimensions = (self.pos[0]-self.width/2, self.pos[1]-self.height/2, self.width, self.height)
         # self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
-        self.solidImage = pg.transform.scale(self.game.menuButtonSolid,(int(self.width), int(self.height)))
-        self.highlightImage = pg.transform.scale(self.game.menuButtonHighlight,(int(self.width), int(self.height)))
+        if solidButtonImage == None:
+            self.solidImage = pg.transform.scale(self.game.menuButtonSolid,(int(self.width), int(self.height)))
+            self.highlightImage = pg.transform.scale(self.game.menuButtonHighlight,(int(self.width), int(self.height)))
+
+        else:
+            self.solidImage = pg.transform.scale(solidButtonImage,(int(self.width), int(self.height)))
+            self.highlightImage = pg.transform.scale(highlightButtonImage,(int(self.width), int(self.height)))
         self.image = self.solidImage
         self.rect = self.image.get_rect()
         self.rect.centerx = x

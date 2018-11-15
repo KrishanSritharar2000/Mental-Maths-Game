@@ -54,38 +54,45 @@ class sceneManager():
             self.gameOverScreen()
         if self.level == "level1":
             self.level1()
+        if self.level == "pause":
+            self.pause()
 
     def level1(self):
-        # self.game.screen.fill(BLACK)
         self.showPlayer = True
         Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
         Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
         Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+        # pauseIMG = pg.transform.scale(self.game.pauseIMG, (30,30))
+        # pauseIMGRect = pauseIMG.get_rect()
+        # pauseIMGRect.center = (WIDTH*8/9, HEIGHT/12)
+        # self.game.screen.blit(pauseIMG, pauseIMGRect)
+        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+
+    def pause(self):
+        self.game.drawText("Pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*3/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Main Menu")
+        self.level1Button = Button(self.game, "level1", WIDTH*5/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Resume")
 
     def settingsMenu(self):
-        # self.game.screen.fill((30, 210, 110))
-        self.game.drawText("Change the Game Settings", 25, BLACK, WIDTH/2, HEIGHT*1/6)
-        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
+        self.game.drawText("Settings", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/9, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
+        self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "View Start Screen")
 
     def levelSelect(self):
-        # self.game.screen.fill((160, 160, 160))
-        self.game.drawText("Select the Level you want to play!", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.game.drawText("Select Level", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.level1Button = Button(self.game, "level1", WIDTH*1/2, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level One")
 
     def stats(self):
-        # self.game.screen.fill((220, 110, 250))
-        self.game.drawText("View your statistics", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.game.drawText("View your statistics", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def leaderboard(self):
-        # self.game.screen.fill((50, 250, 160))
-        self.game.drawText("Leader Board Tables", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.game.drawText("Leader Board Tables", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def shop(self):
-        # self.game.screen.fill((255, 180, 0))
-        self.game.drawText("Spend you coins in the shop", 25, BLACK, WIDTH/2, HEIGHT*1/6)
+        self.game.drawText("Spend your coins in the shop", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def mainMenu(self):
@@ -93,10 +100,8 @@ class sceneManager():
             image = pg.transform.scale(self.game.menuImages["mainMenu"], (WIDTH, HEIGHT))
             rect = image.get_rect()
             self.game.screen.blit(image, rect)
-        # self.game.screen.fill((255,90,70))
-        self.game.drawText("This is the Main Menu", 25, BLACK, WIDTH/2, HEIGHT*1/4)
-        # self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Start Screen")
-        self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*3/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Select Level")
+        self.game.drawText("Main Menu", 30, WHITE, WIDTH/2, HEIGHT*1/8, fontName=self.game.interfaceFont)
+        self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*1/2, HEIGHT*3/8, WIDTH/3, HEIGHT/6, YELLOW, LIGHT_BLUE, "Select Level")
         self.settingsMenuButton = Button(self.game, "settingsMenu", WIDTH/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Settings")
         self.shopButton = Button(self.game, "shop", WIDTH*3/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Shop")
         self.leaderboardButton = Button(self.game, "stats", WIDTH/4, HEIGHT*7/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Stats")
@@ -107,8 +112,8 @@ class sceneManager():
         self.image = pg.transform.scale(self.game.menuImages["startScreen"], (WIDTH, HEIGHT))
         rect = self.image.get_rect()
         self.game.screen.blit(self.image, rect)
-        self.game.drawText("Welome to my Game", 24, BLACK, WIDTH/2, HEIGHT*1/4)
-        self.game.drawText("Press a button to conitnue!", 12, BLACK, WIDTH/2, HEIGHT*3/4)
+        self.game.drawText("Game Title", 32, WHITE, WIDTH/2, HEIGHT*1/4)
+        self.game.drawText("Press A Button To Conitnue!", 22, WHITE, WIDTH/2, HEIGHT*3/4)
         pg.display.flip()
         self.waitForKey()
         self.loadLevel('mainMenu')
@@ -165,6 +170,8 @@ class sceneManager():
                     self.loadLevel('stats')
                 if button.tag == 'level1':
                     self.loadLevel('level1')
+                if button.tag == 'pause':
+                    self.loadLevel('pause')
                 button.kill()
         if self.currentScene != "level1":
             self.showPlayer = False

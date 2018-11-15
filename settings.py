@@ -15,8 +15,8 @@ MENU_SCREENS = ["settingsMenu",
                 "leaderboard",
                 "shop",
                 "startScreen",
-                "gameOverScreen"]
-
+                "gameOverScreen",
+                "pause"]
 
 #Player properties
 PLAYER_ACC = 0.6
