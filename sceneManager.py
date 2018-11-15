@@ -8,6 +8,7 @@ class Camera:
         self.width = width
         self.height = height
 
+
     def applyOffset(self, item):
         return item.rect.move(self.camera.topleft)
 
@@ -31,7 +32,7 @@ class sceneManager():
         self.game = game
         self.currentScene = 'startScreen'
         self.backgroundColour = BLACK
-
+        self.first = True
 
     def loadLevel(self, level=None):
         self.level = level
@@ -55,42 +56,46 @@ class sceneManager():
             self.level1()
 
     def level1(self):
-        self.game.screen.fill(BLACK)
+        # self.game.screen.fill(BLACK)
         self.showPlayer = True
         Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
         Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
         Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
 
     def settingsMenu(self):
-        self.game.screen.fill((30, 210, 110))
+        # self.game.screen.fill((30, 210, 110))
         self.game.drawText("Change the Game Settings", 25, BLACK, WIDTH/2, HEIGHT*1/6)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def levelSelect(self):
-        self.game.screen.fill((160, 160, 160))
+        # self.game.screen.fill((160, 160, 160))
         self.game.drawText("Select the Level you want to play!", 25, BLACK, WIDTH/2, HEIGHT*1/6)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.level1Button = Button(self.game, "level1", WIDTH*1/2, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level One")
 
     def stats(self):
-        self.game.screen.fill((220, 110, 250))
+        # self.game.screen.fill((220, 110, 250))
         self.game.drawText("View your statistics", 25, BLACK, WIDTH/2, HEIGHT*1/6)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def leaderboard(self):
-        self.game.screen.fill((50, 250, 160))
+        # self.game.screen.fill((50, 250, 160))
         self.game.drawText("Leader Board Tables", 25, BLACK, WIDTH/2, HEIGHT*1/6)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def shop(self):
-        self.game.screen.fill((255, 180, 0))
+        # self.game.screen.fill((255, 180, 0))
         self.game.drawText("Spend you coins in the shop", 25, BLACK, WIDTH/2, HEIGHT*1/6)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
 
     def mainMenu(self):
-        self.game.screen.fill((255,90,70))
+        if self.image != pg.transform.scale(self.game.menuImages["mainMenu"], (WIDTH, HEIGHT)):
+            image = pg.transform.scale(self.game.menuImages["mainMenu"], (WIDTH, HEIGHT))
+            rect = image.get_rect()
+            self.game.screen.blit(image, rect)
+        # self.game.screen.fill((255,90,70))
         self.game.drawText("This is the Main Menu", 25, BLACK, WIDTH/2, HEIGHT*1/4)
-        self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Start Screen")
+        # self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Start Screen")
         self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*3/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Select Level")
         self.settingsMenuButton = Button(self.game, "settingsMenu", WIDTH/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Settings")
         self.shopButton = Button(self.game, "shop", WIDTH*3/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Shop")
@@ -99,7 +104,9 @@ class sceneManager():
 
     def startScreen(self):
         #game spalsh/start screen
-        self.game.screen.fill((70,210,255))
+        self.image = pg.transform.scale(self.game.menuImages["startScreen"], (WIDTH, HEIGHT))
+        rect = self.image.get_rect()
+        self.game.screen.blit(self.image, rect)
         self.game.drawText("Welome to my Game", 24, BLACK, WIDTH/2, HEIGHT*1/4)
         self.game.drawText("Press a button to conitnue!", 12, BLACK, WIDTH/2, HEIGHT*3/4)
         pg.display.flip()
@@ -109,7 +116,6 @@ class sceneManager():
     def gameOverScreen(self):
         #game over/continue screen
         pass
-
 
     def waitForKey(self, key = True, click = True):#key contiues if a key is get_pressed
         pg.event.wait()#click continues if the mouse button is pressed
@@ -138,6 +144,11 @@ class sceneManager():
 
             if button.clicked == True:
                 # print("tag",button.tag)
+                self.currentScene = button.tag
+                if button.tag != 'level1':
+                    self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
+                    rect = self.image.get_rect()
+                    self.game.screen.blit(self.image, rect)
                 if button.tag == "startScreen":
                     self.loadLevel('startScreen')
                 if button.tag == "levelSelect":
@@ -154,7 +165,6 @@ class sceneManager():
                     self.loadLevel('stats')
                 if button.tag == 'level1':
                     self.loadLevel('level1')
-                self.currentScene = button.tag
                 button.kill()
         if self.currentScene != "level1":
             self.showPlayer = False

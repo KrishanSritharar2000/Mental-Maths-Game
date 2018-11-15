@@ -65,9 +65,10 @@ class Platform(pg.sprite.Sprite):
         self.image.fill(colour)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
+
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None):
-        self.groups = game.buttons
+        self.groups = game.buttons, game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.tag = tag
@@ -85,30 +86,34 @@ class Button(pg.sprite.Sprite):
             self.textSize = textSize
         self.pos = vec(x,y)
         self.rectDimensions = (self.pos[0]-self.width/2, self.pos[1]-self.height/2, self.width, self.height)
-        self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
+        # self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
+        self.solidImage = pg.transform.scale(self.game.menuButtonSolid,(int(self.width), int(self.height)))
+        self.highlightImage = pg.transform.scale(self.game.menuButtonHighlight,(int(self.width), int(self.height)))
+        self.image = self.solidImage
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.centery = y
         self.clicked = False
+        self.colchange = False
         self.first = True
 
     def highlight(self):
         mousePos = pg.mouse.get_pos()
-        prevcol = self.game.screen.get_at((int(self.pos[0]-self.width/2), int(self.pos[1]-self.height/2)))
-        colchange = False
+        # prevcol = self.game.screen.get_at((int(self.pos[0]-self.width/2), int(self.pos[1]-self.height/2)))
         if self.pos[0] - self.width/2  <= mousePos[0] <= self.pos[0] + self.width/2 and \
             self.pos[1] - self.height/2 <= mousePos[1] <= self.pos[1] + self.height/2:
-            if prevcol[0:3] != self.highlightColour:
-                self.image = pg.draw.rect(self.game.screen, self.highlightColour, self.rectDimensions , 0)
-                colchange = True
+            if self.image != self.highlightImage:
+                # self.image = pg.draw.rect(self.game.screen, self.highlightColour, self.rectDimensions , 0)
+                self.image = self.highlightImage
+                self.colchange = True
             if pg.mouse.get_pressed()[0] == 1:
                 self.clicked = True
         else:
-            if prevcol[0:3] != self.solidColour:
-                self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
-                colchange = True
-        if colchange == True or self.first == True:
-            if self.first:
-                # print(self.first, "self.first")
-                self.first = False
-            self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
+            if self.image != self.solidImage:
+                # self.image = pg.draw.rect(self.game.screen, self.solidColour, self.rectDimensions , 0)
+                self.image = self.solidImage
+                self.colchange = True
+
 
     def update(self):
         self.highlight()
@@ -116,3 +121,14 @@ class Button(pg.sprite.Sprite):
             for button in self.game.buttons:
                 if button != self:
                     button.kill()
+
+    def draw(self):
+        # self.image2 = pg.draw.rect(self.game.screen, YELLOW, self.rectDimensions, 0)
+        if self.colchange == True or self.first == True:
+            self.game.screen.blit(self.image,self.rect)
+            print("drawn", self.tag)
+            if self.first:
+                print(self.first, "self.first")
+                self.first = False
+            self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
+            self.colchange = False

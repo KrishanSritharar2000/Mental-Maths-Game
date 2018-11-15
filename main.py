@@ -19,15 +19,31 @@ class Game:
     def loadData(self):
         gameFolder = path.dirname(__file__)
         imgFolder = path.join(gameFolder, 'img')
+        self.menuButtonSolid = pg.image.load(path.join(imgFolder, 'blue_button01.png')).convert_alpha()
+        self.menuButtonHighlight = pg.image.load(path.join(imgFolder, 'green_button01.png')).convert_alpha()
+        self.menuImages = {}
+        self.menuImages["startScreen"] =  pg.image.load(path.join(imgFolder, 'grey_background.jpg')).convert_alpha()
+        self.menuImages["mainMenu"] =  pg.image.load(path.join(imgFolder, 'blue_background.jpg')).convert_alpha()
+        self.menuImages["settingsMenu"] =  pg.image.load(path.join(imgFolder, 'Grey_yellow_background.jpg')).convert_alpha()
+        self.menuImages["levelSelect"] =  pg.image.load(path.join(imgFolder, 'Grey_blue_background.jpg')).convert_alpha()
+        self.menuImages["stats"] =  pg.image.load(path.join(imgFolder, 'Grey_green_background.jpg')).convert_alpha()
+        self.menuImages["leaderboard"] =  pg.image.load(path.join(imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
+        self.menuImages["shop"] =  pg.image.load(path.join(imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
 
-    def drawText(self, text, size, colour, x, y, surf=None):
+
+
+
+    def drawText(self, text, size, colour, x, y, surf=None, align=None):
         if surf == None:
             surf = self.screen
         fontType = "C:\WINDOWS\FONTS\ARIAL.TTF"
         font = pg.font.SysFont('arial', size)
         textSurface = font.render(text, True, colour)
         textRect = textSurface.get_rect()
-        textRect.center = (int(x),int(y))#aligns the text to the center
+        if align == None:
+            textRect.center = (int(x),int(y))#aligns the text to the center
+        if align == "tl":
+            textRect.topleft = (int(x),int(y))
         surf.blit(textSurface, textRect)
 
     def new(self):
@@ -57,10 +73,10 @@ class Game:
         if self.sceneMan.currentScene not in MENU_SCREENS:
             self.camera.update(self.player)
 
-        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
-        if hits:
-            self.player.pos.y = hits[0].rect.y
-            self.player.vel.y = 0
+            hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+            if hits:
+                self.player.pos.y = hits[0].rect.y
+                self.player.vel.y = 0
 
 
 
@@ -78,10 +94,14 @@ class Game:
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+        for button in self.buttons:
+            button.draw()
+        # self.buttons.draw(self.screen)
         if self.sceneMan.currentScene not in MENU_SCREENS:
             # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
             for sprite in self.allSprites:
                 self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
+
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
 g = Game()
