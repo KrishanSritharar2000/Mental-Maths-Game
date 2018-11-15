@@ -15,30 +15,56 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(x,y)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
+        self.direction = "forward"
+
+    def jump(self):
+        self.vel.y = -20
 
     def update(self):
         if self.game.sceneMan.showPlayer:
             self.game.screen.fill(BLACK)
-            self.acc = vec(0,0)
+            self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
-            if keys[pg.K_LEFT] or keys[pg.K_a]:
-                self.acc.x = -PLAYER_ACC
+
             if keys[pg.K_RIGHT] or keys[pg.K_d]:
-                self.acc.x = PLAYER_ACC
+                if self.direction == "stopped" or self.direction == "forward":
+                    self.acc.x = PLAYER_ACC
+                    self.direction = "forward"
+            if keys[pg.K_DOWN] or keys[pg.K_s]:
+                if round(self.vel.x, 0) != 0:
+                    if self.vel.x > 0:
+                        self.acc.x = -BRAKE_ACC
+                    else:
+                        self.acc.x = BRAKE_ACC
+            if round(self.vel.x, 0) == 0:
+                self.direction = "stopped"
+            if keys[pg.K_LEFT] or keys[pg.K_a]:
+                if self.direction == "stopped" or self.direction == "reverse":
+                    self.acc.x = -PLAYER_ACC
+                    self.direction = "reverse"
+
+
 
             self.acc += self.vel * PLAYER_FRICTION
 
             self.vel += self.acc
             self.pos += self.vel + 0.5 * self.acc
 
-            if self.pos.x > WIDTH:
-                self.pos.x = 0
-            if self.pos.x < 0:
-                self.pos.x = WIDTH
+            # if self.pos.x > WIDTH:
+            #     self.pos.x = 0
+            # if self.pos.x < 0:
+            #     self.pos.x = WIDTH
 
-            self.rect.center = self.pos
+            self.rect.midbottom = self.pos
 
-
+class Platform(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height, colour):
+        self.groups = game.allSprites, game.platforms
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((width, height))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None):
         self.groups = game.buttons

@@ -2,6 +2,29 @@ import pygame as pg
 from settings import *
 from sprites import *
 
+class Camera:
+    def __init__(self, width, height):
+        self.camera = pg.Rect(0, 0, width, height)
+        self.width = width
+        self.height = height
+
+    def applyOffset(self, item):
+        return item.rect.move(self.camera.topleft)
+
+    def applyOffsetRect(self, rect):
+        return rect.move(self.camera.topleft)
+
+    def update(self, target):
+        x = -target.rect.centerx + int(WIDTH/2)
+        y = -target.rect.centery + int(HEIGHT/2)
+
+        #limit scrolling to map size
+        x = min(0, x) #left
+        y = min(0, y) #top
+        x = max(-(self.width - WIDTH), x) #right
+        y = max(-(self.height - HEIGHT), y) #bottom
+
+        self.camera = pg.Rect(x, y, self.width, self.height)
 
 class sceneManager():
     def __init__(self, game):
@@ -30,6 +53,13 @@ class sceneManager():
             self.gameOverScreen()
         if self.level == "level1":
             self.level1()
+
+    def level1(self):
+        self.game.screen.fill(BLACK)
+        self.showPlayer = True
+        Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+        Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
+        Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
 
     def settingsMenu(self):
         self.game.screen.fill((30, 210, 110))
@@ -80,9 +110,6 @@ class sceneManager():
         #game over/continue screen
         pass
 
-    def level1(self):
-        self.game.screen.fill(BLACK)
-        self.showPlayer = True
 
     def waitForKey(self, key = True, click = True):#key contiues if a key is get_pressed
         pg.event.wait()#click continues if the mouse button is pressed

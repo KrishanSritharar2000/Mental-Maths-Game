@@ -34,6 +34,8 @@ class Game:
         #start a new Game
         self.allSprites = pg.sprite.Group()#This groups all the sprties together
         self.buttons = pg.sprite.Group()
+        self.platforms = pg.sprite.Group()
+        self.camera = Camera(10*WIDTH, HEIGHT)
         self.sceneMan = sceneManager(self)
         self.player = Player(self, WIDTH/2, HEIGHT/2)
         self.sceneMan.loadLevel('startScreen')
@@ -52,6 +54,15 @@ class Game:
         #Game loop - Update
         self.sceneMan.update()
         self.allSprites.update()#Updates all of the sprties at once
+        if self.sceneMan.currentScene not in MENU_SCREENS:
+            self.camera.update(self.player)
+
+        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+        if hits:
+            self.player.pos.y = hits[0].rect.y
+            self.player.vel.y = 0
+
+
 
     def events(self):
         #Game loop - Events
@@ -61,11 +72,16 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.running = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.player.jump()
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         if self.sceneMan.currentScene not in MENU_SCREENS:
-            self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
+            # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
+            for sprite in self.allSprites:
+                self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
 g = Game()
