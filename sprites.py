@@ -16,6 +16,7 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.direction = "forward"
+        self.last = 0
 
     def jump(self):
         self.vel.y = -20
@@ -49,6 +50,12 @@ class Player(pg.sprite.Sprite):
 
             self.vel += self.acc
             self.pos += self.vel + 0.5 * self.acc
+            now = pg.time.get_ticks()
+            if now - self.last > 150:
+                self.last = now
+                print("{} direction  Velocity X: {} Acceleration X: {}".format(self.direction, round(self.vel.x,0), round(self.acc.x, 0)))
+                print("                   Velocity Y: {} Acceleration Y: {}".format(round(self.vel.y,0), round(self.acc.y, 0)))
+
 
             # if self.pos.x > WIDTH:
             #     self.pos.x = 0

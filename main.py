@@ -3,7 +3,7 @@ from os import path
 import random
 from settings import *
 from sprites import *
-from sceneManager import *
+from management import *
 
 class Game:
     def __init__(self):
@@ -29,7 +29,7 @@ class Game:
         self.menuImages["settingsMenu"] =  pg.image.load(path.join(imgFolder, 'Grey_yellow_background.jpg')).convert_alpha()
         self.menuImages["levelSelect"] =  pg.image.load(path.join(imgFolder, 'Grey_blue_background.jpg')).convert_alpha()
         self.menuImages["stats"] =  pg.image.load(path.join(imgFolder, 'Grey_green_background.jpg')).convert_alpha()
-        self.menuImages["leaderboard"] =  pg.image.load(path.join(imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
+        self.menuImages["leaderboard"] =      pg.image.load(path.join(imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
         self.menuImages["shop"] =  pg.image.load(path.join(imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
         self.menuImages["pause"] =  pg.image.load(path.join(imgFolder, 'Grey_red_background.jpg')).convert_alpha()
         self.pauseIMGWhite = pg.image.load(path.join(imgFolder, 'pauseWhite.png')).convert_alpha()
@@ -43,7 +43,6 @@ class Game:
         fontType = "C:\WINDOWS\FONTS\ARIAL.TTF"
         if fontName == None:
             font = pg.font.SysFont('arial', size)
-            # font = pg.font.Font(self.interfaceFont, size)
         else:
             font = pg.font.Font(fontName, size)
         textSurface = font.render(text, True, colour)
@@ -104,10 +103,10 @@ class Game:
             button.draw()
         # self.buttons.draw(self.screen)
         if self.sceneMan.currentScene not in MENU_SCREENS:
-            # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
             for sprite in self.allSprites:
                 self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
 
+            # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
 g = Game()
