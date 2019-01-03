@@ -7,7 +7,14 @@ TITLE = "Demo"
 # HEIGHT = 384
 WIDTH = 768
 HEIGHT = 576
+# WIDTH = 1024
+# HEIGHT = 768
 FPS = 60
+
+TILESIZE = 32 #32
+TILESIZE_TRACK = 32
+GRIDWIDTH = WIDTH / TILESIZE
+GRIDHEIGHT = HEIGHT / TILESIZE
 
 
 MENU_SCREENS = ["settingsMenu",
@@ -21,8 +28,8 @@ MENU_SCREENS = ["settingsMenu",
                 "pause"]
 
 #Player properties
-PLAYER_ACC = 1.6
-BRAKE_ACC = 0.2
+PLAYER_ACC = 1.4
+BRAKE_ACC = 0.4
 PLAYER_FRICTION = -0.05
 PLAYER_GRAV = 0.8
 

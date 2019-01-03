@@ -8,11 +8,13 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((40, 30))
+        self.width = 40
+        self.height = 30
+        self.image = pg.Surface((self.width, self.height))
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
-        self.pos = vec(x,y)
+        self.pos = vec(x,y) * TILESIZE
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.direction = "forward"
@@ -20,6 +22,45 @@ class Player(pg.sprite.Sprite):
 
     def jump(self):
         self.vel.y = -20
+
+    def collideWalls(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vel.x > 0:
+                    self.x = hits[0].rect.left - self.rect.width
+                if self.vel.x < 0:
+                    self.x = hits[0].rect.right
+                self.vel.x = 0
+                self.rect.x = self.x
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vel.y > 0:
+                    self.y = hits[0].rect.top - self.rect.height
+                if self.vel.y < 0:
+                    self.y = hits[0].rect.bottom
+                self.vel.y = 0
+                self.rect.y = self.y
+
+    def collideWithWalls(self, dir):
+        hitWall = pg.sprite.spritecollide(self.game.player, self.game.walls, False)
+        if hitWall:
+            if dir == "x":
+                if self.game.player.vel.x > 0:#going to the right  [hit left of wall]
+                    self.game.player.pos.x = hitWall[0].rect.left - self.game.player.width / 2
+                elif self.game.player.vel.x < 0:#going to the left [hit right of wall]
+                    self.game.player.pos.x = hitWall[0].rect.right + self.game.player.width / 2
+                self.game.player.vel.x = 0
+                self.rect.centerx = self.pos.x
+
+            if dir == "y":
+                if self.game.player.vel.y > 0:#going down [hit top of wall]
+                    self.game.player.pos.y = hitWall[0].rect.top - self.rect.height / 2
+                elif self.game.player.vel.y < 0:#going up [hit bottom of wall]
+                    self.game.player.pos.y = hitWall[0].rect.bottom + self.game.player.height / 2
+                self.game.player.vel.y = 0
+                self.rect.centery = self.pos.y
 
     def update(self):
         if self.game.sceneMan.showPlayer:
@@ -31,38 +72,47 @@ class Player(pg.sprite.Sprite):
                 if self.direction == "stopped" or self.direction == "forward":
                     self.acc.x = PLAYER_ACC
                     self.direction = "forward"
-            if keys[pg.K_DOWN] or keys[pg.K_s]:
-                if round(self.vel.x, 0) != 0:
-                    if self.vel.x > 0:
-                        self.acc.x = -BRAKE_ACC
-                    else:
-                        self.acc.x = BRAKE_ACC
-            if round(self.vel.x, 0) == 0:
-                self.direction = "stopped"
+
             if keys[pg.K_LEFT] or keys[pg.K_a]:
                 if self.direction == "stopped" or self.direction == "reverse":
                     self.acc.x = -PLAYER_ACC
                     self.direction = "reverse"
 
+            if abs(self.vel.x) < 0.5:
+                self.direction = "stopped"
 
+            if keys[pg.K_DOWN] or keys[pg.K_s]:
+                if self.direction != "stopped":
+                    if self.vel.x > 0:
+                        self.acc.x = -BRAKE_ACC
+                    else:
+                        self.acc.x = BRAKE_ACC
+            # #Debug Motion
+            # now = pg.time.get_ticks()
+            # if now - self.last > 150:
+            #     self.last = now
+                # print("{} direction  Velocity X: {} Acceleration X: {}".format(self.direction, round(self.vel.x,0), round(self.acc.x, 0)))
+                # print("                   Velocity Y: {} Acceleration Y: {}".format(round(self.vel.y,0), round(self.acc.y, 0)))
 
             self.acc += self.vel * PLAYER_FRICTION
-
             self.vel += self.acc
             self.pos += self.vel + 0.5 * self.acc
-            now = pg.time.get_ticks()
-            if now - self.last > 150:
-                self.last = now
-                print("{} direction  Velocity X: {} Acceleration X: {}".format(self.direction, round(self.vel.x,0), round(self.acc.x, 0)))
-                print("                   Velocity Y: {} Acceleration Y: {}".format(round(self.vel.y,0), round(self.acc.y, 0)))
-
+            self.rect.centerx = self.pos.x
+            self.collideWithWalls('x')
+            self.rect.centery = self.pos.y
+            self.collideWithWalls('y')
+            # self.pos = self.rect.center
 
             # if self.pos.x > WIDTH:
             #     self.pos.x = 0
             # if self.pos.x < 0:
             #     self.pos.x = WIDTH
 
-            self.rect.midbottom = self.pos
+
+            # self.rect.midbottom = self.pos
+
+
+
 
 class Platform(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour):
@@ -71,7 +121,25 @@ class Platform(pg.sprite.Sprite):
         self.image = pg.Surface((width, height))
         self.image.fill(colour)
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x, y
+        self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
+
+class Track(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height, colour):
+        self.groups = game.allSprites, game.platforms
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((width, height))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x * TILESIZE_TRACK, y * TILESIZE_TRACK
+
+class Wall(pg.sprite.Sprite):
+    def __init__(self, game, x, y, colour):
+        self.groups = game.allSprites, game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):

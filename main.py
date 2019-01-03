@@ -17,23 +17,23 @@ class Game:
         self.loadData()
 
     def loadData(self):
-        gameFolder = path.dirname(__file__)
-        imgFolder = path.join(gameFolder, 'img')
-        self.menuButtonSolid = pg.image.load(path.join(imgFolder, 'blue_button01.png')).convert_alpha()
-        self.menuButtonHighlight = pg.image.load(path.join(imgFolder, 'green_button01.png')).convert_alpha()
-        self.interfaceFont = path.join(imgFolder, 'Future.ttf')
-        self.buttonFont = path.join(imgFolder, 'PixelSquare.ttf')
+        self.gameFolder = path.dirname(__file__)
+        self.imgFolder = path.join(self.gameFolder, 'img')
+        self.menuButtonSolid = pg.image.load(path.join(self.imgFolder, 'blue_button01.png')).convert_alpha()
+        self.menuButtonHighlight = pg.image.load(path.join(self.imgFolder, 'green_button01.png')).convert_alpha()
+        self.interfaceFont = path.join(self.imgFolder, 'Future.ttf')
+        self.buttonFont = path.join(self.imgFolder, 'PixelSquare.ttf')
         self.menuImages = {}
-        self.menuImages["startScreen"] =  pg.image.load(path.join(imgFolder, 'grey_background.jpg')).convert_alpha()
-        self.menuImages["mainMenu"] =  pg.image.load(path.join(imgFolder, 'blue_background.jpg')).convert_alpha()
-        self.menuImages["settingsMenu"] =  pg.image.load(path.join(imgFolder, 'Grey_yellow_background.jpg')).convert_alpha()
-        self.menuImages["levelSelect"] =  pg.image.load(path.join(imgFolder, 'Grey_blue_background.jpg')).convert_alpha()
-        self.menuImages["stats"] =  pg.image.load(path.join(imgFolder, 'Grey_green_background.jpg')).convert_alpha()
-        self.menuImages["leaderboard"] =      pg.image.load(path.join(imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
-        self.menuImages["shop"] =  pg.image.load(path.join(imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
-        self.menuImages["pause"] =  pg.image.load(path.join(imgFolder, 'Grey_red_background.jpg')).convert_alpha()
-        self.pauseIMGWhite = pg.image.load(path.join(imgFolder, 'pauseWhite.png')).convert_alpha()
-        self.pauseIMGBlack = pg.image.load(path.join(imgFolder, 'pauseBlack.png')).convert_alpha()
+        self.menuImages["startScreen"] =  pg.image.load(path.join(self.imgFolder, 'grey_background.jpg')).convert_alpha()
+        self.menuImages["mainMenu"] =  pg.image.load(path.join(self.imgFolder, 'blue_background.jpg')).convert_alpha()
+        self.menuImages["settingsMenu"] =  pg.image.load(path.join(self.imgFolder, 'Grey_yellow_background.jpg')).convert_alpha()
+        self.menuImages["levelSelect"] =  pg.image.load(path.join(self.imgFolder, 'Grey_blue_background.jpg')).convert_alpha()
+        self.menuImages["stats"] =  pg.image.load(path.join(self.imgFolder, 'Grey_green_background.jpg')).convert_alpha()
+        self.menuImages["leaderboard"] =      pg.image.load(path.join(self.imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
+        self.menuImages["shop"] =  pg.image.load(path.join(self.imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
+        self.menuImages["pause"] =  pg.image.load(path.join(self.imgFolder, 'Grey_red_background.jpg')).convert_alpha()
+        self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
+        self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
 
 
 
@@ -58,9 +58,12 @@ class Game:
         self.allSprites = pg.sprite.Group()#This groups all the sprties together
         self.buttons = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
-        self.camera = Camera(10*WIDTH, HEIGHT)
+        self.walls = pg.sprite.Group()
+        self.map = Map(path.join(self.gameFolder,'map.txt'))
+        self.mapTrack = Map(path.join(self.gameFolder,'map2.txt'))
+        self.camera = Camera(self.map.width, self.map.height)
         self.sceneMan = sceneManager(self)
-        self.player = Player(self, WIDTH/2, HEIGHT/2)
+        self.player = None
         self.sceneMan.loadLevel('startScreen')
         self.run()
 
@@ -80,9 +83,9 @@ class Game:
         if self.sceneMan.currentScene not in MENU_SCREENS:
             self.camera.update(self.player)
 
-            hits = pg.sprite.spritecollide(self.player, self.platforms, False)
-            if hits:
-                self.player.pos.y = hits[0].rect.y
+            hitPlatform = pg.sprite.spritecollide(self.player, self.platforms, False)
+            if hitPlatform:
+                self.player.pos.y = hitPlatform[0].rect.y - self.player.height / 2
                 self.player.vel.y = 0
 
     def events(self):

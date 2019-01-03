@@ -2,6 +2,19 @@ import pygame as pg
 from settings import *
 from sprites import *
 
+class Map:
+    def __init__(self, filename):
+        self.data = []
+        with open(filename, 'rt') as file:
+            for line in file:
+                self.data.append(line.strip())
+        file.close()
+
+        self.tilewidth = len(self.data[0])
+        self.tileheight = len(self.data)
+        self.width = self.tilewidth * TILESIZE
+        self.height = self.tileheight * TILESIZE
+
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -59,9 +72,40 @@ class sceneManager():
 
     def level1(self):
         self.showPlayer = True
-        Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
-        Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
-        Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+        for row, tiles in enumerate(self.game.map.data):
+            for col, tile in enumerate(tiles):
+                if tile == "1":
+                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+                if tile == "2":
+                    Track(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+                if tile == "3":
+                    Wall(self.game, col, row, GREEN)
+                if tile == "P":
+                    self.game.player = Player(self.game, col, row)
+
+##        for row, tiles in enumerate(self.game.mapTrack.data):
+##            for col, tile in enumerate(tiles):
+##                if tile == "2":
+##                    Track(self.game, col, row, 2, TILESIZE_TRACK, BLUE)
+
+
+        # for row, tiles in enumerate(self.game.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == "1":
+        #             Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, GREEN)
+        #         if tile == "2":
+        #             Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, BLUE)
+        #         if tile == "3":
+        #             Wall(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, RED)
+        #         if tile == "P":
+        #             self.game.player = Player(self.game, col*TILESIZE, row*TILESIZE)
+
+# self.game.map.tilewidth
+# self.game.map.tileheight
+
+        # Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+        # Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
+        # Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
         # pauseIMG = pg.transform.scale(self.game.pauseIMG, (30,30))
         # pauseIMGRect = pauseIMG.get_rect()
         # pauseIMGRect.center = (WIDTH*8/9, HEIGHT/12)
