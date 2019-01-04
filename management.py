@@ -75,18 +75,23 @@ class sceneManager():
         for row, tiles in enumerate(self.game.map.data):
             for col, tile in enumerate(tiles):
                 if tile == "1":
-                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+                    Platform(self.game, col, row, 50, 50, GREEN)
                 if tile == "2":
-                    Track(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+                    Track(self.game, col, row, 2, 20, BLUE)
                 if tile == "3":
-                    Wall(self.game, col, row, GREEN)
+                    Wall(self.game, col, row, RED)
                 if tile == "P":
                     self.game.player = Player(self.game, col, row)
 
-##        for row, tiles in enumerate(self.game.mapTrack.data):
-##            for col, tile in enumerate(tiles):
-##                if tile == "2":
-##                    Track(self.game, col, row, 2, TILESIZE_TRACK, BLUE)
+
+        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+
+                    
+
+        for row, tiles in enumerate(self.game.mapTrack.data):
+            for col, tile in enumerate(tiles):
+                if tile == "2":
+                    Track(self.game, col, row, 2, TILESIZE_TRACK, BLUE)
 
 
         # for row, tiles in enumerate(self.game.map.data):
@@ -110,12 +115,11 @@ class sceneManager():
         # pauseIMGRect = pauseIMG.get_rect()
         # pauseIMGRect.center = (WIDTH*8/9, HEIGHT/12)
         # self.game.screen.blit(pauseIMG, pauseIMGRect)
-        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
     def pause(self):
         self.game.drawText("Pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
-        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*3/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Main Menu")
         self.level1Button = Button(self.game, "level1", WIDTH*5/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Resume")
+        self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*3/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Main Menu")
 
     def settingsMenu(self):
         self.game.drawText("Settings", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)

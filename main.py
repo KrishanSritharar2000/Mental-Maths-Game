@@ -59,8 +59,8 @@ class Game:
         self.buttons = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.map = Map(path.join(self.gameFolder,'map.txt'))
-        self.mapTrack = Map(path.join(self.gameFolder,'map2.txt'))
+        self.map = Map(path.join(self.gameFolder,'map2.txt'))
+        self.mapTrack = Map(path.join(self.gameFolder,'map3.txt'))
         self.camera = Camera(self.map.width, self.map.height)
         self.sceneMan = sceneManager(self)
         self.player = None
