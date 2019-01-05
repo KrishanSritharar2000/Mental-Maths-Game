@@ -130,7 +130,7 @@ class Track(pg.sprite.Sprite):
         self.image = pg.Surface((width, height))
         self.image.fill(colour)
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x * TILESIZE_TRACK, y * TILESIZE_TRACK
+        self.rect.x, self.rect.y = x  , y
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y, colour):
