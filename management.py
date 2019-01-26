@@ -5,7 +5,7 @@ from os import path
 from PIL import Image
 
 class Map:
-    def __init__(self, filename, trackfile):
+    def __init__(self, filename, trackfile, bitSize=4):
         self.data = []
         with open(filename, 'rt') as file:
             for line in file:
@@ -18,6 +18,8 @@ class Map:
         self.height = self.tileheight * TILESIZE
 
         self.trackData = []
+        self.wallData = []
+        self.fillData = []
         self.trackImage = Image.open(trackfile)
         self.trackWidth = self.trackImage.size[0]
         self.trackHeight = self.trackImage.size[1]
@@ -25,10 +27,22 @@ class Map:
         for col in range(self.trackHeight):
             for row in range(self.trackWidth):
                 pixelData = self.trackImage.getpixel((row, col))
-                if pixelData == 1:
-                    self.trackData.append((row, col))
+                if bitSize == 1:
+                    if pixelData == 1:
+                        self.trackData.append((row, col))
+                else:
+                    if pixelData == 0:
+                        self.trackData.append((row, col))
+                if pixelData == 5:
+                    self.wallData.append((row, col))
+                if pixelData == 12:
+                    self.fillData.append((row, col))
 
-
+        print(self.trackData)
+        print()
+        print(self.wallData)
+        print()
+        print(self.fillData)
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -83,27 +97,34 @@ class sceneManager():
             self.level1()
         if self.level == "level2":
             self.level2()
+        if self.level == "level3":
+            self.level3()
         if self.level == "pause":
             self.pause()
 
     def level1(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'LevelTest2.bmp'))
+        self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'Track3.bmp'), bitSize=1)
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
-
         for row, tiles in enumerate(self.game.map.data):
             for col, tile in enumerate(tiles):
                 if tile == "1":
-                    Platform(self.game, col, row, 50, 50, GREEN)
+                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+
+                # if tile == "2":
+                #     Track(self.game, col, row, 2, 20, BLUE)
+
                 if tile == "3":
                     Wall(self.game, col, row, RED)
+
                 if tile == "P":
                     self.game.player = Player(self.game, col, row)
 
-        for coordinates in range(len(self.game.map.trackData)):
-            platformx = self.game.map.trackData[coordinates][0]
-            platformy = self.game.map.trackData[coordinates][1]
-            Track(self.game, platformx, platformy, 1, 1, LIGHT_BLUE)
+##        for coordinates in range(len(self.game.map.trackData)):
+##            platformx = self.game.map.trackData[coordinates][0]
+##            platformy = self.game.map.trackData[coordinates][1]
+##            Track(self.game, platformx, platformy, 1, 1, LIGHT_BLUE)
+
 
         # for row, tiles in enumerate(self.game.mapTrack.data):
         #     for col, tile in enumerate(tiles):
@@ -136,7 +157,7 @@ class sceneManager():
 
     def level2(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.gameFolder,'map3.txt'), path.join(self.game.gameFolder,'Track4.bmp'))
+        self.game.map = Map(path.join(self.game.gameFolder,'map3.txt'), path.join(self.game.gameFolder,'Track4.bmp'), bitSize=1)
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
         #
         for row, tiles in enumerate(self.game.map.data):
@@ -153,6 +174,37 @@ class sceneManager():
             platformy = self.game.map.trackData[coordinates][1]
             Track(self.game, platformx, platformy, 1, 1, LIGHT_BLUE)
 
+        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+
+    def level3(self):
+        self.showPlayer = True
+        self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'Track6.bmp'))
+        self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        #
+        for row, tiles in enumerate(self.game.map.data):
+            for col, tile in enumerate(tiles):
+                if tile == "1":
+                    Platform(self.game, col, row, 50, 50, GREEN)
+                if tile == "3":
+                    Wall(self.game, col, row, RED)
+                if tile == "P":
+                    self.game.player = Player(self.game, col, row)
+
+        for coordinates in range(len(self.game.map.trackData)):
+            trackx = self.game.map.trackData[coordinates][0]
+            tracky = self.game.map.trackData[coordinates][1]
+            Track(self.game, trackx, tracky, 1, 1, LIGHT_BLUE)
+
+        for coordinates in range(len(self.game.map.wallData)):
+            wallx = self.game.map.wallData[coordinates][0]
+            wally = self.game.map.wallData[coordinates][1]
+            WallFile(self.game, wallx, wally, 1, 1, LIGHT_RED)
+
+        for coordinates in range(len(self.game.map.fillData)):
+            fillx = self.game.map.fillData[coordinates][0]
+            filly = self.game.map.fillData[coordinates][1]
+            print(fillx, filly)
+            pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1], 1)
 
         self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
@@ -171,7 +223,8 @@ class sceneManager():
         self.game.drawText("Select Level", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.level1Button = Button(self.game, "level1", WIDTH*1/2, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level One")
-        self.level1Button = Button(self.game, "level2", WIDTH*1/2, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level Two")
+        self.level2Button = Button(self.game, "level2", WIDTH*1/2, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level Two")
+        self.level3Button = Button(self.game, "level3", WIDTH*1/2, HEIGHT*3/4, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Level Three")
 
     def stats(self):
         self.game.drawText("View your statistics", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
@@ -240,10 +293,15 @@ class sceneManager():
             if button.clicked == True:
                 # print("tag",button.tag)
                 self.currentScene = button.tag
-                if button.tag not in ('level1', 'level2'):
+                if button.tag not in ('level1', 'level2', 'level3'):
                     self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
                     rect = self.image.get_rect()
                     self.game.screen.blit(self.image, rect)
+                else:
+                    for wall in self.game.walls:
+                        wall.kill()
+                    for platform in self.game.platforms:
+                        platform.kill()
                 if button.tag == "startScreen":
                     self.loadLevel('startScreen')
                 if button.tag == "levelSelect":
@@ -262,8 +320,10 @@ class sceneManager():
                     self.loadLevel('level1')
                 if button.tag == 'level2':
                     self.loadLevel('level2')
+                if button.tag == 'level3':
+                    self.loadLevel('level3')
                 if button.tag == 'pause':
                     self.loadLevel('pause')
                 button.kill()
-        if self.currentScene not in ("level1", "level2"):
+        if self.currentScene not in ("level1", "level2", "level3"):
             self.showPlayer = False

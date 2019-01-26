@@ -5,6 +5,8 @@ from settings import *
 from sprites import *
 from management import *
 
+vec = pg.math.Vector2
+
 class Game:
     def __init__(self):
         #initializes game window
@@ -34,6 +36,7 @@ class Game:
         self.menuImages["pause"] =  pg.image.load(path.join(self.imgFolder, 'Grey_red_background.jpg')).convert_alpha()
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
+        self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
 
 
 
@@ -65,6 +68,7 @@ class Game:
         #Camera(self.map.width, self.map.height)
         self.sceneMan = sceneManager(self)
         self.player = None
+        self.prevRotate = 0
         self.sceneMan.loadLevel('startScreen')
         self.run()
 
@@ -77,6 +81,15 @@ class Game:
             self.update()
             self.draw()
 
+    def rot_center(self, image, angle):
+        """rotate an image while keeping its center and size"""
+        orig_rect = image.get_rect()
+        rot_image = pg.transform.rotate(image, angle)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        return rot_image
+
     def update(self):
         #Game loop - Update
         self.sceneMan.update()
@@ -88,6 +101,18 @@ class Game:
             if hitPlatform:
                 self.player.pos.y = hitPlatform[0].rect.y - self.player.height / 2
                 self.player.vel.y = 0
+
+
+##                self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
+##                self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
+##                print(self.player.pos)
+##                print(self.rotate)
+##                if self.prevRotate != round(self.rotate,2):
+##                    self.player.image = self.rot_center(self.player.image, self.rotate)
+##                    # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+##                    # self.player.rect = self.player.image.get_rect()
+##                    # self.player.rect.center = self.player.pos
+##                    self.prevRotate = round(self.rotate,2)
 
     def events(self):
         #Game loop - Events

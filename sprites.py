@@ -8,10 +8,11 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.width = 40
+        self.width = 30
         self.height = 30
         self.image = pg.Surface((self.width, self.height))
         self.image.fill(YELLOW)
+##        self.image = self.game.playerBikeImage.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.pos = vec(x,y) * TILESIZE
@@ -19,6 +20,7 @@ class Player(pg.sprite.Sprite):
         self.acc = vec(0,0)
         self.direction = "forward"
         self.last = 0
+        self.braking = False
 
     def jump(self):
         self.vel.y = -20
@@ -69,14 +71,16 @@ class Player(pg.sprite.Sprite):
             keys = pg.key.get_pressed()
 
             if keys[pg.K_RIGHT] or keys[pg.K_d]:
-                if self.direction == "stopped" or self.direction == "forward":
-                    self.acc.x = PLAYER_ACC
-                    self.direction = "forward"
+                if self.direction == "forward" or self.direction == "stopped":
+                    if self.braking == False:
+                        self.acc.x = PLAYER_ACC
+                        self.direction = "forward"
 
             if keys[pg.K_LEFT] or keys[pg.K_a]:
-                if self.direction == "stopped" or self.direction == "reverse":
-                    self.acc.x = -PLAYER_ACC
-                    self.direction = "reverse"
+                if self.direction == "reverse" or self.direction == "stopped":
+                    if self.braking == False:
+                        self.acc.x = -PLAYER_ACC
+                        self.direction = "reverse"
 
             if abs(self.vel.x) < 0.5:
                 self.direction = "stopped"
@@ -87,6 +91,9 @@ class Player(pg.sprite.Sprite):
                         self.acc.x = -BRAKE_ACC
                     else:
                         self.acc.x = BRAKE_ACC
+                self.braking = True
+            else:
+                self.braking = False
             # #Debug Motion
             # now = pg.time.get_ticks()
             # if now - self.last > 150:
@@ -101,17 +108,8 @@ class Player(pg.sprite.Sprite):
             self.collideWithWalls('x')
             self.rect.centery = self.pos.y
             self.collideWithWalls('y')
+
             # self.pos = self.rect.center
-
-            # if self.pos.x > WIDTH:
-            #     self.pos.x = 0
-            # if self.pos.x < 0:
-            #     self.pos.x = WIDTH
-
-
-            # self.rect.midbottom = self.pos
-
-
 
 
 class Platform(pg.sprite.Sprite):
@@ -140,6 +138,16 @@ class Wall(pg.sprite.Sprite):
         self.image.fill(colour)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
+
+class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILESIZE as only one pixel is needed
+    def __init__(self, game, x, y, width, height, colour):
+        self.groups = game.allSprites, game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((width, height))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):

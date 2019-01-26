@@ -1,37 +1,34 @@
 from PIL import Image
 import datetime
-
-
 start = datetime.datetime.now()
-image = Image.open('BitMapMono.bmp')
-##size = width, height = image.size
 
-##print(image.getpixel((570,235)))
+bmpImage = Image.open('BitMapMono.bmp', 'r')
+pixelValue = list(bmpImage.getdata())
+print(pixelValue)
 
-sizeW, sizeH = image.size[0], image.size[1]
-print("W",sizeW)#768
-print("H",sizeH)#576
+sizeWidth = bmpImage.size[0]
+sizeHeight = bmpImage.size[1]
 
 mapData = []
 mapRow = []
-drawn = []
+blackPixel  = []
 
-for col in range(sizeH):
-    for row in range(sizeW):
-        pixel = image.getpixel((row, col))
+for col in range(sizeHeight):
+    for row in range(sizeWidth):
+        pixel = bmpImage.getpixel((row, col))
         mapRow.append(pixel)
         if pixel == 1:
-            drawn.append((row, col))
+            blackPixel.append((row, col))
     mapData.append(mapRow)
     mapRow = []
-    
+
 end1 = datetime.datetime.now()
 print("Time taken {}".format(end1 - start))
 
 for i in range(len(mapData)):
     print(mapData[i])
-print(drawn)
-print(len(drawn))
+print(blackPixel)
+
 
 end2 = datetime.datetime.now()
 print("Time taken {}".format(end2 - start))
