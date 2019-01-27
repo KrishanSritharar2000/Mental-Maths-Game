@@ -33,16 +33,17 @@ class Map:
                 else:
                     if pixelData == 0:
                         self.trackData.append((row, col))
-                if pixelData == 5:
-                    self.wallData.append((row, col))
-                if pixelData == 12:
-                    self.fillData.append((row, col))
+                if bitSize == 4:
+                    if pixelData == 5:
+                        self.wallData.append((row, col))
+                    if pixelData == 12:
+                        self.fillData.append((row, col))
 
-        print(self.trackData)
-        print()
-        print(self.wallData)
-        print()
-        print(self.fillData)
+        # print(self.trackData)
+        # print()
+        # print(self.wallData)
+        # print()
+        # print(self.fillData)
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -120,10 +121,10 @@ class sceneManager():
                 if tile == "P":
                     self.game.player = Player(self.game, col, row)
 
-##        for coordinates in range(len(self.game.map.trackData)):
-##            platformx = self.game.map.trackData[coordinates][0]
-##            platformy = self.game.map.trackData[coordinates][1]
-##            Track(self.game, platformx, platformy, 1, 1, LIGHT_BLUE)
+        for coordinates in range(len(self.game.map.trackData)):
+            platformx = self.game.map.trackData[coordinates][0]
+            platformy = self.game.map.trackData[coordinates][1]
+            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track;')
 
 
         # for row, tiles in enumerate(self.game.mapTrack.data):
@@ -163,7 +164,7 @@ class sceneManager():
         for row, tiles in enumerate(self.game.map.data):
             for col, tile in enumerate(tiles):
                 if tile == "1":
-                    Platform(self.game, col, row, 50, 50, GREEN)
+                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
                 if tile == "3":
                     Wall(self.game, col, row, RED)
                 if tile == "P":
@@ -172,7 +173,7 @@ class sceneManager():
         for coordinates in range(len(self.game.map.trackData)):
             platformx = self.game.map.trackData[coordinates][0]
             platformy = self.game.map.trackData[coordinates][1]
-            Track(self.game, platformx, platformy, 1, 1, LIGHT_BLUE)
+            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
 
         self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
@@ -180,7 +181,7 @@ class sceneManager():
         self.showPlayer = True
         self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'Track6.bmp'))
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
-        #
+
         for row, tiles in enumerate(self.game.map.data):
             for col, tile in enumerate(tiles):
                 if tile == "1":
@@ -193,7 +194,7 @@ class sceneManager():
         for coordinates in range(len(self.game.map.trackData)):
             trackx = self.game.map.trackData[coordinates][0]
             tracky = self.game.map.trackData[coordinates][1]
-            Track(self.game, trackx, tracky, 1, 1, LIGHT_BLUE)
+            Platform(self.game, trackx, tracky, 1, 1, LIGHT_BLUE, 'track')
 
         for coordinates in range(len(self.game.map.wallData)):
             wallx = self.game.map.wallData[coordinates][0]
@@ -203,9 +204,10 @@ class sceneManager():
         for coordinates in range(len(self.game.map.fillData)):
             fillx = self.game.map.fillData[coordinates][0]
             filly = self.game.map.fillData[coordinates][1]
-            print(fillx, filly)
-            pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1], 1)
+##            Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
+            pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1])
 
+            # print(fillx, filly)
         self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
 
@@ -302,6 +304,8 @@ class sceneManager():
                         wall.kill()
                     for platform in self.game.platforms:
                         platform.kill()
+                    self.game.screen.fill(BLACK)
+
                 if button.tag == "startScreen":
                     self.loadLevel('startScreen')
                 if button.tag == "levelSelect":

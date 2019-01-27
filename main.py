@@ -103,16 +103,16 @@ class Game:
                 self.player.vel.y = 0
 
 
-##                self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
-##                self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
-##                print(self.player.pos)
-##                print(self.rotate)
-##                if self.prevRotate != round(self.rotate,2):
-##                    self.player.image = self.rot_center(self.player.image, self.rotate)
-##                    # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
-##                    # self.player.rect = self.player.image.get_rect()
-##                    # self.player.rect.center = self.player.pos
-##                    self.prevRotate = round(self.rotate,2)
+                self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
+                self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
+                # print(self.player.pos)
+                # print(self.rotate)
+                if self.prevRotate != round(self.rotate,2):
+                    self.player.image = self.rot_center(self.player.image, self.rotate)
+                    # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+                    # self.player.rect = self.player.image.get_rect()
+                    # self.player.rect.center = self.player.pos
+                    self.prevRotate = round(self.rotate,2)
 
     def events(self):
         #Game loop - Events

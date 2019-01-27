@@ -12,7 +12,7 @@ class Player(pg.sprite.Sprite):
         self.height = 30
         self.image = pg.Surface((self.width, self.height))
         self.image.fill(YELLOW)
-##        self.image = self.game.playerBikeImage.copy()
+        # self.image = self.game.playerBikeImage.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.pos = vec(x,y) * TILESIZE
@@ -66,7 +66,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         if self.game.sceneMan.showPlayer:
-            self.game.screen.fill(BLACK)
+##            self.game.screen.fill(BLACK)
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
 
@@ -113,22 +113,16 @@ class Player(pg.sprite.Sprite):
 
 
 class Platform(pg.sprite.Sprite):
-    def __init__(self, game, x, y, width, height, colour):
+    def __init__(self, game, x, y, width, height, colour, mode="platform"):
         self.groups = game.allSprites, game.platforms
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((width, height))
         self.image.fill(colour)
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
-
-class Track(pg.sprite.Sprite):
-    def __init__(self, game, x, y, width, height, colour):
-        self.groups = game.allSprites, game.platforms
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((width, height))
-        self.image.fill(colour)
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x  , y
+        if mode == "platform":
+            self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
+        elif mode == "track":
+            self.rect.x, self.rect.y = x, y
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y, colour):
@@ -138,6 +132,27 @@ class Wall(pg.sprite.Sprite):
         self.image.fill(colour)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
+
+class Rectangle(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height, colour):
+        self.groups = game.allSprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((width, height))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x, y
+
+        # self.image = pg.draw.rect(game.screen, colour, (x, y, width, height))
+        # self.rect = self.image.get_rect()
+
+class Track(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height, colour):
+        self.groups = game.allSprites, game.platforms
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((width, height))
+        self.image.fill(colour)
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = x , y
 
 class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILESIZE as only one pixel is needed
     def __init__(self, game, x, y, width, height, colour):
