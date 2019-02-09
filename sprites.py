@@ -23,7 +23,7 @@ class Player(pg.sprite.Sprite):
         self.braking = False
 
     def jump(self):
-        self.vel.y = -20
+        self.vel.y = -35
 
     def collideWalls(self, dir):
         if dir == 'x':
@@ -66,7 +66,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         if self.game.sceneMan.showPlayer:
-##            self.game.screen.fill(BLACK)
+            self.game.screen.fill(BLACK)
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
 
@@ -101,9 +101,11 @@ class Player(pg.sprite.Sprite):
                 # print("{} direction  Velocity X: {} Acceleration X: {}".format(self.direction, round(self.vel.x,0), round(self.acc.x, 0)))
                 # print("                   Velocity Y: {} Acceleration Y: {}".format(round(self.vel.y,0), round(self.acc.y, 0)))
 
-            self.acc += self.vel * PLAYER_FRICTION
-            self.vel += self.acc
-            self.pos += self.vel + 0.5 * self.acc
+            self.acc += self.vel * PLAYER_FRICTION * -1
+            # self.vel += self.acc
+            self.vel += self.acc * self.game.dt
+            # self.pos += self.vel + 0.5 * self.acc
+            self.pos += self.vel + 0.5 * self.acc * (self.game.dt * self.game.dt)
             self.rect.centerx = self.pos.x
             self.collideWithWalls('x')
             self.rect.centery = self.pos.y
@@ -135,7 +137,7 @@ class Wall(pg.sprite.Sprite):
 
 class Rectangle(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour):
-        self.groups = game.allSprites
+        self.groups = game.allSprites, game.rectangles
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((width, height))
         self.image.fill(colour)

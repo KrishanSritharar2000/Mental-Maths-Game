@@ -62,6 +62,7 @@ class Game:
         self.buttons = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.rectangles = pg.sprite.Group()    #This is the area under the track
         self.map = None
         self.camera = None
         #Map(path.join(self.gameFolder,'map2.txt', 'LevelTest2'))
@@ -76,7 +77,7 @@ class Game:
         #Game loop
         self.playing = True
         while self.playing:
-            self.clock.tick(FPS)
+            self.dt = self.clock.tick(FPS) / 1000
             self.events()
             self.update()
             self.draw()
@@ -115,7 +116,7 @@ class Game:
                     self.prevRotate = round(self.rotate,2)
 
     def events(self):
-        #Game loop - Events
+        #Game loop - Events1
         for event in pg.event.get():
             #check for closing the window
             if event.type == pg.QUIT:

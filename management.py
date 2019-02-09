@@ -124,7 +124,7 @@ class sceneManager():
         for coordinates in range(len(self.game.map.trackData)):
             platformx = self.game.map.trackData[coordinates][0]
             platformy = self.game.map.trackData[coordinates][1]
-            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track;')
+            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
 
 
         # for row, tiles in enumerate(self.game.mapTrack.data):
@@ -204,8 +204,8 @@ class sceneManager():
         for coordinates in range(len(self.game.map.fillData)):
             fillx = self.game.map.fillData[coordinates][0]
             filly = self.game.map.fillData[coordinates][1]
-##            Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
-            pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1])
+            Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
+            # pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1])
 
             # print(fillx, filly)
         self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
@@ -304,7 +304,10 @@ class sceneManager():
                         wall.kill()
                     for platform in self.game.platforms:
                         platform.kill()
-                    self.game.screen.fill(BLACK)
+                    for rectangle in self.game.rectangles:
+                        rectangle.kill()
+                    if self.game.player != None:
+                        self.game.player.kill()
 
                 if button.tag == "startScreen":
                     self.loadLevel('startScreen')
