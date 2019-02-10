@@ -23,7 +23,7 @@ class Player(pg.sprite.Sprite):
         self.braking = False
 
     def jump(self):
-        self.vel.y = -35
+        self.vel.y = -20
 
     def collideWalls(self, dir):
         if dir == 'x':
@@ -65,7 +65,7 @@ class Player(pg.sprite.Sprite):
                 self.rect.centery = self.pos.y
 
     def update(self):
-        if self.game.sceneMan.showPlayer:
+        if self.game.sceneMan.showPlayer == True:
             self.game.screen.fill(BLACK)
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
@@ -101,11 +101,9 @@ class Player(pg.sprite.Sprite):
                 # print("{} direction  Velocity X: {} Acceleration X: {}".format(self.direction, round(self.vel.x,0), round(self.acc.x, 0)))
                 # print("                   Velocity Y: {} Acceleration Y: {}".format(round(self.vel.y,0), round(self.acc.y, 0)))
 
-            self.acc += self.vel * PLAYER_FRICTION * -1
-            # self.vel += self.acc
-            self.vel += self.acc * self.game.dt
-            # self.pos += self.vel + 0.5 * self.acc
-            self.pos += self.vel + 0.5 * self.acc * (self.game.dt * self.game.dt)
+            self.acc += self.vel * PLAYER_FRICTION
+            self.vel += self.acc
+            self.pos += self.vel + 0.5 * self.acc
             self.rect.centerx = self.pos.x
             self.collideWithWalls('x')
             self.rect.centery = self.pos.y
@@ -227,13 +225,15 @@ class Button(pg.sprite.Sprite):
                 if button != self:
                     button.kill()
 
-    def draw(self):
+    def draw(self, surface):
         # self.image2 = pg.draw.rect(self.game.screen, YELLOW, self.rectDimensions, 0)
         if self.colchange == True or self.first == True:
-            self.game.screen.blit(self.image,self.rect)
-            print("drawn", self.tag)
+            # if surf == None:
+            #     surf = self.game.screen
+            surface.blit(self.image,self.rect)
+            print("drawn this button", self.tag)
             if self.first:
                 print(self.first, "self.first")
                 self.first = False
-            self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1])
+            self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1], surf=surface)
             self.colchange = False

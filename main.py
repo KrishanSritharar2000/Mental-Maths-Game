@@ -21,10 +21,11 @@ class Game:
     def loadData(self):
         self.gameFolder = path.dirname(__file__)
         self.imgFolder = path.join(self.gameFolder, 'img')
-        self.menuButtonSolid = pg.image.load(path.join(self.imgFolder, 'blue_button01.png')).convert_alpha()
-        self.menuButtonHighlight = pg.image.load(path.join(self.imgFolder, 'green_button01.png')).convert_alpha()
         self.interfaceFont = path.join(self.imgFolder, 'Future.ttf')
         self.buttonFont = path.join(self.imgFolder, 'PixelSquare.ttf')
+        self.menuButtonSolid = pg.image.load(path.join(self.imgFolder, 'blue_button01.png')).convert_alpha()
+        self.menuButtonHighlight = pg.image.load(path.join(self.imgFolder, 'green_button01.png')).convert_alpha()
+
         self.menuImages = {}
         self.menuImages["startScreen"] =  pg.image.load(path.join(self.imgFolder, 'grey_background.jpg')).convert_alpha()
         self.menuImages["mainMenu"] =  pg.image.load(path.join(self.imgFolder, 'blue_background.jpg')).convert_alpha()
@@ -34,8 +35,15 @@ class Game:
         self.menuImages["leaderboard"] =      pg.image.load(path.join(self.imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
         self.menuImages["shop"] =  pg.image.load(path.join(self.imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
         self.menuImages["pause"] =  pg.image.load(path.join(self.imgFolder, 'Grey_red_background.jpg')).convert_alpha()
+
+        self.pauseScreen = pg.Surface(self.screen.get_size()).convert_alpha()
+        self.pauseScreen.fill((0,0,0,180))
+        self.drawText("pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf=self.pauseScreen, fontName=self.interfaceFont)
+        self.pauseScreenImage = pg.transform.scale(self.menuImages['pause'], (WIDTH, HEIGHT))
+        self.pauseScreenImageRect = self.pauseScreenImage.get_rect()
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
+
         self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
 
 
@@ -69,6 +77,8 @@ class Game:
         #Camera(self.map.width, self.map.height)
         self.sceneMan = sceneManager(self)
         self.player = None
+        self.paused = False
+        self.pauseScreenPrinted = False
         self.prevRotate = 0
         self.sceneMan.loadLevel('startScreen')
         self.run()
@@ -77,7 +87,7 @@ class Game:
         #Game loop
         self.playing = True
         while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000
+            self.dt = self.clock.tick(FPS) / 1000 #get the time of the previous frame in seconds
             self.events()
             self.update()
             self.draw()
@@ -94,26 +104,28 @@ class Game:
     def update(self):
         #Game loop - Update
         self.sceneMan.update()
-        self.allSprites.update()#Updates all of the sprties at once
-        if self.sceneMan.currentScene not in MENU_SCREENS:
-            self.camera.update(self.player)
+        # print("Paused variable state: ", self.paused)
+        if not self.paused:
+            # print("Doing Update function")
+            self.allSprites.update()#Updates all of the sprties at once
+            if self.sceneMan.currentScene not in MENU_SCREENS:
+                self.camera.update(self.player)
 
-            hitPlatform = pg.sprite.spritecollide(self.player, self.platforms, False)
-            if hitPlatform:
-                self.player.pos.y = hitPlatform[0].rect.y - self.player.height / 2
-                self.player.vel.y = 0
+                hitPlatform = pg.sprite.spritecollide(self.player, self.platforms, False)
+                if hitPlatform:
+                    self.player.pos.y = hitPlatform[0].rect.y - self.player.height / 2
+                    self.player.vel.y = 0
 
-
-                self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
-                self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
-                # print(self.player.pos)
-                # print(self.rotate)
-                if self.prevRotate != round(self.rotate,2):
-                    self.player.image = self.rot_center(self.player.image, self.rotate)
-                    # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
-                    # self.player.rect = self.player.image.get_rect()
-                    # self.player.rect.center = self.player.pos
-                    self.prevRotate = round(self.rotate,2)
+                    self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
+                    self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
+                    # print(self.player.pos)
+                    # print(self.rotate)
+                    if self.prevRotate != round(self.rotate,2):
+                        self.player.image = self.rot_center(self.player.image, self.rotate)
+                        # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+                        # self.player.rect = self.player.image.get_rect()
+                        # self.player.rect.center = self.player.pos
+                        self.prevRotate = round(self.rotate,2)
 
     def events(self):
         #Game loop - Events1
@@ -129,14 +141,22 @@ class Game:
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        for button in self.buttons:
-            button.draw()
-        # self.buttons.draw(self.screen)
-        if self.sceneMan.currentScene not in MENU_SCREENS:
-            for sprite in self.allSprites:
-                self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
+        if self.paused:
+            if self.pauseScreenPrinted == False:
+                self.pauseScreenPrinted = True
+            for button in self.buttons:
+                button.draw(self.pauseScreen)
+            # self.screen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
+            self.screen.blit(self.pauseScreen, (0,0))
 
-            # self.allSprites.draw(self.screen)#draws all of the sprities to the screen at once
+        else:
+            for button in self.buttons:
+                button.draw(self.screen)
+            if self.sceneMan.currentScene not in MENU_SCREENS:
+                for sprite in self.allSprites:
+                    self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
+                for button in self.buttons:
+                    self.screen.blit(button.image, self.camera.applyOffset(button))
         pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
 g = Game()

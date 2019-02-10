@@ -29,10 +29,10 @@ MENU_SCREENS = ["settingsMenu",
                 "pause"]
 
 #Player properties
-PLAYER_ACC = 10
-BRAKE_ACC = 5
-PLAYER_FRICTION = -0.15
-PLAYER_GRAV = 10
+PLAYER_ACC = 1.4
+BRAKE_ACC = 0.4
+PLAYER_FRICTION = -0.05
+PLAYER_GRAV = 0.8
 
 #0.5
 #-0.12
