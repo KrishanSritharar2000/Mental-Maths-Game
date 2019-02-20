@@ -21,6 +21,7 @@ class Game:
     def loadData(self):
         self.gameFolder = path.dirname(__file__)
         self.imgFolder = path.join(self.gameFolder, 'img')
+        self.mapFolder = path.join(self.gameFolder, 'map')
         self.interfaceFont = path.join(self.imgFolder, 'Future.ttf')
         self.buttonFont = path.join(self.imgFolder, 'PixelSquare.ttf')
         self.menuButtonSolid = pg.image.load(path.join(self.imgFolder, 'blue_button01.png')).convert_alpha()
@@ -37,14 +38,33 @@ class Game:
         self.menuImages["pause"] =  pg.image.load(path.join(self.imgFolder, 'Grey_red_background.jpg')).convert_alpha()
 
         self.pauseScreen = pg.Surface(self.screen.get_size()).convert_alpha()
-        self.pauseScreen.fill((0,0,0,180))
-        self.drawText("pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf=self.pauseScreen, fontName=self.interfaceFont)
         self.pauseScreenImage = pg.transform.scale(self.menuImages['pause'], (WIDTH, HEIGHT))
         self.pauseScreenImageRect = self.pauseScreenImage.get_rect()
+        self.pauseScreen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
+        self.drawText("Pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf=self.pauseScreen, fontName=self.interfaceFont)    #wasnt being printed before because it was before the previous line
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
 
         self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
+
+    def loadQuestions():
+        questionFile = path.join(self.game_folder, 'questions.csv')
+        with open(questions, 'r') as questionFile:
+            reader = csv.reader(questionFile)
+            next(questionFile)
+            self.questionData=[]
+            for line in reader:
+                # line = [QuestionID, Questtion, CAns, WAns1, Wans2, Wans3, Wans4, Diff, level, isMaj]
+                temp = []
+                questionID = int(line[0])
+                question = str(line[1])
+                cAns = int(line[2])
+                wAns1, wAns2, wAns3, wAns4 = int(line[3]),int(line[4]),int(line[5]),int(line[6])
+                diff = str(line[7])
+                level = int(line[8])
+                isMaj = str(line[9])
+                temp.extend((questionID,question,cAns,wAns1,wAns2,wAns3,wAns4,diff,level,isMaj))
+                self.questionData.append(temp)#all the data is now held in a 2D array
 
 
 
@@ -138,16 +158,27 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+                if event.key == pg.K_p:
+                    self.paused = not self.paused
+                    if self.paused == False:
+                        for button in self.buttons:
+                            button.kill()
+                    self.pauseScreenPrinted = False
+
+
+                    # self.currentScene = self.sceneManPrevScence
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         if self.paused:
             if self.pauseScreenPrinted == False:
+                self.sceneMan.loadLevel('pause')
                 self.pauseScreenPrinted = True
             for button in self.buttons:
                 button.draw(self.pauseScreen)
-            # self.screen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
-            self.screen.blit(self.pauseScreen, (0,0))
+            self.screen.blit(self.pauseScreen, self.pauseScreen.get_rect())
+
+            #self.screen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
 
         else:
             for button in self.buttons:
@@ -155,9 +186,22 @@ class Game:
             if self.sceneMan.currentScene not in MENU_SCREENS:
                 for sprite in self.allSprites:
                     self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
-                for button in self.buttons:
-                    self.screen.blit(button.image, self.camera.applyOffset(button))
-        pg.display.flip()#used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
+        pg.display.flip()
+
+
+
+        #used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
+
+
+
+
+        # print('paused', self.paused)
+        print("self.buttons", self.buttons, self.paused, self.sceneMan.currentScene )
+        print("2nd Prev: {}, Prev:{}, Current: {} Pause: {}".format(self.sceneMan.secondPrevScence, self.sceneMan.prevScence, self.sceneMan.currentScene, self.paused))
+
+        # for button in self.buttons:
+        #     print(button.tag)
+
 
 g = Game()
 

@@ -66,6 +66,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         if self.game.sceneMan.showPlayer == True:
+            print("Moving Player")
             self.game.screen.fill(BLACK)
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
@@ -166,7 +167,7 @@ class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILES
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):
-        self.groups = game.buttons, game.allSprites
+        self.groups = game.buttons
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.tag = tag
@@ -226,14 +227,11 @@ class Button(pg.sprite.Sprite):
                     button.kill()
 
     def draw(self, surface):
-        # self.image2 = pg.draw.rect(self.game.screen, YELLOW, self.rectDimensions, 0)
         if self.colchange == True or self.first == True:
-            # if surf == None:
-            #     surf = self.game.screen
             surface.blit(self.image,self.rect)
             print("drawn this button", self.tag)
             if self.first:
-                print(self.first, "self.first")
+                # print(self.first, "self.first")
                 self.first = False
             self.game.drawText(self.text, self.textSize, BLACK, self.pos[0], self.pos[1], surf=surface)
             self.colchange = False

@@ -75,6 +75,8 @@ class sceneManager():
         self.currentScene = 'startScreen'
         self.backgroundColour = BLACK
         self.first = True
+        self.prevScence = None
+        self.secondPrevScence = None
 
     def loadLevel(self, level=None):
         self.level = level
@@ -105,7 +107,7 @@ class sceneManager():
 
     def level1(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'Track3.bmp'), bitSize=1)
+        self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track3.bmp'), bitSize=1)
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
         for row, tiles in enumerate(self.game.map.data):
             for col, tile in enumerate(tiles):
@@ -126,39 +128,41 @@ class sceneManager():
             platformy = self.game.map.trackData[coordinates][1]
             Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
 
+        # self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
-        # for row, tiles in enumerate(self.game.mapTrack.data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == "2":
-        #             Track(self.game, col, row, 2, TILESIZE_TRACK, BLUE)
-
-
-        # for row, tiles in enumerate(self.game.map.data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == "1":
-        #             Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, GREEN)
-        #         if tile == "2":
-        #             Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, BLUE)
-        #         if tile == "3":
-        #             Wall(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, RED)
-        #         if tile == "P":
-        #             self.game.player = Player(self.game, col*TILESIZE, row*TILESIZE)
-
-# self.game.map.tilewidth
-# self.game.map.tileheight
-
-        # Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
-        # Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
-        # Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
-        # pauseIMG = pg.transform.scale(self.game.pauseIMG, (30,30))
-        # pauseIMGRect = pauseIMG.get_rect()
-        # pauseIMGRect.center = (WIDTH*8/9, HEIGHT/12)
-        # self.game.screen.blit(pauseIMG, pauseIMGRect)
-        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+    # # def oldCode():
+    #     pass
+    #     for row, tiles in enumerate(self.game.mapTrack.data):
+    #         for col, tile in enumerate(tiles):
+    #             if tile == "2":
+    #                 Track(self.game, col, row, 2, TILESIZE_TRACK, BLUE)
+    #
+    #
+    #     for row, tiles in enumerate(self.game.map.data):
+    #         for col, tile in enumerate(tiles):
+    #             if tile == "1":
+    #                 Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, GREEN)
+    #             if tile == "2":
+    #                 Platform(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, BLUE)
+    #             if tile == "3":
+    #                 Wall(self.game, col*TILESIZE, row*TILESIZE, self.game.map.width, self.game.map.height, RED)
+    #             if tile == "P":
+    #                 self.game.player = Player(self.game, col*TILESIZE, row*TILESIZE)
+    #
+    #     self.game.map.tilewidth
+    #     self.game.map.tileheight
+    #
+    #     Platform(self.game, 0, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+    #     Platform(self.game, WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, GREEN)
+    #     Platform(self.game, 2*WIDTH, HEIGHT*7/8, WIDTH, HEIGHT/8, BLUE)
+    #     pauseIMG = pg.transform.scale(self.game.pauseIMG, (30,30))
+    #     pauseIMGRect = pauseIMG.get_rect()
+    #     pauseIMGRect.center = (WIDTH*8/9, HEIGHT/12)
+    #     self.game.screen.blit(pauseIMG, pauseIMGRect)
 
     def level2(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.gameFolder,'map3.txt'), path.join(self.game.gameFolder,'Track4.bmp'), bitSize=1)
+        self.game.map = Map(path.join(self.game.mapFolder,'map3.txt'), path.join(self.game.mapFolder,'Track4.bmp'), bitSize=1)
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
         #
         for row, tiles in enumerate(self.game.map.data):
@@ -179,7 +183,7 @@ class sceneManager():
 
     def level3(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.gameFolder,'map2.txt'), path.join(self.game.gameFolder,'Track6.bmp'))
+        self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track6.bmp'))
         self.game.camera = Camera(self.game.map.width, self.game.map.height)
 
         for row, tiles in enumerate(self.game.map.data):
@@ -210,11 +214,11 @@ class sceneManager():
             # print(fillx, filly)
         self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
-
     def pause(self):
-        self.game.drawText("Pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
+        # self.game.drawText("Pause Menu", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf= self.game.pauseScreen, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*3/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Main Menu")
-        self.level1Button = Button(self.game, "level1", WIDTH*5/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Resume")
+        self.resumeButton = Button(self.game, "resume", WIDTH*5/8, HEIGHT*1/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Resume")
+        # self.game.paused = True
 
     def settingsMenu(self):
         self.game.drawText("Settings", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
@@ -294,12 +298,16 @@ class sceneManager():
 
             if button.clicked == True:
                 # print("tag",button.tag)
+                self.secondPrevScence = self.prevScence
+                self.prevScence = self.currentScene
                 self.currentScene = button.tag
-                if button.tag not in ('level1', 'level2', 'level3'):
+
+                print("2nd Prev: {}, Prev: {}, Current: {} ButtonTag: {}".format(self.secondPrevScence, self.prevScence, self.currentScene, button.tag))
+                if button.tag not in ('level1', 'level2', 'level3', 'pause', 'resume'):
                     self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
                     rect = self.image.get_rect()
                     self.game.screen.blit(self.image, rect)
-                else:
+                elif button.tag in ('level1', 'level2', 'level3'):#creation of a new level
                     for wall in self.game.walls:
                         wall.kill()
                     for platform in self.game.platforms:
@@ -316,6 +324,8 @@ class sceneManager():
                 if button.tag == "shop":
                     self.loadLevel('shop')
                 if button.tag == 'mainMenu':
+                    if self.game.paused:
+                        self.game.paused = False
                     self.loadLevel('mainMenu')
                 if button.tag == "settingsMenu":
                     self.loadLevel('settingsMenu')
@@ -331,6 +341,19 @@ class sceneManager():
                     self.loadLevel('level3')
                 if button.tag == 'pause':
                     self.loadLevel('pause')
+                if button.tag == 'resume':
+                    self.game.paused = False
+                    for button in self.game.buttons:
+                        button.kill()
+                    self.game.pauseScreenPrinted = False
+                    self.currentScene = self.prevScence
+
+                    # self.game.pauseScreen.blit(self.game.pauseScreenImage, self.game.pauseScreenImageRect)
+                    # self.game.pauseScreen.fill((123, 129, 140))
+                #     self.loadLevel('pause')
                 button.kill()
-        if self.currentScene not in ("level1", "level2", "level3"):
+        if self.currentScene  not in ("level1", "level2", "level3"):
             self.showPlayer = False
+            # print("showPlayer :", self.showPlayer)
+        else:
+            self.showPlayer = True
