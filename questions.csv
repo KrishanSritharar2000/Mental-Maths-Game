@@ -1,6 +1,12 @@
 questionID,questions,correctAnswer,wrongAnswer1,wrongAnswer2,wrongAnswer3,wrongAnswer4,difficulty,level,isMajor
 1,2 + 2,4,3,2,6,5,easy,1,FALSE
 2,5 + 7,12,13,25,10,15,easy,1,FALSE
-3,15 + 17,32,30,42,23,34,easy,0,TRUE
+3,15 + 17,32,30,42,23,34,easy,1,FALSE
 4,25 ÷ 5,5,1,7,11,4,easy,1,FALSE
 5,4 x 3,12,11,15,17,8,easy,1,FALSE
+6,14 x 4,56,52,48,75,55,medium,1,FALSE
+7,98 - 7,91,89,87,93,95,easy,1,FALSE
+8,15 + 17,32,30,42,23,34,easy,1,FALSE
+9,49 ÷ 7,7,6,11,40,9,easy,1,FALSE
+10,21 + 9,30,27,28,35,42,easy,1,FALSE
+11,Find dy/dx when y=3x^2 +7x,6x+7,4x+9,5x^2+7x+9,3x,17,medium,1,FALSE

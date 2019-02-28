@@ -17,6 +17,10 @@ TILESIZE_TRACK = 32
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
+TIME_FOR_EASY_Q = 10
+TIME_FOR_MEDIUM_Q = 15
+TIME_FOR_HARD_Q = 20
+
 
 MENU_SCREENS = ["settingsMenu",
                 "mainMenu",
@@ -26,7 +30,8 @@ MENU_SCREENS = ["settingsMenu",
                 "shop",
                 "startScreen",
                 "gameOverScreen",
-                "pause"]
+                "pause",
+                "levelComplete"]
 
 #Player properties
 PLAYER_ACC = 1.4
@@ -45,6 +50,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
 LIGHT_RED = (210, 0, 0)
 LIGHT_GREEN = (0, 150, 0)
 LIGHT_BLUE = (0,0,210)

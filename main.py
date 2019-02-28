@@ -1,6 +1,7 @@
 import pygame as pg
 from os import path
 import random
+import csv
 from settings import *
 from sprites import *
 from management import *
@@ -23,6 +24,7 @@ class Game:
         self.imgFolder = path.join(self.gameFolder, 'img')
         self.mapFolder = path.join(self.gameFolder, 'map')
         self.interfaceFont = path.join(self.imgFolder, 'Future.ttf')
+        self.interfaceFont2 = path.join(self.imgFolder, 'FutureNarrow.ttf')
         self.buttonFont = path.join(self.imgFolder, 'PixelSquare.ttf')
         self.menuButtonSolid = pg.image.load(path.join(self.imgFolder, 'blue_button01.png')).convert_alpha()
         self.menuButtonHighlight = pg.image.load(path.join(self.imgFolder, 'green_button01.png')).convert_alpha()
@@ -36,6 +38,7 @@ class Game:
         self.menuImages["leaderboard"] =      pg.image.load(path.join(self.imgFolder, 'Grey_violet_background.jpg')).convert_alpha()
         self.menuImages["shop"] =  pg.image.load(path.join(self.imgFolder, 'Grey_orange_background.jpg')).convert_alpha()
         self.menuImages["pause"] =  pg.image.load(path.join(self.imgFolder, 'Grey_red_background.jpg')).convert_alpha()
+        self.menuImages["levelComplete"] =  pg.image.load(path.join(self.imgFolder, 'blue_background.jpg')).convert_alpha()
 
         self.pauseScreen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.pauseScreenImage = pg.transform.scale(self.menuImages['pause'], (WIDTH, HEIGHT))
@@ -47,26 +50,66 @@ class Game:
 
         self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
 
-    def loadQuestions():
-        questionFile = path.join(self.game_folder, 'questions.csv')
-        with open(questions, 'r') as questionFile:
+        self.loadQuestions()
+        self.questionSurface = pg.Surface(self.screen.get_size()).convert_alpha()
+
+        self.loadstatsData()
+
+    def loadstatsData(self):
+        statsFile = open("stats.pickle", "rb")
+        self.statsData = pickle.load(statsFile)
+        statsFile.close()
+        self.coinAmount = self.statsData["coinTotal"]
+        self.gamesPlayed = self.statsData["gamesPlayed"]
+        self.questAnswered = self.statsData["questAnswered"]
+        self.correctAnswerQuesEasy = self.statsData["correctAnswerQuesEasy"]
+        self.correctAnswerQuesMed = self.statsData["correctAnswerQuesMed"]
+        self.correctAnswerQuesHard = self.statsData["correctAnswerQuesHard"]
+        self.vehicleUnlock = self.statsData["vehicleUnlock"]
+        self.coinSpent = self.statsData["coinSpent"]
+        self.totalScore = self.statsData["totalScore"]
+
+        print("Loaded stats fle")
+        print("statsDict: ", self.statsData)
+        print("coinAmount", self.coinAmount)
+        print("coinAmount 0")
+
+    def updateStatsData(self):
+        statsFile = open("stats.pickle", "wb")
+        self.statsData["coinTotal"] = self.coinAmount
+        self.statsData["gamesPlayed"] = self.gamesPlayed
+        self.statsData["questAnswered"] = self.questAnswered
+        self.statsData["correctAnswerQuesEasy"] = self.correctAnswerQuesEasy
+        self.statsData["correctAnswerQuesMed"] = self.correctAnswerQuesMed
+        self.statsData["correctAnswerQuesHard"] = self.correctAnswerQuesHard
+        self.statsData["vehicleUnlock"] = self.vehicleUnlock
+        self.statsData["coinSpent"] = self.coinSpent
+        self.statsData["totalScore"] = self.totalScore
+        pickle.dump(self.statsData, statsFile)
+        statsFile.close()
+
+    def loadQuestions(self):
+        questionCSV = path.join(self.gameFolder, 'questions.csv')
+        with open(questionCSV, 'r') as questionFile:
             reader = csv.reader(questionFile)
             next(questionFile)
-            self.questionData=[]
+            self.questionData = []
+            self.questionID = []
             for line in reader:
-                # line = [QuestionID, Questtion, CAns, WAns1, Wans2, Wans3, Wans4, Diff, level, isMaj]
                 temp = []
                 questionID = int(line[0])
                 question = str(line[1])
-                cAns = int(line[2])
-                wAns1, wAns2, wAns3, wAns4 = int(line[3]),int(line[4]),int(line[5]),int(line[6])
+                cAns = (line[2])
+                wAns1, wAns2, wAns3, wAns4 = (line[3]),(line[4]),(line[5]),(line[6])
                 diff = str(line[7])
                 level = int(line[8])
                 isMaj = str(line[9])
+                self.questionID.append(questionID)
                 temp.extend((questionID,question,cAns,wAns1,wAns2,wAns3,wAns4,diff,level,isMaj))
-                self.questionData.append(temp)#all the data is now held in a 2D array
-
-
+                self.questionData.append(temp)
+        questionFile.close()
+        print(self.questionData)
+                # line = [QuestionID, Questtion, CAns, WAns1, Wans2, Wans3, Wans4, Diff, level, isMaj]
 
     def drawText(self, text, size, colour, x, y, surf=None, align=None, fontName=None):
         if surf == None:
@@ -91,6 +134,10 @@ class Game:
         self.platforms = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.rectangles = pg.sprite.Group()    #This is the area under the track
+        self.questionItems = pg.sprite.Group()
+        self.endWalls = pg.sprite.Group()
+        self.coins = pg.sprite.Group()
+        self.userInputBox = pg.sprite.Group()
         self.map = None
         self.camera = None
         #Map(path.join(self.gameFolder,'map2.txt', 'LevelTest2'))
@@ -99,6 +146,16 @@ class Game:
         self.player = None
         self.paused = False
         self.pauseScreenPrinted = False
+        self.askQuestion = False
+        self.questionScreenPrinted = False
+        # with open(path.join(self.gameFolder, 'highscore'), 'r') as highScore:
+        #     try:
+        #         self.highscore = int(f.read())
+        #     except:
+        #         self.highscore = 0
+        self.score = 0
+        self.delay = False
+        self.lastCountdownTime = 0
         self.prevRotate = 0
         self.sceneMan.loadLevel('startScreen')
         self.run()
@@ -147,11 +204,35 @@ class Game:
                         # self.player.rect.center = self.player.pos
                         self.prevRotate = round(self.rotate,2)
 
+                hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True)
+                if hitQuestion:
+                    self.askQuestion = True
+                    self.paused = True
+
+                hitCoin =  pg.sprite.spritecollide(self.player, self.coins, True)
+                if hitCoin:
+                    print("A Coin has been hit")
+                    self.coinAmount += 1
+                    self.sceneMan.coinCollected += 1
+                    print("Total Coins: {}".format(self.coinAmount))
+
+                hitLevelEnd = pg.sprite.spritecollide(self.player, self.endWalls, True)
+                if hitLevelEnd:
+                    self.totalScore += self.score
+                    print("Hit Wall")
+                    print("Total Score", self.totalScore)
+                    self.sceneMan.secondPrevScence = self.sceneMan.prevScence
+                    self.sceneMan.prevScence = self.sceneMan.currentScene
+                    self.sceneMan.currentScene = "levelComplete"
+                    self.sceneMan.showPlayer = False
+                    self.sceneMan.loadLevel("levelComplete")
+
     def events(self):
         #Game loop - Events1
         for event in pg.event.get():
             #check for closing the window
             if event.type == pg.QUIT:
+                self.updateStatsData()
                 if self.playing:
                     self.playing = False
                     self.running = False
@@ -164,21 +245,145 @@ class Game:
                         for button in self.buttons:
                             button.kill()
                     self.pauseScreenPrinted = False
+                if event.key == pg.K_q:
+                    print("Q button pressed")
+                    print("self.askQuestion is: ", self.askQuestion)
+                    self.askQuestion = not self.askQuestion
+                    if self.askQuestion:
+                        self.paused = True
+                    else:
+                        self.paused = False
+                        self.questionScreenPrinted = False
+
+    def getQuestion(self):
+        self.answerCorrect = False
+        self.answerClicked = False
+        self.selectedAns = None
+        self.startTime = pg.time.get_ticks()
+
+        questionNumber = random.choice(self.questionID)
+        wrongAns = [3,4,5,6]
+        chosenAns = [2,]
+        print(self.questionID)
+        print(questionNumber)
+        self.questionID.remove(questionNumber)
+        print(self.questionID)
+        self.questionNumberIndex = questionNumber - 1
+        correctAns = self.questionData[self.questionNumberIndex][2]
+        print(correctAns)
+
+        for i in range(3):
+            randomIndex = random.choice(wrongAns)
+            wrongAns.remove(randomIndex)
+            chosenAns.append(randomIndex)
+        random.shuffle(chosenAns)
+
+        self.drawText(str(self.questionData[self.questionNumberIndex][1]), 30, WHITE, WIDTH/2, HEIGHT*2/9, surf=self.questionSurface)
+        print("text to be printed {}".format(str(self.questionData[self.questionNumberIndex][1])))
+
+        answer1 = Button(self, str(chosenAns[0]), WIDTH/3, HEIGHT/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, str(self.questionData[self.questionNumberIndex][chosenAns[0]]))
+        answer2 = Button(self, str(chosenAns[1]), WIDTH*2/3, HEIGHT/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, str(self.questionData[self.questionNumberIndex][chosenAns[1]]))
+        answer3 = Button(self, str(chosenAns[2]), WIDTH/3, HEIGHT*2/3, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, str(self.questionData[self.questionNumberIndex][chosenAns[2]]))
+        answer4 = Button(self, str(chosenAns[3]), WIDTH*2/3, HEIGHT*2/3, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, str(self.questionData[self.questionNumberIndex][chosenAns[3]]))
+
+    def getTimeAllowed(self):
+        if self.questionData[self.questionNumberIndex][7] == "easy":
+            self.questionDiff = "easy"
+            self.timeAllowed = TIME_FOR_EASY_Q
+        if self.questionData[self.questionNumberIndex][7] == "medium":
+            self.questionDiff = "medium"
+            self.timeAllowed = TIME_FOR_MEDIUM_Q
+        if self.questionData[self.questionNumberIndex][7] == "hard":
+            self.questionDiff = "hard"
+            self.timeAllowed = TIME_FOR_HARD_Q
+        self.timeRemaining = self.timeAllowed
+        self.timeOut = False
+
+    def calculateScore(self):
+        self.timeTaken = int(round((self.endTime - self.startTime) / 1000, 0))
+
+        print("The time take to answer that question was: ", self.timeTaken)
+
+        multiplier = random.choice([2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,7,7,7,7,8,8,8,8,9,9,10,15])
+
+        scoreIncrease = int(round((self.timeAllowed - self.timeTaken) * multiplier, 0))
+        self.score += scoreIncrease
+        print(self.score)
+
+    def countdownTimer(self):
+        now = pg.time.get_ticks()
+        if now - self.lastCountdownTime > 1000 and self.timeRemaining >= 0:
+            self.questionSurface.fill(BLACK, (WIDTH*7/8-80, HEIGHT/8-25, 160, 50))
+            self.lastCountdownTime = now
+            print("Time Remaining: {}".format(self.timeRemaining))
+            self.drawText("Time Remaining: {}".format(self.timeRemaining), 20, BLUE, WIDTH*7/8, HEIGHT/8, surf=self.questionSurface)
+            self.timeRemaining -= 1
+        if self.timeRemaining == -1:
+            self.timeOut = True
+            self.answerClicked = True
 
 
-                    # self.currentScene = self.sceneManPrevScence
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         if self.paused:
-            if self.pauseScreenPrinted == False:
-                self.sceneMan.loadLevel('pause')
-                self.pauseScreenPrinted = True
-            for button in self.buttons:
-                button.draw(self.pauseScreen)
-            self.screen.blit(self.pauseScreen, self.pauseScreen.get_rect())
+            if self.askQuestion:
+                if self.questionScreenPrinted == False:
+                    self.questionSurface.fill(0)
+                    self.drawText("Question asking", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf=self.questionSurface, fontName=self.interfaceFont)
+                    self.getQuestion()
+                    self.getTimeAllowed()
+                    print("The question: {} The correct answer: {}".format(self.questionData[self.questionNumberIndex][1], self.questionData[self.questionNumberIndex][2]))
+                    self.questionScreenPrinted = True
 
-            #self.screen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
+                for button in self.buttons:
+                    button.draw(self.questionSurface)
+
+                if self.answerClicked:
+                    self.questAnswered += 1
+                    self.endTime = pg.time.get_ticks()
+
+                    if self.answerCorrect:
+                        if self.questionDiff == "easy":
+                            self.correctAnswerQuesEasy += 1
+                        elif self.questionDiff == "medium":
+                            self.correctAnswerQuesMed += 1
+                        elif self.questionDiff == "hard":
+                            self.correctAnswerQuesHard += 1
+                        print("CORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
+                        self.calculateScore()
+                        self.drawText("Correct Answer", 35, GREEN, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
+                    elif self.timeOut:
+                        self.drawText("Time Out", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
+                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, WHITE, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
+                        print("Time out, INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
+                    else:
+                        print("INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
+                        self.drawText("Incorrect Answer", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
+                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, WHITE, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
+
+                    self.screen.blit(self.questionSurface, self.questionSurface.get_rect())
+                    pg.display.flip()
+                    pg.time.delay(1500)
+
+                    self.askQuestion = False
+                    self.questionScreenPrinted = False
+                    self.paused = False
+
+                else:
+                    self.countdownTimer()
+
+                self.screen.blit(self.questionSurface, self.questionSurface.get_rect())
+
+            else:
+                if self.pauseScreenPrinted == False:
+                    self.sceneMan.loadLevel('pause')
+                    self.pauseScreenPrinted = True
+                for button in self.buttons:
+                    button.draw(self.pauseScreen)
+                self.screen.blit(self.pauseScreen, self.pauseScreen.get_rect())
+
+                #self.screen.blit(self.pauseScreenImage, self.pauseScreenImageRect)
 
         else:
             for button in self.buttons:
@@ -186,26 +391,21 @@ class Game:
             if self.sceneMan.currentScene not in MENU_SCREENS:
                 for sprite in self.allSprites:
                     self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
+                self.drawText("Score: " + str(self.score), 22, WHITE, WIDTH-100, 15)
+                self.drawText("Coin: " + str(self.coinAmount), 22, WHITE, 100, 15)
         pg.display.flip()
-
-
-
+        # if self.delay:
+        #     pg.time.delay(1500)
+        #     self.delay = False
         #used for buffered frames- ALWAYS DO THIS LAST AFTER DRAWING EVERYTHING
 
-
-
-
         # print('paused', self.paused)
-        print("self.buttons", self.buttons, self.paused, self.sceneMan.currentScene )
-        print("2nd Prev: {}, Prev:{}, Current: {} Pause: {}".format(self.sceneMan.secondPrevScence, self.sceneMan.prevScence, self.sceneMan.currentScene, self.paused))
-
-        # for button in self.buttons:
-        #     print(button.tag)
-
+        # print("self.buttons", self.buttons, self.paused, self.sceneMan.currentScene )
+        # print("2nd Prev: {}, Prev:{}, Current: {} Pause: {}".format(self.sceneMan.secondPrevScence, self.sceneMan.prevScence, self.sceneMan.currentScene, self.paused))
 
 g = Game()
 
 while g.running:
     g.new()
-
+print("End")
 pg.quit()

@@ -66,7 +66,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         if self.game.sceneMan.showPlayer == True:
-            print("Moving Player")
+            # print("Moving Player")
             self.game.screen.fill(BLACK)
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
@@ -126,11 +126,17 @@ class Platform(pg.sprite.Sprite):
             self.rect.x, self.rect.y = x, y
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y, colour):
-        self.groups = game.allSprites, game.walls
+    def __init__(self, game, x, y, colour, altColour=None, mode=None):
+        if mode == "end":
+            self.groups = game.allSprites, game.endWalls
+        else:
+            self.groups = game.allSprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(colour)
+        if mode != "end":
+            self.image.fill(colour)
+        else:
+            self.image.fill(altColour)
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
 
@@ -164,6 +170,70 @@ class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILES
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x, y
 
+class Question(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.allSprites, game.questionItems
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((50, 50))
+        self.image.fill(WHITE)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+class Coin(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.allSprites, game.coins
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = pg.Surface((30,30))
+        self.image.fill(ORANGE)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+class InputBox(pg.sprite.Sprite):
+    def __init__(self, game, x, y, width, height, text='', fontName=None):
+        self.groups = self.allSprites, self.userInputBox
+        pg.sprite.Sprite.__init(self, self.groups)
+        self.game = game
+        self.rect = pg.Rect(x, y, width, height)
+        self.colour = RED
+        self.text = text
+        if fontName == None:
+            font = pg.font.SysFont('arial', size)
+        else:
+            font = pg.font.Font(fontName, size)
+        self.textSurf = font.render(text, True, self.colour)
+        self.boxActive = False
+
+    def inputKeys(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.boxActive = not self.boxActive
+            else:
+                self.boxActive = False
+
+            if self.boxActive:
+                self.colour = GREEN
+            else:
+                self.colour = RED
+        if event.type == pg.KEYDOWN:
+            if self.boxActive:
+                if event.key == pg.K_RETURN:
+                    print("This is the text: {}".format(self.text))
+                    self.text = ''
+                elif event.key == pg.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+
+
+                self.textSurf = font.render(self.text, True, self.colour)
+
+    def update(self):
+        newWidth = max(150, self.textSurf.get_width()+10)
+        self.rect.width = newWidth
+
+    def draw(self):
+        self.game.screen.blit(self.textSurf, (self.rect.x+5, self.rect.y+5))
+        pg.draw.rect(screen, self.colour, self.rect, 2)
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):

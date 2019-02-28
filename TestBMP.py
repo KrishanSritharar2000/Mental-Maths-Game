@@ -102,7 +102,7 @@ import datetime
 
 
 start = datetime.datetime.now()
-image = Image.open('Track6.bmp')
+image = Image.open('BitTest2.bmp')
 size = width, height = image.size
 
 ##print(image.getpixel((570,35)))
@@ -127,8 +127,8 @@ for col in range(sizeH):
 end1 = datetime.datetime.now()
 print("Time taken {}".format(end1 - start))
 
-##for i in range(len(mapData)):
-##    print(mapData[i])
-print(drawn)
+for i in range(len(mapData)):
+    print(mapData[i])
+##print(drawn)
 
 end2 = datetime.datetime.now()
