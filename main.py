@@ -48,8 +48,10 @@ class Game:
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
 
-        self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
-
+        # self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
+        self.playerBikeImage = pg.image.load(path.join(self.imgFolder, 'car.png')).convert_alpha()#car image is laoded in
+        self.carImgSize = self.playerBikeImage.get_size()
+        self.playerBikeImage = pg.transform.scale(self.playerBikeImage, (int(round(self.carImgSize[0]/8,0)), int(round(self.carImgSize[1]/8,0))))#image scaled down
         self.loadQuestions()
         self.questionSurface = pg.Surface(self.screen.get_size()).convert_alpha()
 
@@ -169,14 +171,14 @@ class Game:
             self.update()
             self.draw()
 
-    def rot_center(self, image, angle):
-        """rotate an image while keeping its center and size"""
+    def rotateCenter(self, image, angle):
         orig_rect = image.get_rect()
-        rot_image = pg.transform.rotate(image, angle)
-        rot_rect = orig_rect.copy()
-        rot_rect.center = rot_image.get_rect().center
-        rot_image = rot_image.subsurface(rot_rect).copy()
-        return rot_image
+        rotatedImage = pg.transform.rotate(image, angle)#rotates iamge by a particuar angle
+        rotatedImageRect = orig_rect.copy()#keeps the original iamge
+        rotatedImageRect.center = rotatedImage.get_rect().center#re-ceneters the transformed image
+        #makes a new surface using the transformed image
+        rotatedImage = rotatedImage.subsurface(rotatedImageRect).copy()
+        return rotatedImage#returns the rotated image
 
     def update(self):
         #Game loop - Update
@@ -185,6 +187,7 @@ class Game:
         if not self.paused:
             # print("Doing Update function")
             self.allSprites.update()#Updates all of the sprties at once
+            self.userInputBox.update()
             if self.sceneMan.currentScene not in MENU_SCREENS:
                 self.camera.update(self.player)
 
@@ -195,14 +198,14 @@ class Game:
 
                     self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
                     self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
-                    # print(self.player.pos)
-                    # print(self.rotate)
                     if self.prevRotate != round(self.rotate,2):
-                        self.player.image = self.rot_center(self.player.image, self.rotate)
-                        # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
-                        # self.player.rect = self.player.image.get_rect()
-                        # self.player.rect.center = self.player.pos
+                        # self.player.image = self.rotateCenter(self.player.image, self.rotate)
                         self.prevRotate = round(self.rotate,2)
+
+
+                        self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+                        self.player.rect = self.player.image.get_rect()
+                        self.player.rect.center = self.player.pos
 
                 hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True)
                 if hitQuestion:
@@ -236,6 +239,10 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.running = False
+
+            for box in self.userInputBox:
+                box.inputKeys(event)
+
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
@@ -388,6 +395,8 @@ class Game:
         else:
             for button in self.buttons:
                 button.draw(self.screen)
+            for box in self.userInputBox:
+                box.draw(self.screen)
             if self.sceneMan.currentScene not in MENU_SCREENS:
                 for sprite in self.allSprites:
                     self.screen.blit(sprite.image, self.camera.applyOffset(sprite))

@@ -14,29 +14,38 @@ def statistics():
     pickle.dump(statsDict, exportDict)
     exportDict.close()
 
-def level1():
-    level1Dict = {1:[0, "name","time"], 2:[0, "", ""], 3:[0, "", ""], 4:[0, "", ""], 5:[0, "", ""], 6:[0, "", ""], 7:[0, "", ""], \
-                  8:[0, "", ""], 9:[0, "", ""], 10:[0, "", ""], 11:[0, "", ""], 12:[0, "", ""]}
-    exportDict = open("level1.pickle", "wb")
-    pickle.dump(level1Dict, exportDict)
+def createScoreDict(level):
+    levelDict = {0:[100, "name100","date100"], 1:[90, "test90", "date90"], 2:[80, "name80", "date80"], 3:[70, "test70", "date70"], \
+                  4:[60, "name60", "date60"], 5:[50, "test50", "date50"], 6:[40, "name40", "date40"],   7:[30, "test30", "date30"], \
+                  8:[20, "name20", "date20"], 9:[10, "test10", "date10"]}
+    fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
+    fileNameList.insert(5, str(level))
+    pickleFile = "".join(fileNameList)
+    exportDict = open(pickleFile, "wb")
+    pickle.dump(levelDict, exportDict)
     exportDict.close()
 
-def loadLevel1():
-    exportDict = open("level1.pickle", "rb")
+
+def loadLevel(level):
+    fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
+    fileNameList.insert(5, str(level))
+    pickleFile = "".join(fileNameList)
+    exportDict = open(pickleFile, "rb")
     dict = pickle.load(exportDict)
     print(dict)
-    print(dict[1][0])
-    print(dict[1][1])
-    print(dict[1][2])
+    print(dict[0][0])
+    print(dict[0][1])
+    print(dict[0][2])
 
 def loadHighscore(level):
-    fileNameList = ["l","e","v","e","l","-","p","i","c","k","l","e"]
+    fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
     fileNameList.insert(5, str(level))
     fileName = "".join(fileNameList)
     print(fileName)
-loadHighscore(2)
-loadHighscore(1)
+# loadHighscore(2)
+# loadHighscore(1)
 
-# level1()
-# loadLevel1()
+createScoreDict(1)
+loadLevel(1)
+
 # statistics()

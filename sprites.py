@@ -10,9 +10,9 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.width = 30
         self.height = 30
-        self.image = pg.Surface((self.width, self.height))
-        self.image.fill(YELLOW)
-        # self.image = self.game.playerBikeImage.copy()
+        # self.image = pg.Surface((self.width, self.height))
+        # self.image.fill(YELLOW)
+        self.image = self.game.playerBikeImage.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.pos = vec(x,y) * TILESIZE
@@ -189,18 +189,18 @@ class Coin(pg.sprite.Sprite):
         self.rect.center = (x, y)
 
 class InputBox(pg.sprite.Sprite):
-    def __init__(self, game, x, y, width, height, text='', fontName=None):
-        self.groups = self.allSprites, self.userInputBox
-        pg.sprite.Sprite.__init(self, self.groups)
+    def __init__(self, game, x, y, width, height, text='', textSize=32, fontName=None):
+        self.groups = game.allSprites, game.userInputBox
+        pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.rect = pg.Rect(x, y, width, height)
         self.colour = RED
         self.text = text
         if fontName == None:
-            font = pg.font.SysFont('arial', size)
+            self.font = pg.font.SysFont(None, textSize)
         else:
-            font = pg.font.Font(fontName, size)
-        self.textSurf = font.render(text, True, self.colour)
+            self.font = pg.font.Font(fontName, textSize)
+        self.textSurf = self.font.render(text, True, self.colour)
         self.boxActive = False
 
     def inputKeys(self, event):
@@ -209,7 +209,6 @@ class InputBox(pg.sprite.Sprite):
                 self.boxActive = not self.boxActive
             else:
                 self.boxActive = False
-
             if self.boxActive:
                 self.colour = GREEN
             else:
@@ -218,22 +217,24 @@ class InputBox(pg.sprite.Sprite):
             if self.boxActive:
                 if event.key == pg.K_RETURN:
                     print("This is the text: {}".format(self.text))
+                    if self.game.sceneMan.currentScene == 'levelComplete':
+                        self.game.sceneMan.updateHighscore(self.game.sceneMan.nextLevelTagNumber-1, self.game.score)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-
-
-                self.textSurf = font.render(self.text, True, self.colour)
+                print(self.text)
+                self.game.screen.fill(WHITE, (WIDTH*5/8, HEIGHT*7/11, self.rect.width+5, 32))
+                self.textSurf = self.font.render(self.text, True, self.colour)
 
     def update(self):
         newWidth = max(150, self.textSurf.get_width()+10)
         self.rect.width = newWidth
 
-    def draw(self):
-        self.game.screen.blit(self.textSurf, (self.rect.x+5, self.rect.y+5))
-        pg.draw.rect(screen, self.colour, self.rect, 2)
+    def draw(self, surf):
+        surf.blit(self.textSurf, (self.rect.x+5, self.rect.y+5))
+        pg.draw.rect(surf, self.colour, self.rect, 2)
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):
