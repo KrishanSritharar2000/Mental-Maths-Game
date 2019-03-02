@@ -45,7 +45,7 @@ def loadHighscore(level):
 # loadHighscore(2)
 # loadHighscore(1)
 
-createScoreDict(1)
+createScoreDict(2)
 loadLevel(1)
 
 # statistics()

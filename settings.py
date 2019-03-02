@@ -33,6 +33,17 @@ MENU_SCREENS = ["settingsMenu",
                 "pause",
                 "levelComplete"]
 
+LEVEL_SCREENS = ["level1",
+                "level2",
+                "level3",
+                "level4",
+                "level5",
+                "level6",
+                "level7",
+                "level8",
+                "minigame"]
+
+
 #Player properties
 PLAYER_ACC = 1.4
 BRAKE_ACC = 0.4

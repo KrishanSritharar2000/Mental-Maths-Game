@@ -346,7 +346,7 @@ class sceneManager():
             self.scoreName = "N/A"
 
         currentDate = datetime.datetime.now()
-        self.scoreDate = currentDate.strftime("%Y-%m-%d")
+        self.scoreDate = currentDate.strftime("%d-%m-%Y")
 
 
         index = 11
@@ -417,9 +417,22 @@ class sceneManager():
         # self.game.paused = True
 
     def settingsMenu(self):
+        self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
+        rect = self.image.get_rect()
+        self.game.screen.blit(self.image, rect)
         self.game.drawText("Settings", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/9, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "View Start Screen")
+
+        self.game.drawText("Question Difficulty: {}".format(self.game.settingsQuestionDiff.capitalize()), 18, \
+                            WHITE, WIDTH*11/16, HEIGHT/4, fontName=self.game.interfaceFont2)
+
+        self.easyButton = Button(self.game, "easy", WIDTH*7/10, HEIGHT*4/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Easy")
+        self.mediumButton = Button(self.game, "medium", WIDTH*7/10, HEIGHT*5/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Medium")
+        self.hardButton = Button(self.game, "hard", WIDTH*7/10, HEIGHT*6/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Hard")
+
+
+        print("this is the question dificuly: ", self.game.settingsQuestionDiff)
 
     def levelSelect(self):
         self.game.drawText("Select Level", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
@@ -474,37 +487,37 @@ class sceneManager():
         self.game.screen.blit(self.image, rect)
         self.game.drawText("Leader Board Tables", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
-        self.level1Score = Button(self.game, "level1Score", WIDTH/5, HEIGHT*3/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 1", textSize=None)
-        self.level2Score = Button(self.game, "level2Score", WIDTH/5, HEIGHT*4/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 2", textSize=None)
-        self.level3Score = Button(self.game, "level3Score", WIDTH/5, HEIGHT*5/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 3", textSize=None)
-        self.level4Score = Button(self.game, "level4Score", WIDTH/5, HEIGHT*6/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 4", textSize=None)
-        self.level5Score = Button(self.game, "level5Score", WIDTH/5, HEIGHT*7/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 5", textSize=None)
-        self.level6Score = Button(self.game, "level6Score", WIDTH/5, HEIGHT*8/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 6", textSize=None)
-        self.level7Score = Button(self.game, "level7Score", WIDTH/5, HEIGHT*9/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 7", textSize=None)
-        self.level8Score = Button(self.game, "level8Score", WIDTH/5, HEIGHT*10/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 8", textSize=None)
-        self.level0Score = Button(self.game, "level0Score", WIDTH/5, HEIGHT*11/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Minigame", textSize=None)
+        self.level1Score = Button(self.game, "level1Score", WIDTH/5, HEIGHT*3/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 1")
+        self.level2Score = Button(self.game, "level2Score", WIDTH/5, HEIGHT*4/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 2")
+        self.level3Score = Button(self.game, "level3Score", WIDTH/5, HEIGHT*5/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 3")
+        self.level4Score = Button(self.game, "level4Score", WIDTH/5, HEIGHT*6/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 4")
+
+        self.level5Score = Button(self.game, "level5Score", WIDTH/5, HEIGHT*7/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 5")
+        self.level6Score = Button(self.game, "level6Score", WIDTH/5, HEIGHT*8/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 6")
+        self.level7Score = Button(self.game, "level7Score", WIDTH/5, HEIGHT*9/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 7")
+        self.level8Score = Button(self.game, "level8Score", WIDTH/5, HEIGHT*10/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Level 8")
+        self.level0Score = Button(self.game, "level0Score", WIDTH/5, HEIGHT*11/12+15, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Minigame")
         fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
         levelNumber = self.leaderboardLoadLevel[:-5][-1]
-        fileNameList.insert(5, str(levelNumber))#remove the Score and look at last number
+        fileNameList.insert(5, str(levelNumber))
         self.leaderboardLevelFileName = "".join(fileNameList)
         scoreFile = open(self.leaderboardLevelFileName, "rb")
         self.leaderboardDict = pickle.load(scoreFile)
         scoreFile.close()
         print("leaderboardDict: ", self.leaderboardDict)
-        self.game.drawText("Level {}".format(str(levelNumber)), 25, WHITE, WIDTH*21/32, HEIGHT*9/32, fontName=self.game.interfaceFont2)
+        if levelNumber == 0:
+            self.game.drawText("Mini Game", 25, WHITE, WIDTH*21/32, HEIGHT*9/32, fontName=self.game.interfaceFont2)
+        else:
+            self.game.drawText("Level {}".format(str(levelNumber)), 25, WHITE, WIDTH*21/32, HEIGHT*9/32, fontName=self.game.interfaceFont2)
+
         self.game.drawText("Name", 22, WHITE, WIDTH*7/16, HEIGHT*3/8, fontName=self.game.interfaceFont2)
         self.game.drawText("Score", 22, WHITE, WIDTH*21/32, HEIGHT*3/8, fontName=self.game.interfaceFont2)
         self.game.drawText("Date", 22, WHITE, WIDTH*7/8, HEIGHT*3/8, fontName=self.game.interfaceFont2)
-        # self.game.drawText("Previous Score: {}".format(self.previousScore), 20, WHITE, WIDTH*5/16, HEIGHT*9/32, fontName=self.game.interfaceFont2)
-        # self.game.drawText("Highscore: {}".format(str(self.leaderboardDict[0][0])), 20, WHITE, WIDTH*6/8, HEIGHT*9/32, fontName=self.game.interfaceFont2)
 
         for i in range(10):
             self.game.drawText(str(self.leaderboardDict[i][0]), 18, WHITE, WIDTH*21/32, HEIGHT*(8+i)/18, fontName=self.game.interfaceFont2)
             self.game.drawText(str(self.leaderboardDict[i][1]), 18, WHITE, WIDTH*7/16, HEIGHT*(8+i)/18, fontName=self.game.interfaceFont2)
             self.game.drawText(str(self.leaderboardDict[i][2]), 18, WHITE, WIDTH*7/8, HEIGHT*(8+i)/18, fontName=self.game.interfaceFont2)
-
-
-
 
     def shop(self):
         self.game.drawText("Spend your coins in the shop", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
@@ -568,97 +581,113 @@ class sceneManager():
             if button.clicked == True:
                 print('currentScene', self.currentScene)
                 print('button.tag', button.tag)
+
                 if self.currentScene != "leaderboard" or (self.currentScene == "leaderboard" and button.tag == "mainMenu"):
-                    if self.currentScene == "levelComplete":
-                        if not self.updatedHighscore:
-                            self.updateHighscore(self.nextLevelTagNumber-1, self.game.score)
-                    if button.tag not in ("2", "3", "4", "5", "6"):
-                        self.secondPrevScence = self.prevScence
-                        self.prevScence = self.currentScene
-                        self.currentScene = button.tag
+                    if self.currentScene != "settingsMenu" or (self.currentScene == "settingsMenu" and button.tag == "mainMenu") \
+                        or (self.currentScene == "settingsMenu" and button.tag == "startScreen"):
 
-                        print("2nd Prev: {}, Prev: {}, Current: {} ButtonTag: {}".format(self.secondPrevScence, self.prevScence, self.currentScene, button.tag))
-                        if button.tag not in ('level1', 'level2', 'level3','level4', 'pause', 'resume', 'levelComplete'):
-                            self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
-                            rect = self.image.get_rect()
-                            self.game.screen.blit(self.image, rect)
-                            for inputBox in self.game.userInputBox:
-                                inputBox.kill()
-                        elif button.tag in ('level1', 'level2', 'level3', "level4"):#creation of a new level
-                            for wall in self.game.walls:
-                                wall.kill()
-                            for endWall in self.game.endWalls:
-                                endWall.kill()
-                            for platform in self.game.platforms:
-                                platform.kill()
-                            for rectangle in self.game.rectangles:
-                                rectangle.kill()
-                            for questions in self.game.questionItems:
-                                questions.kill()
-                            if self.game.player != None:
-                                self.game.player.kill()
+                        if self.currentScene == "levelComplete":
+                            if not self.updatedHighscore:
+                                self.updateHighscore(self.nextLevelTagNumber-1, self.game.score)
+                        if button.tag not in ("2", "3", "4", "5", "6"):
+                            self.secondPrevScence = self.prevScence
+                            self.prevScence = self.currentScene
+                            self.currentScene = button.tag
 
-                            self.loadHighscore(int(self.currentScene[-1]))
+                            print("2nd Prev: {}, Prev: {}, Current: {} ButtonTag: {}".format(self.secondPrevScence, self.prevScence, self.currentScene, button.tag))
+                            if button.tag not in ('level1', 'level2', 'level3','level4', 'pause', 'resume', 'levelComplete'):
+                                self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
+                                rect = self.image.get_rect()
+                                self.game.screen.blit(self.image, rect)
+                                for inputBox in self.game.userInputBox:
+                                    inputBox.kill()
+                            elif button.tag in (LEVEL_SCREENS):#creation of a new level
+                                for wall in self.game.walls:
+                                    wall.kill()
+                                for endWall in self.game.endWalls:
+                                    endWall.kill()
+                                for platform in self.game.platforms:
+                                    platform.kill()
+                                for rectangle in self.game.rectangles:
+                                    rectangle.kill()
+                                for questions in self.game.questionItems:
+                                    questions.kill()
+                                if self.game.player != None:
+                                    self.game.player.kill()
 
-                            self.game.score = 0
-                            self.coinCollected = 0
-                            self.game.gamesPlayed += 1
+                                self.loadHighscore(int(self.currentScene[-1]))
 
-                        if button.tag == "startScreen":
-                            self.loadLevel('startScreen')
-                        if button.tag == "levelSelect":
-                            self.loadLevel('levelSelect')
-                        if button.tag == "shop":
-                            self.loadLevel('shop')
-                        if button.tag == 'mainMenu':
-                            if self.game.paused:
+                                self.game.score = 0
+                                self.coinCollected = 0
+                                self.game.gamesPlayed += 1
+
+                            if button.tag == "startScreen":
+                                self.loadLevel('startScreen')
+                            if button.tag == "levelSelect":
+                                self.loadLevel('levelSelect')
+                            if button.tag == "shop":
+                                self.loadLevel('shop')
+                            if button.tag == 'mainMenu':
+                                if self.game.paused:
+                                    self.game.paused = False
+                                self.loadLevel('mainMenu')
+                            if button.tag == "settingsMenu":
+                                self.loadLevel('settingsMenu')
+                            if button.tag == 'leaderboard':
+                                self.loadLevel('leaderboard')
+                            if button.tag == 'stats':
+                                self.loadLevel('stats')
+                            if button.tag == 'level1':
+                                self.loadLevel('level1')
+                            if button.tag == 'level2':
+                                self.loadLevel('level2')
+                            if button.tag == 'level3':
+                                self.loadLevel('level3')
+                            if button.tag == 'level4':
+                                self.loadLevel('level4')
+                            if button.tag == "levelComplete":
+                                self.loadLevel('levelComplete')
+                            if button.tag == 'pause':
+                                self.loadLevel('pause')
+                            if button.tag == 'resume':
                                 self.game.paused = False
-                            self.loadLevel('mainMenu')
-                        if button.tag == "settingsMenu":
-                            self.loadLevel('settingsMenu')
-                        if button.tag == 'leaderboard':
-                            self.loadLevel('leaderboard')
-                        if button.tag == 'stats':
-                            self.loadLevel('stats')
-                        if button.tag == 'level1':
-                            self.loadLevel('level1')
-                        if button.tag == 'level2':
-                            self.loadLevel('level2')
-                        if button.tag == 'level3':
-                            self.loadLevel('level3')
-                        if button.tag == 'level4':
-                            self.loadLevel('level4')
-                        if button.tag == "levelComplete":
-                            self.loadLevel('levelComplete')
-                        if button.tag == 'pause':
-                            self.loadLevel('pause')
-                        if button.tag == 'resume':
-                            self.game.paused = False
+                                for button in self.game.buttons:
+                                    button.kill()
+                                self.game.pauseScreenPrinted = False
+                                self.currentScene = self.prevScence
+                        else:
+                            self.game.answerClicked = True
+                            self.game.selectedAns = self.game.questionData[self.game.questionNumberIndex][int(button.tag)]
+                            if button.tag == "2":
+                                self.game.answerCorrect = True
+                            else:
+                                self.game.answerCorrect = False
                             for button in self.game.buttons:
                                 button.kill()
-                            self.game.pauseScreenPrinted = False
-                            self.currentScene = self.prevScence
+
+                            # self.game.pauseScreen.blit(self.game.pauseScreenImage, self.game.pauseScreenImageRect)
+                            # self.game.pauseScreen.fill((123, 129, 140))
+                        #     self.loadLevel('pause')
+                        button.kill()
                     else:
-                        self.game.answerClicked = True
-                        self.game.selectedAns = self.game.questionData[self.game.questionNumberIndex][int(button.tag)]
-                        if button.tag == "2":
-                            self.game.answerCorrect = True
-                        else:
-                            self.game.answerCorrect = False
+                        self.game.settingsQuestionDiff = button.tag
+
                         for button in self.game.buttons:
                             button.kill()
-
-                        # self.game.pauseScreen.blit(self.game.pauseScreenImage, self.game.pauseScreenImageRect)
-                        # self.game.pauseScreen.fill((123, 129, 140))
-                    #     self.loadLevel('pause')
-                    button.kill()
+                        self.game.questionID = []
+                        for i in range(len(self.game.questionData)):
+                            if self.game.questionData[i][7] == self.game.settingsQuestionDiff:
+                                self.game.questionID.append(self.game.questionData[i][0])
+                        print(self.game.questionID)
+                        self.loadLevel("settingsMenu")
                 else:
                     self.leaderboardLoadLevel = button.tag
-                    print("leaderboard Load level: ", self.leaderboardLoadLevel)
                     for button in self.game.buttons:
                         button.kill()
                     self.loadLevel("leaderboard")
-        if self.currentScene  not in ("level1", "level2", "level3", "level4"):
+
+                    print("leaderboard Load level: ", self.leaderboardLoadLevel)
+        if self.currentScene  not in LEVEL_SCREENS:
             self.showPlayer = False
             # print("showPlayer :", self.showPlayer)
         else:

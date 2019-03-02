@@ -48,10 +48,8 @@ class Game:
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
 
-        # self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
-        self.playerBikeImage = pg.image.load(path.join(self.imgFolder, 'car.png')).convert_alpha()#car image is laoded in
-        self.carImgSize = self.playerBikeImage.get_size()
-        self.playerBikeImage = pg.transform.scale(self.playerBikeImage, (int(round(self.carImgSize[0]/8,0)), int(round(self.carImgSize[1]/8,0))))#image scaled down
+        self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
+
         self.loadQuestions()
         self.questionSurface = pg.Surface(self.screen.get_size()).convert_alpha()
 
@@ -111,6 +109,7 @@ class Game:
                 self.questionData.append(temp)
         questionFile.close()
         print(self.questionData)
+
                 # line = [QuestionID, Questtion, CAns, WAns1, Wans2, Wans3, Wans4, Diff, level, isMaj]
 
     def drawText(self, text, size, colour, x, y, surf=None, align=None, fontName=None):
@@ -159,6 +158,11 @@ class Game:
         self.delay = False
         self.lastCountdownTime = 0
         self.prevRotate = 0
+        self.settingsQuestionDiff = "easy"
+        self.questionID = []
+        for i in range(len(self.questionData)):
+            if self.questionData[i][7] == self.settingsQuestionDiff:
+                self.questionID.append(self.questionData[i][0])
         self.sceneMan.loadLevel('startScreen')
         self.run()
 
@@ -171,14 +175,14 @@ class Game:
             self.update()
             self.draw()
 
-    def rotateCenter(self, image, angle):
+    def rot_center(self, image, angle):
+        """rotate an image while keeping its center and size"""
         orig_rect = image.get_rect()
-        rotatedImage = pg.transform.rotate(image, angle)#rotates iamge by a particuar angle
-        rotatedImageRect = orig_rect.copy()#keeps the original iamge
-        rotatedImageRect.center = rotatedImage.get_rect().center#re-ceneters the transformed image
-        #makes a new surface using the transformed image
-        rotatedImage = rotatedImage.subsurface(rotatedImageRect).copy()
-        return rotatedImage#returns the rotated image
+        rot_image = pg.transform.rotate(image, angle)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        return rot_image
 
     def update(self):
         #Game loop - Update
@@ -198,14 +202,14 @@ class Game:
 
                     self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
                     self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
+                    # print(self.player.pos)
+                    # print(self.rotate)
                     if self.prevRotate != round(self.rotate,2):
-                        # self.player.image = self.rotateCenter(self.player.image, self.rotate)
+                        self.player.image = self.rot_center(self.player.image, self.rotate)
+                        # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+                        # self.player.rect = self.player.image.get_rect()
+                        # self.player.rect.center = self.player.pos
                         self.prevRotate = round(self.rotate,2)
-
-
-                        self.player.image = pg.transform.rotate(self.player.image, self.rotate)
-                        self.player.rect = self.player.image.get_rect()
-                        self.player.rect.center = self.player.pos
 
                 hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True)
                 if hitQuestion:
@@ -247,11 +251,12 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
                 if event.key == pg.K_p:
-                    self.paused = not self.paused
-                    if self.paused == False:
-                        for button in self.buttons:
-                            button.kill()
-                    self.pauseScreenPrinted = False
+                    if self.sceneMan.currentScene in LEVEL_SCREENS:
+                        self.paused = not self.paused
+                        if self.paused == False:
+                            for button in self.buttons:
+                                button.kill()
+                        self.pauseScreenPrinted = False
                 if event.key == pg.K_q:
                     print("Q button pressed")
                     print("self.askQuestion is: ", self.askQuestion)
@@ -267,6 +272,7 @@ class Game:
         self.answerClicked = False
         self.selectedAns = None
         self.startTime = pg.time.get_ticks()
+        print("this is the question data", self.questionData)
 
         questionNumber = random.choice(self.questionID)
         wrongAns = [3,4,5,6]
@@ -364,6 +370,8 @@ class Game:
                         self.drawText("Time Out", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
                         self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, WHITE, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
                         print("Time out, INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
+                        for button in self.buttons:
+                            button.kill()
                     else:
                         print("INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
                         self.drawText("Incorrect Answer", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)

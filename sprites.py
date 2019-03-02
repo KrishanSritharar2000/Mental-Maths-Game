@@ -10,9 +10,9 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.width = 30
         self.height = 30
-        # self.image = pg.Surface((self.width, self.height))
-        # self.image.fill(YELLOW)
-        self.image = self.game.playerBikeImage.copy()
+        self.image = pg.Surface((self.width, self.height))
+        self.image.fill(YELLOW)
+        # self.image = self.game.playerBikeImage.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.pos = vec(x,y) * TILESIZE
@@ -225,7 +225,7 @@ class InputBox(pg.sprite.Sprite):
                 else:
                     self.text += event.unicode
                 print(self.text)
-                self.game.screen.fill(WHITE, (WIDTH*5/8, HEIGHT*7/11, self.rect.width+5, 32))
+                self.game.screen.fill(WHITE, (WIDTH*5/8, HEIGHT*7/11, self.rect.width+10, 32))
                 self.textSurf = self.font.render(self.text, True, self.colour)
 
     def update(self):
