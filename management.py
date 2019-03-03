@@ -5,6 +5,7 @@ from os import path
 from PIL import Image
 import pickle
 import datetime
+import pytmx
 
 class Map:
     def __init__(self, filename, trackfile, bitSize=4):
@@ -49,6 +50,27 @@ class Map:
         # print(self.wallData)
         # print()
         # print(self.fillData)
+
+class TiledMap():
+    def __init__(self, filename):
+        self.tiledMapFile = pytmx.load_pygame(filename, pixelaplha=True)
+        self.width = self.tiledMapFile.width * self.tiledMapFile.tilewidth
+        self.height = self.tiledMapFile.height * self.tiledMapFile.tileheight
+        print("tile Map Width", self.tiledMapFile.width, self.width, "tiled map height", self.tiledMapFile.height ,self.height)
+
+    def render(self, surface):
+        tileImage = self.tiledMapFile.get_tile_image_by_gid
+        for layer in self.tiledMapFile.visible_layers:
+            if isinstance(layer, pytmx.TiledTileLayer):
+                for x, y, gid, in layer:
+                    tile = tileImage(gid)
+                    if tile:
+                        surface.blit(tile, (x * self.tiledMapFile.tilewidth, y * self.tiledMapFile.tileheight))
+    def makeMap(self):
+        tempSurface = pg.Surface((self.width, self.height))
+        self.render(tempSurface)
+        return tempSurface
+
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -120,29 +142,42 @@ class sceneManager():
     def level1(self):
         self.showPlayer = True
         self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track3.bmp'), bitSize=1)
-        self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        # self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level1.tmx'))
+        self.game.tiledMapImg  = self.game.tiledMap.makeMap()
+        self.game.tiledMapRect = self.game.tiledMapImg.get_rect()
+        self.game.camera = Camera(self.game.tiledMap.width, self.game.tiledMap.height)
         self.loadHighscore(1)
-        for row, tiles in enumerate(self.game.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == "1":
-                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
 
-                # if tile == "2":
-                #     Track(self.game, col, row, 2, 20, BLUE)
+        for tileObject in self.game.tiledMap.tiledMapFile.objects:
+            if tileObject.name == "player":
+                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+            if tileObject.name == "wall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
 
-                if tile == "3":
-                    Wall(self.game, col, row, RED)
+        # for row, tiles in enumerate(self.game.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == "1":
+        #             Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+        #
+        #         # if tile == "2":
+        #         #     Track(self.game, col, row, 2, 20, BLUE)
+        #
+        #         if tile == "3":
+        #             Wall(self.game, col, row, RED)
+        #
+        #         if tile == "4":
+        #             Wall(self.game, col, row, GREEN, altColour=ORANGE, mode="end")
+        #
+        #         if tile == "P":
+        #             self.game.player = Player(self.game, col, row)
+        # self.game.player = Player(self.game, 10, 10)
 
-                if tile == "4":
-                    Wall(self.game, col, row, GREEN, altColour=ORANGE, mode="end")
-
-                if tile == "P":
-                    self.game.player = Player(self.game, col, row)
-
-        for coordinates in range(len(self.game.map.trackData)):
-            platformx = self.game.map.trackData[coordinates][0]
-            platformy = self.game.map.trackData[coordinates][1]
-            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
+        # for coordinates in range(len(self.game.map.trackData)):
+        #     platformx = self.game.map.trackData[coordinates][0]
+        #     platformy = self.game.map.trackData[coordinates][1]
+        #     Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
 
         Question(self.game, WIDTH/2, HEIGHT/2)
         Question(self.game, WIDTH*3/2, HEIGHT/2)

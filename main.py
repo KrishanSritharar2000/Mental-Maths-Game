@@ -140,6 +140,9 @@ class Game:
         self.coins = pg.sprite.Group()
         self.userInputBox = pg.sprite.Group()
         self.map = None
+        self.tiledMap = None
+        self.tiledMapImg = None
+        self.tiledMapRect = None
         self.camera = None
         #Map(path.join(self.gameFolder,'map2.txt', 'LevelTest2'))
         #Camera(self.map.width, self.map.height)
@@ -335,8 +338,6 @@ class Game:
             self.timeOut = True
             self.answerClicked = True
 
-
-
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         if self.paused:
@@ -406,6 +407,7 @@ class Game:
             for box in self.userInputBox:
                 box.draw(self.screen)
             if self.sceneMan.currentScene not in MENU_SCREENS:
+                self.screen.blit(self.tiledMapImg, self.camera.applyOffsetRect(self.tiledMapRect))
                 for sprite in self.allSprites:
                     self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
                 self.drawText("Score: " + str(self.score), 22, WHITE, WIDTH-100, 15)

@@ -15,7 +15,7 @@ class Player(pg.sprite.Sprite):
         # self.image = self.game.playerBikeImage.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
-        self.pos = vec(x,y) * TILESIZE
+        self.pos = vec(x,y)
         self.vel = vec(0,0)
         self.acc = vec(0,0)
         self.direction = "forward"
@@ -67,7 +67,7 @@ class Player(pg.sprite.Sprite):
     def update(self):
         if self.game.sceneMan.showPlayer == True:
             # print("Moving Player")
-            self.game.screen.fill(BLACK)
+
             self.acc = vec(0, PLAYER_GRAV)
             keys = pg.key.get_pressed()
 
@@ -126,19 +126,25 @@ class Platform(pg.sprite.Sprite):
             self.rect.x, self.rect.y = x, y
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y, colour, altColour=None, mode=None):
-        if mode == "end":
-            self.groups = game.allSprites, game.endWalls
+    def __init__(self, game, x, y, colour=None, altColour=None, mode=None, width=None, height=None):
+        if mode == "tiled":
+            self.groups = game.walls
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.rect = pg.Rect(x, y, width, height)
+            self.rect.x, self.rect.y = x, y
         else:
-            self.groups = game.allSprites, game.walls
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        if mode != "end":
-            self.image.fill(colour)
-        else:
-            self.image.fill(altColour)
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
+            if mode == "end":
+                self.groups = game.allSprites, game.endWalls
+            else:
+                self.groups = game.allSprites, game.walls
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.image = pg.Surface((TILESIZE, TILESIZE))
+            if mode != "end":
+                self.image.fill(colour)
+            else:
+                self.image.fill(altColour)
+            self.rect = self.image.get_rect()
+            self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
 
 class Rectangle(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour):
