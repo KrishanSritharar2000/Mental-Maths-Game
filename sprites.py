@@ -126,9 +126,12 @@ class Platform(pg.sprite.Sprite):
             self.rect.x, self.rect.y = x, y
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y, colour=None, altColour=None, mode=None, width=None, height=None):
+    def __init__(self, game, x, y, colour=None, altColour=None, mode=None, mode2=None, width=None, height=None):
         if mode == "tiled":
-            self.groups = game.walls
+            if mode2 == "end":
+                self.groups = game.endWalls
+            else:
+                self.groups = game.walls
             pg.sprite.Sprite.__init__(self, self.groups)
             self.rect = pg.Rect(x, y, width, height)
             self.rect.x, self.rect.y = x, y
@@ -181,7 +184,7 @@ class Question(pg.sprite.Sprite):
         self.groups = game.allSprites, game.questionItems
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((50, 50))
-        self.image.fill(WHITE)
+        self.image.fill(LIGHT_BLUE)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 

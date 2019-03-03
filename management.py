@@ -52,11 +52,28 @@ class Map:
         # print(self.fillData)
 
 class TiledMap():
-    def __init__(self, filename):
+    def __init__(self, filename, trackfile):
         self.tiledMapFile = pytmx.load_pygame(filename, pixelaplha=True)
         self.width = self.tiledMapFile.width * self.tiledMapFile.tilewidth
         self.height = self.tiledMapFile.height * self.tiledMapFile.tileheight
-        print("tile Map Width", self.tiledMapFile.width, self.width, "tiled map height", self.tiledMapFile.height ,self.height)
+        print("tile Map Width", self.tiledMapFile.width, self.width, "tiled map height", self.tiledMapFile.height, self.height)
+
+        # self.trackData = []
+        # self.trackImage = Image.open(trackfile)
+        # self.trackWidth = self.trackImage.size[0]
+        # self.trackHeight = self.trackImage.size[1]
+        # self.trackCount = 0
+        #
+        # print("Track Data: ", self.trackData)
+        # for col in range(self.trackHeight):
+        #     for row in range(self.trackWidth):
+        #         pixelData = self.trackImage.getpixel((row, col))
+        #         if pixelData == 1:
+        #             self.trackData.append((row, col))
+        #             self.trackCount += 1
+        # print("Track Data: ", self.trackData)
+        # print("Track Data Length", len(self.trackData))
+
 
     def render(self, surface):
         tileImage = self.tiledMapFile.get_tile_image_by_gid
@@ -65,7 +82,7 @@ class TiledMap():
                 for x, y, gid, in layer:
                     tile = tileImage(gid)
                     if tile:
-                        surface.blit(tile, (x * self.tiledMapFile.tilewidth, y * self.tiledMapFile.tileheight))
+                        surface.blit(tile, (x * self.tiledMapFile.tilewidth, y * self.tiledMapFile.tileheight - TILESIZE))
     def makeMap(self):
         tempSurface = pg.Surface((self.width, self.height))
         self.render(tempSurface)
@@ -141,9 +158,9 @@ class sceneManager():
 
     def level1(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track3.bmp'), bitSize=1)
+        # self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track3.bmp'), bitSize=1)
         # self.game.camera = Camera(self.game.map.width, self.game.map.height)
-        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level1.tmx'))
+        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level1.tmx'), path.join(self.game.mapFolder,'Level1TrackBMP.bmp'))
         self.game.tiledMapImg  = self.game.tiledMap.makeMap()
         self.game.tiledMapRect = self.game.tiledMapImg.get_rect()
         self.game.camera = Camera(self.game.tiledMap.width, self.game.tiledMap.height)
@@ -152,9 +169,18 @@ class sceneManager():
         for tileObject in self.game.tiledMap.tiledMapFile.objects:
             if tileObject.name == "player":
                 self.game.player = Player(self.game, tileObject.x, tileObject.y)
-            if tileObject.name == "wall":
+            elif tileObject.name == "wall":
                 print("A wall has been added")
                 Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
+            elif tileObject.name == "endWall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled", mode2="end")
+            elif tileObject.name == "coin":
+                Coin(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "question":
+                Question(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "track":
+                Platform(self.game, tileObject.x, tileObject.y, 2, 2, LIGHT_BLUE, "track")
 
         # for row, tiles in enumerate(self.game.map.data):
         #     for col, tile in enumerate(tiles):
@@ -174,20 +200,24 @@ class sceneManager():
         #             self.game.player = Player(self.game, col, row)
         # self.game.player = Player(self.game, 10, 10)
 
-        # for coordinates in range(len(self.game.map.trackData)):
-        #     platformx = self.game.map.trackData[coordinates][0]
-        #     platformy = self.game.map.trackData[coordinates][1]
+        # print("len", len(self.game.tiledMap.trackData))
+        # print("trackCount", self.game.tiledMap.trackCount)
+
+        # for coordinates in range(len(self.game.tiledMap.trackData)):
+        #     platformx = self.game.tiledMap.trackData[coordinates-1][0]
+        #     platformy = self.game.tiledMap.trackData[coordinates-1][1]
+        #     # print(platformx, platformy)
         #     Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
 
-        Question(self.game, WIDTH/2, HEIGHT/2)
-        Question(self.game, WIDTH*3/2, HEIGHT/2)
-        Question(self.game, WIDTH*5/2, HEIGHT/2)
-
-        Coin(self.game, WIDTH/4, HEIGHT/2)
-        Coin(self.game, WIDTH*3/4, HEIGHT/2)
-        Coin(self.game, WIDTH*5/4, HEIGHT/2)
-        Coin(self.game, WIDTH*7/4, HEIGHT/2)
-        Coin(self.game, WIDTH*9/4, HEIGHT/2)
+        # Question(self.game, WIDTH/2, HEIGHT/2)
+        # Question(self.game, WIDTH*3/2, HEIGHT/2)
+        # Question(self.game, WIDTH*5/2, HEIGHT/2)
+        #
+        # Coin(self.game, WIDTH/4, HEIGHT/2)
+        # Coin(self.game, WIDTH*3/4, HEIGHT/2)
+        # Coin(self.game, WIDTH*5/4, HEIGHT/2)
+        # Coin(self.game, WIDTH*7/4, HEIGHT/2)
+        # Coin(self.game, WIDTH*9/4, HEIGHT/2)
 
 
         # self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)

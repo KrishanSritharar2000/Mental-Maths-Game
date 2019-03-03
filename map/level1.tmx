@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.07.13" orientation="orthogonal" renderorder="right-down" width="95" height="18" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="9">
+<map version="1.0" tiledversion="2018.07.13" orientation="orthogonal" renderorder="right-down" width="95" height="18" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="477">
  <tileset firstgid="1" source="Backgrounds.tsx"/>
  <tileset firstgid="10" source="Grass Ground.tsx"/>
  <tileset firstgid="46" source="colored_desert_small.tsx"/>
@@ -25,8 +25,9 @@
 590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620
 </data>
  </layer>
- <layer id="19" name="Platforms" width="95" height="18">
+ <layer id="11" name="Platforms" width="95" height="18" locked="1">
   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -38,20 +39,277 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,34,34,34,34,0,34,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,27,0,27,0,27,0,27,0,27,0,27,0,27,0,27,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,34,34,34,0,34,0,34,0,34,34,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,34,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,0,34,34,34,34,34,34,34,34,34,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,0,28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,0,
-23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,23,23,0,23,23,23,23,23,23,23,23,0,23,0,23,0,23,23,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0,23,23,0,23,23,23,23,23,23,23,23,0,23,0,23,0,23,23,0,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,0
 </data>
  </layer>
  <objectgroup id="4" name="Obstacles">
-  <object id="3" name="wall" x="992" y="320" width="512" height="64"/>
-  <object id="4" name="wall" x="0" y="512" width="832" height="64"/>
+  <object id="3" name="wall" x="994" y="321" width="508" height="63"/>
+  <object id="4" name="wall" x="0" y="512" width="800" height="64"/>
   <object id="5" name="wall" x="1664" y="512" width="608" height="64"/>
-  <object id="6" name="wall" x="2592" y="160" width="448" height="64"/>
-  <object id="7" name="player" x="48" y="464" width="24" height="24"/>
+  <object id="6" name="endWall" x="3008" y="0" width="32" height="224"/>
+  <object id="7" name="player" x="80" y="464" width="32" height="32"/>
+  <object id="10" name="wall" x="-32" y="0" width="32" height="512"/>
+  <object id="11" name="coin" x="320" y="472" width="32" height="32"/>
+  <object id="12" name="question" x="672" y="464" width="32" height="32"/>
+  <object id="13" name="coin" x="512" y="472" width="32" height="32"/>
+  <object id="14" name="coin" x="416" y="472" width="32" height="32"/>
+  <object id="15" name="coin" x="832" y="414" width="32" height="32"/>
+  <object id="16" name="coin" x="896" y="350" width="32" height="32"/>
+  <object id="17" name="coin" x="1024" y="280" width="32" height="32"/>
+  <object id="18" name="question" x="1232" y="272" width="32" height="32"/>
+  <object id="19" name="coin" x="1344" y="280" width="32" height="32"/>
+  <object id="20" name="coin" x="1408" y="280" width="32" height="32"/>
+  <object id="21" name="coin" x="1792" y="472" width="32" height="32"/>
+  <object id="22" name="coin" x="1856" y="472" width="32" height="32"/>
+  <object id="23" name="coin" x="1920" y="472" width="32" height="32"/>
+  <object id="24" name="coin" x="1984" y="472" width="32" height="32"/>
+  <object id="25" name="coin" x="2048" y="472" width="32" height="32"/>
+  <object id="26" name="coin" x="2112" y="472" width="32" height="32"/>
+  <object id="27" name="coin" x="2304" y="384" width="32" height="32"/>
+  <object id="28" name="coin" x="2368" y="320" width="32" height="32"/>
+  <object id="29" name="coin" x="2656" y="120" width="32" height="32"/>
+  <object id="30" name="coin" x="2720" y="120" width="32" height="32"/>
+  <object id="31" name="question" x="2448" y="224" width="32" height="32"/>
+  <object id="32" name="question" x="2880" y="112" width="32" height="32"/>
+  <object id="45" name="track" x="2592" y="160" width="8" height="8"/>
+  <object id="47" name="track" x="2584" y="168" width="8" height="8"/>
+  <object id="48" name="track" x="2576" y="176" width="8" height="8"/>
+  <object id="49" name="track" x="2568" y="184" width="8" height="8"/>
+  <object id="52" name="track" x="2560" y="192" width="8" height="8"/>
+  <object id="53" name="track" x="2552" y="200" width="8" height="8"/>
+  <object id="54" name="track" x="2544" y="208" width="8" height="8"/>
+  <object id="55" name="track" x="2536" y="216" width="8" height="8"/>
+  <object id="56" name="track" x="2528" y="224" width="8" height="8"/>
+  <object id="57" name="track" x="2520" y="232" width="8" height="8"/>
+  <object id="58" name="track" x="2512" y="240" width="8" height="8"/>
+  <object id="59" name="track" x="2504" y="248" width="8" height="8"/>
+  <object id="60" name="track" x="2496" y="256" width="8" height="8"/>
+  <object id="61" name="track" x="2488" y="264" width="8" height="8"/>
+  <object id="62" name="track" x="2480" y="272" width="8" height="8"/>
+  <object id="63" name="track" x="2472" y="280" width="8" height="8"/>
+  <object id="64" name="track" x="2464" y="288" width="8" height="8"/>
+  <object id="65" name="track" x="2456" y="296" width="8" height="8"/>
+  <object id="66" name="track" x="2448" y="304" width="8" height="8"/>
+  <object id="67" name="track" x="2440" y="312" width="8" height="8"/>
+  <object id="68" name="track" x="2432" y="320" width="8" height="8"/>
+  <object id="69" name="track" x="2424" y="328" width="8" height="8"/>
+  <object id="70" name="track" x="2416" y="336" width="8" height="8"/>
+  <object id="71" name="track" x="2408" y="344" width="8" height="8"/>
+  <object id="72" name="track" x="2400" y="352" width="8" height="8"/>
+  <object id="73" name="track" x="2392" y="360" width="8" height="8"/>
+  <object id="74" name="track" x="2384" y="368" width="8" height="8"/>
+  <object id="75" name="track" x="2376" y="376" width="8" height="8"/>
+  <object id="76" name="track" x="2368" y="384" width="8" height="8"/>
+  <object id="77" name="track" x="2360" y="392" width="8" height="8"/>
+  <object id="78" name="track" x="2352" y="400" width="8" height="8"/>
+  <object id="79" name="track" x="2344" y="408" width="8" height="8"/>
+  <object id="80" name="track" x="2336" y="416" width="8" height="8"/>
+  <object id="81" name="track" x="2328" y="424" width="8" height="8"/>
+  <object id="82" name="track" x="2320" y="432" width="8" height="8"/>
+  <object id="83" name="track" x="2312" y="440" width="8" height="8"/>
+  <object id="84" name="track" x="2304" y="448" width="8" height="8"/>
+  <object id="85" name="track" x="2296" y="456" width="8" height="8"/>
+  <object id="86" name="track" x="2288" y="464" width="8" height="8"/>
+  <object id="87" name="track" x="2280" y="472" width="8" height="8"/>
+  <object id="88" name="track" x="2272" y="480" width="8" height="8"/>
+  <object id="89" name="track" x="2264" y="488" width="8" height="8"/>
+  <object id="90" name="track" x="2256" y="496" width="8" height="8"/>
+  <object id="93" name="track" x="2248" y="504" width="8" height="8"/>
+  <object id="94" name="wall" x="2600" y="161" width="408" height="63"/>
+  <object id="99" name="track" x="1504" y="320" width="2" height="2"/>
+  <object id="100" name="track" x="1506" y="322" width="2" height="2"/>
+  <object id="101" name="track" x="1508" y="324" width="2" height="2"/>
+  <object id="102" name="track" x="1510" y="326" width="2" height="2"/>
+  <object id="103" name="track" x="1512" y="328" width="2" height="2"/>
+  <object id="104" name="track" x="1514" y="330" width="2" height="2"/>
+  <object id="105" name="track" x="1516" y="332" width="2" height="2"/>
+  <object id="106" name="track" x="1518" y="334" width="2" height="2"/>
+  <object id="111" name="track" x="1520" y="336" width="2" height="2"/>
+  <object id="112" name="track" x="1522" y="338" width="2" height="2"/>
+  <object id="113" name="track" x="1524" y="340" width="2" height="2"/>
+  <object id="114" name="track" x="1526" y="342" width="2" height="2"/>
+  <object id="115" name="track" x="1528" y="344" width="2" height="2"/>
+  <object id="116" name="track" x="1530" y="346" width="2" height="2"/>
+  <object id="117" name="track" x="1532" y="348" width="2" height="2"/>
+  <object id="118" name="track" x="1534" y="350" width="2" height="2"/>
+  <object id="119" name="track" x="1536" y="352" width="2" height="2"/>
+  <object id="120" name="track" x="1538" y="354" width="2" height="2"/>
+  <object id="121" name="track" x="1540" y="356" width="2" height="2"/>
+  <object id="122" name="track" x="1542" y="358" width="2" height="2"/>
+  <object id="123" name="track" x="1544" y="360" width="2" height="2"/>
+  <object id="124" name="track" x="1546" y="362" width="2" height="2"/>
+  <object id="125" name="track" x="1548" y="364" width="2" height="2"/>
+  <object id="126" name="track" x="1550" y="366" width="2" height="2"/>
+  <object id="127" name="track" x="1552" y="368" width="2" height="2"/>
+  <object id="128" name="track" x="1554" y="370" width="2" height="2"/>
+  <object id="129" name="track" x="1556" y="372" width="2" height="2"/>
+  <object id="130" name="track" x="1558" y="374" width="2" height="2"/>
+  <object id="131" name="track" x="1560" y="376" width="2" height="2"/>
+  <object id="132" name="track" x="1562" y="378" width="2" height="2"/>
+  <object id="133" name="track" x="1564" y="380" width="2" height="2"/>
+  <object id="134" name="track" x="1566" y="382" width="2" height="2"/>
+  <object id="167" name="track" x="1568" y="384" width="2" height="2"/>
+  <object id="168" name="track" x="1570" y="386" width="2" height="2"/>
+  <object id="169" name="track" x="1572" y="388" width="2" height="2"/>
+  <object id="170" name="track" x="1574" y="390" width="2" height="2"/>
+  <object id="171" name="track" x="1576" y="392" width="2" height="2"/>
+  <object id="172" name="track" x="1578" y="394" width="2" height="2"/>
+  <object id="173" name="track" x="1580" y="396" width="2" height="2"/>
+  <object id="174" name="track" x="1582" y="398" width="2" height="2"/>
+  <object id="175" name="track" x="1584" y="400" width="2" height="2"/>
+  <object id="176" name="track" x="1586" y="402" width="2" height="2"/>
+  <object id="177" name="track" x="1588" y="404" width="2" height="2"/>
+  <object id="178" name="track" x="1590" y="406" width="2" height="2"/>
+  <object id="179" name="track" x="1592" y="408" width="2" height="2"/>
+  <object id="180" name="track" x="1594" y="410" width="2" height="2"/>
+  <object id="181" name="track" x="1596" y="412" width="2" height="2"/>
+  <object id="182" name="track" x="1598" y="414" width="2" height="2"/>
+  <object id="183" name="track" x="1600" y="416" width="2" height="2" rotation="-90"/>
+  <object id="184" name="track" x="1602" y="418" width="2" height="2" rotation="-90"/>
+  <object id="185" name="track" x="1604" y="420" width="2" height="2" rotation="-90"/>
+  <object id="186" name="track" x="1606" y="422" width="2" height="2" rotation="-90"/>
+  <object id="187" name="track" x="1608" y="424" width="2" height="2" rotation="-90"/>
+  <object id="188" name="track" x="1610" y="426" width="2" height="2" rotation="-90"/>
+  <object id="189" name="track" x="1612" y="428" width="2" height="2" rotation="-90"/>
+  <object id="190" name="track" x="1614" y="430" width="2" height="2" rotation="-90"/>
+  <object id="191" name="track" x="1616" y="432" width="2" height="2" rotation="-90"/>
+  <object id="192" name="track" x="1618" y="434" width="2" height="2" rotation="-90"/>
+  <object id="193" name="track" x="1620" y="436" width="2" height="2" rotation="-90"/>
+  <object id="194" name="track" x="1622" y="438" width="2" height="2" rotation="-90"/>
+  <object id="195" name="track" x="1624" y="440" width="2" height="2" rotation="-90"/>
+  <object id="196" name="track" x="1626" y="442" width="2" height="2" rotation="-90"/>
+  <object id="197" name="track" x="1628" y="444" width="2" height="2" rotation="-90"/>
+  <object id="198" name="track" x="1630" y="446" width="2" height="2" rotation="-90"/>
+  <object id="263" name="track" x="1632" y="448" width="2" height="2" rotation="-90"/>
+  <object id="264" name="track" x="1634" y="450" width="2" height="2" rotation="-90"/>
+  <object id="265" name="track" x="1636" y="452" width="2" height="2" rotation="-90"/>
+  <object id="266" name="track" x="1638" y="454" width="2" height="2" rotation="-90"/>
+  <object id="267" name="track" x="1640" y="456" width="2" height="2" rotation="-90"/>
+  <object id="268" name="track" x="1642" y="458" width="2" height="2" rotation="-90"/>
+  <object id="269" name="track" x="1644" y="460" width="2" height="2" rotation="-90"/>
+  <object id="270" name="track" x="1646" y="462" width="2" height="2" rotation="-90"/>
+  <object id="271" name="track" x="1648" y="464" width="2" height="2" rotation="-90"/>
+  <object id="272" name="track" x="1650" y="466" width="2" height="2" rotation="-90"/>
+  <object id="273" name="track" x="1652" y="468" width="2" height="2" rotation="-90"/>
+  <object id="274" name="track" x="1654" y="470" width="2" height="2" rotation="-90"/>
+  <object id="275" name="track" x="1656" y="472" width="2" height="2" rotation="-90"/>
+  <object id="276" name="track" x="1658" y="474" width="2" height="2" rotation="-90"/>
+  <object id="277" name="track" x="1660" y="476" width="2" height="2" rotation="-90"/>
+  <object id="278" name="track" x="1662" y="478" width="2" height="2" rotation="-90"/>
+  <object id="279" name="track" x="1664" y="480" width="2" height="2" rotation="-90"/>
+  <object id="280" name="track" x="1666" y="482" width="2" height="2"/>
+  <object id="281" name="track" x="1668" y="484" width="2" height="2"/>
+  <object id="282" name="track" x="1670" y="486" width="2" height="2"/>
+  <object id="283" name="track" x="1672" y="488" width="2" height="2"/>
+  <object id="284" name="track" x="1674" y="490" width="2" height="2"/>
+  <object id="285" name="track" x="1676" y="492" width="2" height="2"/>
+  <object id="286" name="track" x="1678" y="494" width="2" height="2"/>
+  <object id="287" name="track" x="1680" y="496" width="2" height="2"/>
+  <object id="288" name="track" x="1682" y="498" width="2" height="2"/>
+  <object id="289" name="track" x="1684" y="500" width="2" height="2"/>
+  <object id="290" name="track" x="1686" y="502" width="2" height="2"/>
+  <object id="291" name="track" x="1688" y="504" width="2" height="2"/>
+  <object id="292" name="track" x="1690" y="506" width="2" height="2"/>
+  <object id="293" name="track" x="1692" y="508" width="2" height="2"/>
+  <object id="294" name="track" x="1694" y="510" width="2" height="2"/>
+  <object id="317" name="track" x="962" y="353" width="2" height="2" rotation="-90"/>
+  <object id="318" name="track" x="964" y="351" width="2" height="2" rotation="-90"/>
+  <object id="319" name="track" x="966" y="349" width="2" height="2" rotation="-90"/>
+  <object id="320" name="track" x="968" y="347" width="2" height="2" rotation="-90"/>
+  <object id="321" name="track" x="970" y="345" width="2" height="2" rotation="-90"/>
+  <object id="322" name="track" x="972" y="343" width="2" height="2" rotation="-90"/>
+  <object id="323" name="track" x="974" y="341" width="2" height="2" rotation="-90"/>
+  <object id="324" name="track" x="976" y="339" width="2" height="2" rotation="-90"/>
+  <object id="325" name="track" x="978" y="337" width="2" height="2" rotation="-90"/>
+  <object id="326" name="track" x="980" y="335" width="2" height="2" rotation="-90"/>
+  <object id="327" name="track" x="982" y="333" width="2" height="2" rotation="-90"/>
+  <object id="328" name="track" x="984" y="331" width="2" height="2" rotation="-90"/>
+  <object id="329" name="track" x="986" y="329" width="2" height="2" rotation="-90"/>
+  <object id="330" name="track" x="988" y="327" width="2" height="2" rotation="-90"/>
+  <object id="331" name="track" x="990" y="325" width="2" height="2" rotation="-90"/>
+  <object id="396" name="track" x="932" y="383" width="2" height="2" rotation="-90"/>
+  <object id="397" name="track" x="934" y="381" width="2" height="2" rotation="-90"/>
+  <object id="398" name="track" x="936" y="379" width="2" height="2" rotation="-90"/>
+  <object id="399" name="track" x="938" y="377" width="2" height="2" rotation="-90"/>
+  <object id="400" name="track" x="940" y="375" width="2" height="2" rotation="-90"/>
+  <object id="401" name="track" x="942" y="373" width="2" height="2" rotation="-90"/>
+  <object id="402" name="track" x="944" y="371" width="2" height="2" rotation="-90"/>
+  <object id="403" name="track" x="946" y="369" width="2" height="2" rotation="-90"/>
+  <object id="404" name="track" x="948" y="367" width="2" height="2" rotation="-90"/>
+  <object id="405" name="track" x="950" y="365" width="2" height="2" rotation="-90"/>
+  <object id="406" name="track" x="952" y="363" width="2" height="2" rotation="-90"/>
+  <object id="407" name="track" x="954" y="361" width="2" height="2" rotation="-90"/>
+  <object id="408" name="track" x="956" y="359" width="2" height="2" rotation="-90"/>
+  <object id="409" name="track" x="958" y="357" width="2" height="2" rotation="-90"/>
+  <object id="410" name="track" x="960" y="355" width="2" height="2" rotation="-90"/>
+  <object id="411" name="track" x="902" y="413" width="2" height="2" rotation="-90"/>
+  <object id="412" name="track" x="904" y="411" width="2" height="2" rotation="-90"/>
+  <object id="413" name="track" x="906" y="409" width="2" height="2" rotation="-90"/>
+  <object id="414" name="track" x="908" y="407" width="2" height="2" rotation="-90"/>
+  <object id="415" name="track" x="910" y="405" width="2" height="2" rotation="-90"/>
+  <object id="416" name="track" x="912" y="403" width="2" height="2" rotation="-90"/>
+  <object id="417" name="track" x="914" y="401" width="2" height="2" rotation="-90"/>
+  <object id="418" name="track" x="916" y="399" width="2" height="2" rotation="-90"/>
+  <object id="419" name="track" x="918" y="397" width="2" height="2" rotation="-90"/>
+  <object id="420" name="track" x="920" y="395" width="2" height="2" rotation="-90"/>
+  <object id="421" name="track" x="922" y="393" width="2" height="2" rotation="-90"/>
+  <object id="422" name="track" x="924" y="391" width="2" height="2" rotation="-90"/>
+  <object id="423" name="track" x="926" y="389" width="2" height="2" rotation="-90"/>
+  <object id="424" name="track" x="928" y="387" width="2" height="2" rotation="-90"/>
+  <object id="425" name="track" x="930" y="385" width="2" height="2" rotation="-90"/>
+  <object id="426" name="track" x="872" y="443" width="2" height="2" rotation="-90"/>
+  <object id="427" name="track" x="874" y="441" width="2" height="2" rotation="-90"/>
+  <object id="428" name="track" x="876" y="439" width="2" height="2" rotation="-90"/>
+  <object id="429" name="track" x="878" y="437" width="2" height="2" rotation="-90"/>
+  <object id="430" name="track" x="880" y="435" width="2" height="2" rotation="-90"/>
+  <object id="431" name="track" x="882" y="433" width="2" height="2" rotation="-90"/>
+  <object id="432" name="track" x="884" y="431" width="2" height="2" rotation="-90"/>
+  <object id="433" name="track" x="886" y="429" width="2" height="2" rotation="-90"/>
+  <object id="434" name="track" x="888" y="427" width="2" height="2" rotation="-90"/>
+  <object id="435" name="track" x="890" y="425" width="2" height="2" rotation="-90"/>
+  <object id="436" name="track" x="892" y="423" width="2" height="2" rotation="-90"/>
+  <object id="437" name="track" x="894" y="421" width="2" height="2" rotation="-90"/>
+  <object id="438" name="track" x="896" y="419" width="2" height="2" rotation="-90"/>
+  <object id="439" name="track" x="898" y="417" width="2" height="2" rotation="-90"/>
+  <object id="440" name="track" x="900" y="415" width="2" height="2" rotation="-90"/>
+  <object id="441" name="track" x="842" y="473" width="2" height="2" rotation="-90"/>
+  <object id="442" name="track" x="844" y="471" width="2" height="2" rotation="-90"/>
+  <object id="443" name="track" x="846" y="469" width="2" height="2" rotation="-90"/>
+  <object id="444" name="track" x="848" y="467" width="2" height="2" rotation="-90"/>
+  <object id="445" name="track" x="850" y="465" width="2" height="2" rotation="-90"/>
+  <object id="446" name="track" x="852" y="463" width="2" height="2" rotation="-90"/>
+  <object id="447" name="track" x="854" y="461" width="2" height="2" rotation="-90"/>
+  <object id="448" name="track" x="856" y="459" width="2" height="2" rotation="-90"/>
+  <object id="449" name="track" x="858" y="457" width="2" height="2" rotation="-90"/>
+  <object id="450" name="track" x="860" y="455" width="2" height="2" rotation="-90"/>
+  <object id="451" name="track" x="862" y="453" width="2" height="2" rotation="-90"/>
+  <object id="452" name="track" x="864" y="451" width="2" height="2" rotation="-90"/>
+  <object id="453" name="track" x="866" y="449" width="2" height="2" rotation="-90"/>
+  <object id="454" name="track" x="868" y="447" width="2" height="2" rotation="-90"/>
+  <object id="455" name="track" x="870" y="445" width="2" height="2" rotation="-90"/>
+  <object id="456" name="track" x="812" y="503" width="2" height="2" rotation="-90"/>
+  <object id="457" name="track" x="814" y="501" width="2" height="2" rotation="-90"/>
+  <object id="458" name="track" x="816" y="499" width="2" height="2" rotation="-90"/>
+  <object id="459" name="track" x="818" y="497" width="2" height="2" rotation="-90"/>
+  <object id="460" name="track" x="820" y="495" width="2" height="2" rotation="-90"/>
+  <object id="461" name="track" x="822" y="493" width="2" height="2" rotation="-90"/>
+  <object id="462" name="track" x="824" y="491" width="2" height="2" rotation="-90"/>
+  <object id="463" name="track" x="826" y="489" width="2" height="2" rotation="-90"/>
+  <object id="464" name="track" x="828" y="487" width="2" height="2" rotation="-90"/>
+  <object id="465" name="track" x="830" y="485" width="2" height="2" rotation="-90"/>
+  <object id="466" name="track" x="832" y="483" width="2" height="2" rotation="-90"/>
+  <object id="467" name="track" x="834" y="481" width="2" height="2" rotation="-90"/>
+  <object id="468" name="track" x="836" y="479" width="2" height="2" rotation="-90"/>
+  <object id="469" name="track" x="838" y="477" width="2" height="2" rotation="-90"/>
+  <object id="470" name="track" x="840" y="475" width="2" height="2" rotation="-90"/>
+  <object id="471" name="track" x="806" y="509" width="2" height="2" rotation="-90"/>
+  <object id="472" name="track" x="808" y="507" width="2" height="2" rotation="-90"/>
+  <object id="473" name="track" x="810" y="505" width="2" height="2" rotation="-90"/>
+  <object id="476" name="track" x="804" y="511" width="2" height="2" rotation="-90"/>
  </objectgroup>
 </map>
