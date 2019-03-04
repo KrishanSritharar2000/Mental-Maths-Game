@@ -55,6 +55,14 @@ class Game:
 
         self.loadstatsData()
 
+        self.coinImages = {}
+        for img in range(len(COIN_IMAGES)):
+            image = pg.image.load(path.join(self.imgFolder, COIN_IMAGES[img])).convert_alpha()
+            size = image.get_size()
+            self.coinImages[img] = pg.transform.scale(image, (int(size[0]/2), int(size[1]/2)))
+
+        self.questionImage = pg.image.load(path.join(self.imgFolder, QUESTION_IMAGE)).convert_alpha()
+
     def loadstatsData(self):
         statsFile = open("stats.pickle", "rb")
         self.statsData = pickle.load(statsFile)
@@ -130,7 +138,7 @@ class Game:
 
     def new(self):
         #start a new Game
-        self.allSprites = pg.sprite.Group()#This groups all the sprties together
+        self.allSprites = pg.sprite.LayeredUpdates()#This groups all the sprites together
         self.buttons = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
         self.walls = pg.sprite.Group()
@@ -200,6 +208,14 @@ class Game:
 
                 hitPlatform = pg.sprite.spritecollide(self.player, self.platforms, False)
                 if hitPlatform:
+                    # if hitPlatform[0].mode == "track":
+                    #     if self.player.vel.x > 0:
+                    #         self.player.pos.y = hitPlatform[-1].rect.topright[1] - self.player.height / 2
+                    #     else:
+                    #         self.player.pos.y = hitPlatform[-1].rect.topleft[1] - self.player.height / 2
+                    #     self.player.vel.y = 0
+                    #
+                    # else:
                     self.player.pos.y = hitPlatform[0].rect.y - self.player.height / 2
                     self.player.vel.y = 0
 

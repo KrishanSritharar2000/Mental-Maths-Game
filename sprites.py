@@ -5,6 +5,7 @@ vec = pg.math.Vector2
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = PLAYER_LAYER
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -115,25 +116,32 @@ class Player(pg.sprite.Sprite):
 
 class Platform(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour, mode="platform"):
+        self._layer = PLATFORM_LAYER
         self.groups = game.allSprites, game.platforms
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((width, height))
         self.image.fill(colour)
         self.rect = self.image.get_rect()
-        if mode == "platform":
+        self.mode = mode
+        if self.mode == "platform":
             self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
-        elif mode == "track":
+        elif self.mode == "track":
             self.rect.x, self.rect.y = x, y
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y, colour=None, altColour=None, mode=None, mode2=None, width=None, height=None):
+        self._layer = WALL_LAYER
         if mode == "tiled":
             if mode2 == "end":
                 self.groups = game.endWalls
             else:
                 self.groups = game.walls
             pg.sprite.Sprite.__init__(self, self.groups)
+            # self.image = pg.Surface((width, height))
+            # self.image.fill(RED)
+            # self.rect = self.image.get_rect()
             self.rect = pg.Rect(x, y, width, height)
+            # pg.draw.rect(game.screen, RED, (x, y, width, height), 1)
             self.rect.x, self.rect.y = x, y
         else:
             if mode == "end":
@@ -151,6 +159,7 @@ class Wall(pg.sprite.Sprite):
 
 class Rectangle(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour):
+        self._layer = RECTANGLE_LAYER
         self.groups = game.allSprites, game.rectangles
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((width, height))
@@ -163,6 +172,7 @@ class Rectangle(pg.sprite.Sprite):
 
 class Track(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour):
+        self._layer = TRACK_LAYER
         self.groups = game.allSprites, game.platforms
         pg.sprite.Sprite.__init__(self, self.groups)
         self.image = pg.Surface((width, height))
@@ -181,24 +191,56 @@ class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILES
 
 class Question(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = QUESTION_LAYER
         self.groups = game.allSprites, game.questionItems
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((50, 50))
-        self.image.fill(LIGHT_BLUE)
+        # self.image = pg.Surface((self.width, self.height))
+        # self.image.fill(LIGHT_BLUE)
+        self.image = game.questionImage.copy()
+        self.image = pg.transform.scale(self.image, (64, 64))
+        size = self.image.get_size()
+        self.width, self.height = size[0], size[1]
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.x, self.y = x, y
+        self.rect.center = (self.x, self.y)
+        self.velY = 1
+
+    def update(self):
+        self.rect.y += self.velY
+        if self.rect.top > self.y - self.height/4:
+            self.velY = -1
+        if self.rect.bottom < self.y + self.height/4:
+            self.velY = 1
+
+
 
 class Coin(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = COIN_LAYER
         self.groups = game.allSprites, game.coins
         pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((30,30))
-        self.image.fill(ORANGE)
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.game = game
+        # self.image = pg.Surface((30,30))
+        # self.image.fill(ORANGE)
+        # self.rect = self.image.get_rect()
+        # self.rect.center = (x, y)
+        self.x = x
+        self.y = y
+        self.currentFrame = 0
+        self.lastUpdated = 0
+
+    def update(self):
+        now = pg.time.get_ticks()
+        if now - self.lastUpdated > 200:
+            self.lastUpdated = now
+            self.currentFrame = (self.currentFrame + 1) % len(self.game.coinImages)
+            self.image = self.game.coinImages[self.currentFrame]
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.x, self.y)
 
 class InputBox(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, text='', textSize=32, fontName=None):
+        self._layer = INPUT_BOX_LAYER
         self.groups = game.allSprites, game.userInputBox
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -247,6 +289,7 @@ class InputBox(pg.sprite.Sprite):
 
 class Button(pg.sprite.Sprite):
     def __init__(self, game, tag, x, y, width, height, solidColour, highlightColour, text, textSize=None, solidButtonImage=None, highlightButtonImage=None):
+        self._layer = BUTTON_LAYER
         self.groups = game.buttons
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game

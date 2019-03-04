@@ -180,7 +180,7 @@ class sceneManager():
             elif tileObject.name == "question":
                 Question(self.game, tileObject.x, tileObject.y)
             elif tileObject.name == "track":
-                Platform(self.game, tileObject.x, tileObject.y, 2, 2, LIGHT_BLUE, "track")
+                Platform(self.game, tileObject.x, tileObject.y, tileObject.width, tileObject.height, LIGHT_BLUE, "track")
 
         # for row, tiles in enumerate(self.game.map.data):
         #     for col, tile in enumerate(tiles):
@@ -739,11 +739,15 @@ class sceneManager():
 
                         for button in self.game.buttons:
                             button.kill()
+
                         self.game.questionID = []
                         for i in range(len(self.game.questionData)):
                             if self.game.questionData[i][7] == self.game.settingsQuestionDiff:
                                 self.game.questionID.append(self.game.questionData[i][0])
+
+                                
                         print(self.game.questionID)
+
                         self.loadLevel("settingsMenu")
                 else:
                     self.leaderboardLoadLevel = button.tag

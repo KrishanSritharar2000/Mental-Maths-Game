@@ -1,3 +1,4 @@
+import pygame as pg
 #Game options/settings
 
 TITLE = "Demo"
@@ -45,13 +46,21 @@ LEVEL_SCREENS = ["level1",
 
 
 #Player properties
-PLAYER_ACC = 1.4
+PLAYER_ACC = 1.2
 BRAKE_ACC = 0.4
 PLAYER_FRICTION = -0.05
 PLAYER_GRAV = 0.8
 
-#0.5
-#-0.12
+#Layers
+PLAYER_LAYER = 2
+PLATFORM_LAYER = 1
+WALL_LAYER = 1
+TRACK_LAYER = 1
+RECTANGLE_LAYER = 2
+QUESTION_LAYER = 3
+COIN_LAYER = 3
+INPUT_BOX_LAYER = 1
+BUTTON_LAYER = 1
 
 
 # define colours
@@ -65,3 +74,12 @@ ORANGE = (255, 165, 0)
 LIGHT_RED = (210, 0, 0)
 LIGHT_GREEN = (0, 150, 0)
 LIGHT_BLUE = (0,0,210)
+
+#Images
+COIN_IMAGES = ["coin1.png",
+               "coin2.png",
+               "coin3.png",
+               "coin4.png",
+               "coin5.png",
+               "coin6.png"]
+QUESTION_IMAGE = "boxQuestion.png"
