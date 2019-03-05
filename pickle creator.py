@@ -15,9 +15,11 @@ def statistics():
     exportDict.close()
 
 def createScoreDict(level):
-    levelDict = {0:[100, "name100","date100"], 1:[90, "test90", "date90"], 2:[80, "name80", "date80"], 3:[70, "test70", "date70"], \
-                  4:[60, "name60", "date60"], 5:[50, "test50", "date50"], 6:[40, "name40", "date40"],   7:[30, "test30", "date30"], \
-                  8:[20, "name20", "date20"], 9:[10, "test10", "date10"]}
+    # levelDict = {0:[100, "name100","date100"], 1:[90, "test90", "date90"], 2:[80, "name80", "date80"], 3:[70, "test70", "date70"], \
+    #               4:[60, "name60", "date60"], 5:[50, "test50", "date50"], 6:[40, "name40", "date40"],   7:[30, "test30", "date30"], \
+    #               8:[20, "name20", "date20"], 9:[10, "test10", "date10"]}
+    levelDict = {0:[0, "",""], 1:[0, "",""], 2:[0, "",""], 3:[0, "",""], 4:[0, "",""], 5:[0, "",""], \
+                 6:[0, "",""], 7:[0, "",""], 8:[0, "",""], 9:[0, "",""]}
     fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
     fileNameList.insert(5, str(level))
     pickleFile = "".join(fileNameList)
@@ -45,7 +47,23 @@ def loadHighscore(level):
 # loadHighscore(2)
 # loadHighscore(1)
 
-createScoreDict(2)
-loadLevel(1)
+# createScoreDict(1)
+# loadLevel(1)
+# createScoreDict(2)
+# loadLevel(2)
+# createScoreDict(3)
+# loadLevel(3)
+# createScoreDict(4)
+# loadLevel(4)
+# createScoreDict(5)
+# loadLevel(5)
+# createScoreDict(6)
+# loadLevel(6)
+# createScoreDict(7)
+# loadLevel(7)
+# createScoreDict(8)
+# loadLevel(8)
+# createScoreDict(0)
+# loadLevel(0)
 
 # statistics()

@@ -115,14 +115,19 @@ class Player(pg.sprite.Sprite):
 
 
 class Platform(pg.sprite.Sprite):
-    def __init__(self, game, x, y, width, height, colour, mode="platform"):
+    def __init__(self, game, x, y, width, height, colour, mode="platform", show=True):
         self._layer = PLATFORM_LAYER
-        self.groups = game.allSprites, game.platforms
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.image = pg.Surface((width, height))
-        self.image.fill(colour)
-        self.rect = self.image.get_rect()
         self.mode = mode
+        if show == True:
+            self.groups = game.allSprites, game.platforms
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.image = pg.Surface((width, height))
+            self.image.fill(colour)
+            self.rect = self.image.get_rect()
+        elif show == False:
+            self.groups =  game.platforms
+            pg.sprite.Sprite.__init__(self, self.groups)
+            self.rect = pg.Rect(x, y, width, height)
         if self.mode == "platform":
             self.rect.x, self.rect.y = x * TILESIZE, y * TILESIZE
         elif self.mode == "track":
@@ -190,7 +195,7 @@ class WallFile(pg.sprite.Sprite):#This is so the sizes are not multiped by TILES
         self.rect.x, self.rect.y = x, y
 
 class Question(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, major=False):
         self._layer = QUESTION_LAYER
         self.groups = game.allSprites, game.questionItems
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -204,6 +209,7 @@ class Question(pg.sprite.Sprite):
         self.x, self.y = x, y
         self.rect.center = (self.x, self.y)
         self.velY = 1
+        self.major = major
 
     def update(self):
         self.rect.y += self.velY
@@ -241,7 +247,7 @@ class Coin(pg.sprite.Sprite):
 class InputBox(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, text='', textSize=32, fontName=None):
         self._layer = INPUT_BOX_LAYER
-        self.groups = game.allSprites, game.userInputBox
+        self.groups = game.userInputBox
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.rect = pg.Rect(x, y, width, height)

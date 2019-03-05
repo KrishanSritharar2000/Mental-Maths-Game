@@ -173,7 +173,11 @@ class Game:
         self.questionID = []
         for i in range(len(self.questionData)):
             if self.questionData[i][7] == self.settingsQuestionDiff:
-                self.questionID.append(self.questionData[i][0])
+                if self.questionData[i][9] == 'FALSE':
+                    self.questionID.append(self.questionData[i][0])
+                    print("This is the Question:", self.questionData[i][1], self.questionData[i][9])
+        self.majorQuestion = False
+        self.majorQuestionCorrect = True
         self.sceneMan.loadLevel('startScreen')
         self.run()
 
@@ -234,6 +238,8 @@ class Game:
                 if hitQuestion:
                     self.askQuestion = True
                     self.paused = True
+                    if hitQuestion[0].major == True:
+                        self.majorQuestion = True
 
                 hitCoin =  pg.sprite.spritecollide(self.player, self.coins, True)
                 if hitCoin:
@@ -247,11 +253,14 @@ class Game:
                     self.totalScore += self.score
                     print("Hit Wall")
                     print("Total Score", self.totalScore)
+                    self.majorQuestion = False
+
                     self.sceneMan.secondPrevScence = self.sceneMan.prevScence
                     self.sceneMan.prevScence = self.sceneMan.currentScene
                     self.sceneMan.currentScene = "levelComplete"
                     self.sceneMan.showPlayer = False
                     self.sceneMan.loadLevel("levelComplete")
+
 
     def events(self):
         #Game loop - Events1
@@ -293,6 +302,15 @@ class Game:
         self.startTime = pg.time.get_ticks()
         print("this is the question data", self.questionData)
 
+        if self.majorQuestion == True:
+            self.questionID = []
+
+            for i in range(len(self.questionData)):
+                if self.questionData[i][9] == 'TRUE':
+                    if self.questionData[i][7] == self.settingsQuestionDiff:
+                        print("This is the Question:", self.questionData[i][1], self.questionData[i][9])
+                        self.questionID.append(self.questionData[i][0])
+
         questionNumber = random.choice(self.questionID)
         wrongAns = [3,4,5,6]
         chosenAns = [2,]
@@ -310,7 +328,7 @@ class Game:
             chosenAns.append(randomIndex)
         random.shuffle(chosenAns)
 
-        self.drawText(str(self.questionData[self.questionNumberIndex][1]), 30, WHITE, WIDTH/2, HEIGHT*2/9, surf=self.questionSurface)
+        self.drawText(str(self.questionData[self.questionNumberIndex][1]), 30, HUD_COLOUR, WIDTH/2, HEIGHT*2/9, surf=self.questionSurface)
         print("text to be printed {}".format(str(self.questionData[self.questionNumberIndex][1])))
 
         answer1 = Button(self, str(chosenAns[0]), WIDTH/3, HEIGHT/2, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, str(self.questionData[self.questionNumberIndex][chosenAns[0]]))
@@ -345,14 +363,16 @@ class Game:
     def countdownTimer(self):
         now = pg.time.get_ticks()
         if now - self.lastCountdownTime > 1000 and self.timeRemaining >= 0:
-            self.questionSurface.fill(BLACK, (WIDTH*7/8-80, HEIGHT/8-25, 160, 50))
+            self.questionSurface.fill(WHITE, (WIDTH*7/8-80, HEIGHT/8-25, 160, 50))
             self.lastCountdownTime = now
             print("Time Remaining: {}".format(self.timeRemaining))
-            self.drawText("Time Remaining: {}".format(self.timeRemaining), 20, BLUE, WIDTH*7/8, HEIGHT/8, surf=self.questionSurface)
+            self.drawText("Time Remaining: {}".format(self.timeRemaining), 20, HUD_COLOUR, WIDTH*7/8, HEIGHT/8, surf=self.questionSurface)
             self.timeRemaining -= 1
         if self.timeRemaining == -1:
             self.timeOut = True
             self.answerClicked = True
+            if self.majorQuestion:
+                self.majorQuestionCorrect = False
 
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -360,7 +380,7 @@ class Game:
             if self.askQuestion:
                 if self.questionScreenPrinted == False:
                     self.questionSurface.fill(0)
-                    self.drawText("Question asking", 25, WHITE, WIDTH/2, HEIGHT*1/9, surf=self.questionSurface, fontName=self.interfaceFont)
+                    self.drawText("Question asking", 25, HUD_COLOUR, WIDTH/2, HEIGHT*1/9, surf=self.questionSurface, fontName=self.interfaceFont)
                     self.getQuestion()
                     self.getTimeAllowed()
                     print("The question: {} The correct answer: {}".format(self.questionData[self.questionNumberIndex][1], self.questionData[self.questionNumberIndex][2]))
@@ -385,15 +405,18 @@ class Game:
                         self.drawText("Correct Answer", 35, GREEN, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
                     elif self.timeOut:
                         self.drawText("Time Out", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
-                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, WHITE, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
+                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, HUD_COLOUR, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
                         print("Time out, INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
                         for button in self.buttons:
                             button.kill()
                     else:
+                        if self.majorQuestion:
+                            self.majorQuestionCorrect = False
                         print("INCORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
                         self.drawText("Incorrect Answer", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
-                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, WHITE, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
+                        self.drawText("Correct Answer was {}".format(self.questionData[self.questionNumberIndex][2]), 20, HUD_COLOUR, WIDTH/2, HEIGHT*5/6 + 50, surf=self.questionSurface)
 
+                    print("major quesion", self.majorQuestionCorrect)
                     self.screen.blit(self.questionSurface, self.questionSurface.get_rect())
                     pg.display.flip()
                     pg.time.delay(1500)
@@ -426,8 +449,8 @@ class Game:
                 self.screen.blit(self.tiledMapImg, self.camera.applyOffsetRect(self.tiledMapRect))
                 for sprite in self.allSprites:
                     self.screen.blit(sprite.image, self.camera.applyOffset(sprite))
-                self.drawText("Score: " + str(self.score), 22, WHITE, WIDTH-100, 15)
-                self.drawText("Coin: " + str(self.coinAmount), 22, WHITE, 100, 15)
+                self.drawText("Score: " + str(self.score), 22, HUD_COLOUR, WIDTH-100, 15)
+                self.drawText("Coin: " + str(self.coinAmount), 22, HUD_COLOUR, 100, 15)
         pg.display.flip()
         # if self.delay:
         #     pg.time.delay(1500)
