@@ -82,7 +82,7 @@ class TiledMap():
                 for x, y, gid, in layer:
                     tile = tileImage(gid)
                     if tile:
-                        surface.blit(tile, (x * self.tiledMapFile.tilewidth, y * self.tiledMapFile.tileheight - TILESIZE))
+                        surface.blit(tile, (x * self.tiledMapFile.tilewidth- TILESIZE, y * self.tiledMapFile.tileheight - TILESIZE))
     def makeMap(self):
         tempSurface = pg.Surface((self.width, self.height))
         self.render(tempSurface)
@@ -91,7 +91,7 @@ class TiledMap():
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
-        self.width = width
+        self.width = width - TILESIZE
         self.height = height
 
 
@@ -157,6 +157,8 @@ class sceneManager():
             self.levelFailed()
         if self.level == "pause":
             self.pause()
+        if self.level == "instructions":
+            self.instructions()
 
     def level1(self):
         self.showPlayer = True
@@ -256,98 +258,201 @@ class sceneManager():
         # self.game.screen.blit(pauseIMG, pauseIMGRect)
 
     def level2(self):
-        self.showPlayer = True
-        self.game.map = Map(path.join(self.game.mapFolder,'map3.txt'), path.join(self.game.mapFolder,'Track4.bmp'), bitSize=1)
-        self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        # self.showPlayer = True
+        # self.game.map = Map(path.join(self.game.mapFolder,'map3.txt'), path.join(self.game.mapFolder,'Track4.bmp'), bitSize=1)
+        # self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        # #
+        # for row, tiles in enumerate(self.game.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == "1":
+        #             Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
+        #         if tile == "3":
+        #             Wall(self.game, col, row, RED)
+        #         if tile == "P":
+        #             self.game.player = Player(self.game, col, row)
         #
-        for row, tiles in enumerate(self.game.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == "1":
-                    Platform(self.game, col, row, TILESIZE, TILESIZE, GREEN)
-                if tile == "3":
-                    Wall(self.game, col, row, RED)
-                if tile == "P":
-                    self.game.player = Player(self.game, col, row)
+        # for coordinates in range(len(self.game.map.trackData)):
+        #     platformx = self.game.map.trackData[coordinates][0]
+        #     platformy = self.game.map.trackData[coordinates][1]
+        #     Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
+        #
+        # self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+        self.showPlayer = True
+        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level2.tmx'), path.join(self.game.mapFolder,'Level1TrackBMP.bmp'))
+        self.game.tiledMapImg  = self.game.tiledMap.makeMap()
+        self.game.tiledMapRect = self.game.tiledMapImg.get_rect()
+        self.game.camera = Camera(self.game.tiledMap.width, self.game.tiledMap.height)
+        self.loadHighscore(2)
 
-        for coordinates in range(len(self.game.map.trackData)):
-            platformx = self.game.map.trackData[coordinates][0]
-            platformy = self.game.map.trackData[coordinates][1]
-            Platform(self.game, platformx, platformy, 1, 1, LIGHT_BLUE, 'track')
+        for tileObject in self.game.tiledMap.tiledMapFile.objects:
+            if tileObject.name == "player":
+                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "wall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
+            elif tileObject.name == "endWall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled", mode2="end")
+            elif tileObject.name == "coin":
+                Coin(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "question":
+                Question(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "majorQuestion":
+                Question(self.game, tileObject.x, tileObject.y, major=True)
+            elif tileObject.name == "track":
+                Platform(self.game, tileObject.x, tileObject.y, tileObject.width, tileObject.height, LIGHT_BLUE, "track", show=False)
 
-        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+        # Player(self.game, WIDTH/2, HEIGHT/2)
+
+
 
     def level3(self):
         self.showPlayer = True
-        self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track6.bmp'))
-        self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level3.tmx'), path.join(self.game.mapFolder,'Level1TrackBMP.bmp'))
+        self.game.tiledMapImg  = self.game.tiledMap.makeMap()
+        self.game.tiledMapRect = self.game.tiledMapImg.get_rect()
+        self.game.camera = Camera(self.game.tiledMap.width, self.game.tiledMap.height)
+        self.loadHighscore(3)
 
-        for row, tiles in enumerate(self.game.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == "1":
-                    Platform(self.game, col, row, 50, 50, GREEN)
-                if tile == "3":
-                    Wall(self.game, col, row, RED)
-                if tile == "P":
-                    self.game.player = Player(self.game, col, row)
+        for tileObject in self.game.tiledMap.tiledMapFile.objects:
+            if tileObject.name == "player":
+                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "wall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
+            elif tileObject.name == "endWall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled", mode2="end")
+            elif tileObject.name == "coin":
+                Coin(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "question":
+                Question(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "majorQuestion":
+                Question(self.game, tileObject.x, tileObject.y, major=True)
+            elif tileObject.name == "track":
+                Platform(self.game, tileObject.x, tileObject.y, tileObject.width, tileObject.height, LIGHT_BLUE, "track", show=False)
 
-        for coordinates in range(len(self.game.map.trackData)):
-            trackx = self.game.map.trackData[coordinates][0]
-            tracky = self.game.map.trackData[coordinates][1]
-            Platform(self.game, trackx, tracky, 1, 1, LIGHT_BLUE, 'track')
-
-        for coordinates in range(len(self.game.map.wallData)):
-            wallx = self.game.map.wallData[coordinates][0]
-            wally = self.game.map.wallData[coordinates][1]
-            WallFile(self.game, wallx, wally, 1, 1, LIGHT_RED)
-
-        for coordinates in range(len(self.game.map.fillData)):
-            fillx = self.game.map.fillData[coordinates][0]
-            filly = self.game.map.fillData[coordinates][1]
-            Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
-            # pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1])
-
-            # print(fillx, filly)
-        self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
+        # self.showPlayer = True
+        # self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track6.bmp'))
+        # self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        #
+        # for row, tiles in enumerate(self.game.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == "1":
+        #             Platform(self.game, col, row, 50, 50, GREEN)
+        #         if tile == "3":
+        #             Wall(self.game, col, row, RED)
+        #         if tile == "P":
+        #             self.game.player = Player(self.game, col, row)
+        #
+        # for coordinates in range(len(self.game.map.trackData)):
+        #     trackx = self.game.map.trackData[coordinates][0]
+        #     tracky = self.game.map.trackData[coordinates][1]
+        #     Platform(self.game, trackx, tracky, 1, 1, LIGHT_BLUE, 'track')
+        #
+        # for coordinates in range(len(self.game.map.wallData)):
+        #     wallx = self.game.map.wallData[coordinates][0]
+        #     wally = self.game.map.wallData[coordinates][1]
+        #     WallFile(self.game, wallx, wally, 1, 1, LIGHT_RED)
+        #
+        # for coordinates in range(len(self.game.map.fillData)):
+        #     fillx = self.game.map.fillData[coordinates][0]
+        #     filly = self.game.map.fillData[coordinates][1]
+        #     Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
+        #     # pg.draw.rect(self.game.screen, YELLOW, [fillx, filly, 1, 1])
+        #
+        #     # print(fillx, filly)
+        # self.pauseButton = Button(self.game, "pause", WIDTH*8/9, HEIGHT*1/12, 30, 30, YELLOW, LIGHT_BLUE, "", 18,self.game.pauseIMGWhite, self.game.pauseIMGBlack)
 
     def level4(self):
+
         self.showPlayer = True
-        print("level4")
-        self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track7.bmp'))
-        self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        self.game.tiledMap = TiledMap(path.join(self.game.mapFolder,'Level4.tmx'), path.join(self.game.mapFolder,'Level1TrackBMP.bmp'))
+        self.game.tiledMapImg  = self.game.tiledMap.makeMap()
+        self.game.tiledMapRect = self.game.tiledMapImg.get_rect()
+        self.game.camera = Camera(self.game.tiledMap.width, self.game.tiledMap.height)
+        self.loadHighscore(4)
 
-        for row, tiles in enumerate(self.game.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == "1":
-                    Platform(self.game, col, row, 50, 50, GREEN)
-                if tile == "3":
-                    Wall(self.game, col, row, RED)
-                if tile == "P":
-                    self.game.player = Player(self.game, col, row)
+        for tileObject in self.game.tiledMap.tiledMapFile.objects:
+            if tileObject.name == "player":
+                self.game.player = Player(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "wall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
+            elif tileObject.name == "endWall":
+                print("A wall has been added")
+                Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled", mode2="end")
+            elif tileObject.name == "coin":
+                Coin(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "question":
+                Question(self.game, tileObject.x, tileObject.y)
+            elif tileObject.name == "majorQuestion":
+                Question(self.game, tileObject.x, tileObject.y, major=True)
+            elif tileObject.name == "track":
+                Platform(self.game, tileObject.x, tileObject.y, tileObject.width, tileObject.height, LIGHT_BLUE, "track", show=False)
 
-        for coordinates in range(len(self.game.map.trackData)):
-            trackx = self.game.map.trackData[coordinates][0]
-            tracky = self.game.map.trackData[coordinates][1]
-            Platform(self.game, trackx, tracky, 1, 1, LIGHT_BLUE, 'track')
+        #
+        # self.showPlayer = True
+        # print("level4")
+        # self.game.map = Map(path.join(self.game.mapFolder,'map2.txt'), path.join(self.game.mapFolder,'Track7.bmp'))
+        # self.game.camera = Camera(self.game.map.width, self.game.map.height)
+        #
+        # for row, tiles in enumerate(self.game.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == "1":
+        #             Platform(self.game, col, row, 50, 50, GREEN)
+        #         if tile == "3":
+        #             Wall(self.game, col, row, RED)
+        #         if tile == "P":
+        #             self.game.player = Player(self.game, col, row)
+        #
+        # for coordinates in range(len(self.game.map.trackData)):
+        #     trackx = self.game.map.trackData[coordinates][0]
+        #     tracky = self.game.map.trackData[coordinates][1]
+        #     Platform(self.game, trackx, tracky, 1, 1, LIGHT_BLUE, 'track')
+        #
+        # for coordinates in range(len(self.game.map.wallData)):
+        #     wallx = self.game.map.wallData[coordinates][0]
+        #     wally = self.game.map.wallData[coordinates][1]
+        #     WallFile(self.game, wallx, wally, 1, 1, LIGHT_RED)
+        #
+        # for coordinates in range(len(self.game.map.fillData)):
+        #     fillx = self.game.map.fillData[coordinates][0]
+        #     filly = self.game.map.fillData[coordinates][1]
+        #     Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
+        #
+        # for coordinates in range(len(self.game.map.questionData)):
+        #     fillx = self.game.map.questionData[coordinates][0]
+        #     filly = self.game.map.questionData[coordinates][1]
+        #     Question(self.game, fillx, filly)
 
-        for coordinates in range(len(self.game.map.wallData)):
-            wallx = self.game.map.wallData[coordinates][0]
-            wally = self.game.map.wallData[coordinates][1]
-            WallFile(self.game, wallx, wally, 1, 1, LIGHT_RED)
+    def instructions(self):
+        self.image = pg.transform.scale(self.game.menuImages['levelComplete'], (WIDTH, HEIGHT))
+        rect = self.image.get_rect()
+        self.game.screen.blit(self.image, rect)
+        self.game.drawText("Instructions", 30, WHITE, WIDTH/2, HEIGHT/6, fontName=self.game.interfaceFont2)
+        self.game.drawText("WASD or Arrow Keys to move", 20, WHITE, WIDTH/2, HEIGHT*3/8, fontName=self.game.interfaceFont2)
+        self.game.drawText("Space Bar to jump", 20, WHITE, WIDTH/2, HEIGHT*4/8, fontName=self.game.interfaceFont2)
+        self.game.drawText("Answer the questions and collect the coins!", 20, WHITE, WIDTH/2, HEIGHT*5/8, fontName=self.game.interfaceFont2)
+        self.game.drawText("Make sure you get the final question", 20, WHITE, WIDTH/2, HEIGHT*23//32, fontName=self.game.interfaceFont2)
+        self.game.drawText("correct to finish the level!", 20, WHITE, WIDTH/2, HEIGHT*25/32, fontName=self.game.interfaceFont2)
+        self.game.drawText("Press A Button To Start!", 22, WHITE, WIDTH/2, HEIGHT*7/8, fontName=self.game.interfaceFont2)
+        pg.display.flip()
+        self.waitForKey()
+        if self.prevScence == "settingsMenu":
+            self.currentScene = 'settingsMenu'
+            self.loadLevel('settingsMenu')
 
-        for coordinates in range(len(self.game.map.fillData)):
-            fillx = self.game.map.fillData[coordinates][0]
-            filly = self.game.map.fillData[coordinates][1]
-            Rectangle(self.game, fillx, filly, 1, 1, YELLOW)
-
-        for coordinates in range(len(self.game.map.questionData)):
-            fillx = self.game.map.questionData[coordinates][0]
-            filly = self.game.map.questionData[coordinates][1]
-            Question(self.game, fillx, filly)
 
     def levelComplete(self):
         self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
         rect = self.image.get_rect()
         self.game.screen.blit(self.image, rect)
+        self.game.drawText("Score: {}".format(str(self.game.score)), 25, WHITE, WIDTH/2, HEIGHT*3/11, fontName=self.game.buttonFont)
+        self.game.drawText("Highscore: {}".format(str(self.highscoreDict[0][0])), 25, WHITE, WIDTH/2, HEIGHT*4/11, fontName=self.game.interfaceFont)
+
+        self.game.drawText("Coins Collected: {}".format(self.coinCollected), 25, WHITE, WIDTH/4, HEIGHT*6/11, fontName=None)
+        self.game.drawText("Total Coins: {}".format(self.game.coinAmount), 25, WHITE, WIDTH/4, HEIGHT*7/11, fontName=None)
         if self.game.majorQuestionCorrect:
             self.game.drawText("Level Completed", 30, WHITE, WIDTH/2, HEIGHT/6, fontName=self.game.interfaceFont)
             self.nextLevelTagNumber = int(self.prevScence[-1]) + 1
@@ -357,11 +462,6 @@ class sceneManager():
             print("Next Level: ", nextLevel)
             # if self.game.score > self.highscore:
                 # self.game.drawText("Congratulations, new High Score", 28, WHITE, WIDTH/2, HEIGHT*5/11, fontName=self.game.interfaceFont)
-            self.game.drawText("Score: {}".format(str(self.game.score)), 25, WHITE, WIDTH/2, HEIGHT*3/11, fontName=self.game.buttonFont)
-            self.game.drawText("Highscore: {}".format(str(self.highscoreDict[0][0])), 25, WHITE, WIDTH/2, HEIGHT*4/11, fontName=self.game.interfaceFont)
-
-            self.game.drawText("Coins Collected: {}".format(self.coinCollected), 25, WHITE, WIDTH/4, HEIGHT*6/11, fontName=None)
-            self.game.drawText("Total Coins: {}".format(self.game.coinAmount), 25, WHITE, WIDTH/4, HEIGHT*7/11, fontName=None)
 
             index = 11
             for i in range(10):
@@ -377,9 +477,12 @@ class sceneManager():
                 self.inputBox = InputBox(self.game, WIDTH*5/8, HEIGHT*7/11, 150, 32, text='')
             else:
                 self.inputBox = None
-            self.nextLevel = Button(self.game, nextLevel, WIDTH /2, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Next Level")
+            if self.prevScence != "level4":
+                self.nextLevel = Button(self.game, nextLevel, WIDTH /2, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Next Level")
         else:
             self.game.drawText("Level Failed", 30, WHITE, WIDTH/2, HEIGHT/6, fontName=self.game.interfaceFont)
+            self.samelevel = Button(self.game, self.prevScence, WIDTH /2, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Retry Level")
+
 
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/4, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Main Menu")
         self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*3/4, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Select Level")
@@ -393,7 +496,7 @@ class sceneManager():
         self.game.screen.blit(self.image, rect)
         self.game.drawText("Level Failed", 30, WHITE, WIDTH/2, HEIGHT/6, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/4, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Main Menu")
-        # self.nextLevel = Button(self.game, nextLevel, WIDTH /2, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Next Level")
+        self.samelevel = Button(self.game, self.prevScence, WIDTH /2, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Retry Level")
         self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*3/4, HEIGHT*7/8, WIDTH/5, HEIGHT/6, YELLOW, LIGHT_BLUE, "Select Level")
 
 
@@ -499,12 +602,13 @@ class sceneManager():
         # self.game.paused = True
 
     def settingsMenu(self):
-        self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
+        self.image = pg.transform.scale(self.game.menuImages['settingsMenu'], (WIDTH, HEIGHT))
         rect = self.image.get_rect()
         self.game.screen.blit(self.image, rect)
         self.game.drawText("Settings", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/9, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.startScreenButton = Button(self.game, "startScreen", WIDTH/4, HEIGHT*3/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "View Start Screen")
+        self.instructionsButton = Button(self.game, "instructions", WIDTH/4, HEIGHT*4/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Instructions")
 
         self.game.drawText("Question Difficulty: {}".format(self.game.settingsQuestionDiff.capitalize()), 18, \
                             WHITE, WIDTH*11/16, HEIGHT/4, fontName=self.game.interfaceFont2)
@@ -602,8 +706,22 @@ class sceneManager():
             self.game.drawText(str(self.leaderboardDict[i][2]), 18, WHITE, WIDTH*7/8, HEIGHT*(8+i)/18, fontName=self.game.interfaceFont2)
 
     def shop(self):
+        self.image = pg.transform.scale(self.game.menuImages['shop'], (WIDTH, HEIGHT))
+        rect = self.image.get_rect()
+        self.game.screen.blit(self.image, rect)
         self.game.drawText("Spend your coins in the shop", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
+        self.carButton = Button(self.game, "car", WIDTH*2/5, HEIGHT*5/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Car")
+        self.bikeButton = Button(self.game, "bike", WIDTH*2/5, HEIGHT*8/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Bike")
+        self.game.screen.blit(self.game.carImage, (WIDTH*11/20, HEIGHT*9/24))
+        self.game.screen.blit(self.game.bikeImage, (WIDTH*11/20, HEIGHT*15/24))
+        if self.game.imageType == "car":
+            currentVehicle = "Car"
+        if self.game.imageType == "bike":
+            currentVehicle = "Bike"
+        self.game.drawText("Current Vehicle: {}".format(currentVehicle), 25, WHITE, WIDTH/2, HEIGHT*3/12, surf=None, align=None, fontName=self.game.interfaceFont2)
+
+
 
     def mainMenu(self):
         if self.image != pg.transform.scale(self.game.menuImages["mainMenu"], (WIDTH, HEIGHT)):
@@ -666,93 +784,111 @@ class sceneManager():
 
                 if self.currentScene != "leaderboard" or (self.currentScene == "leaderboard" and button.tag == "mainMenu"):
                     if self.currentScene != "settingsMenu" or (self.currentScene == "settingsMenu" and button.tag == "mainMenu") \
-                        or (self.currentScene == "settingsMenu" and button.tag == "startScreen"):
+                        or (self.currentScene == "settingsMenu" and button.tag == "startScreen") \
+                        or (self.currentScene == "settingsMenu" and button.tag == "instructions"):
 
-                        if self.currentScene == "levelComplete":
-                            if not self.updatedHighscore:
-                                self.updateHighscore(self.nextLevelTagNumber-1, self.game.score)
-                        if button.tag not in ("2", "3", "4", "5", "6"):
-                            self.secondPrevScence = self.prevScence
-                            self.prevScence = self.currentScene
-                            self.currentScene = button.tag
+                        if self.currentScene != "shop" or (self.currentScene == "shop" and button.tag == "mainMenu"):
 
-                            print("2nd Prev: {}, Prev: {}, Current: {} ButtonTag: {}".format(self.secondPrevScence, self.prevScence, self.currentScene, button.tag))
-                            if button.tag not in ('level1', 'level2', 'level3','level4', 'pause', 'resume', 'levelComplete', 'levelFailed'):
-                                self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
-                                rect = self.image.get_rect()
-                                self.game.screen.blit(self.image, rect)
-                                for inputBox in self.game.userInputBox:
-                                    inputBox.kill()
-                            elif button.tag in (LEVEL_SCREENS):#creation of a new level
-                                for wall in self.game.walls:
-                                    wall.kill()
-                                for endWall in self.game.endWalls:
-                                    endWall.kill()
-                                for platform in self.game.platforms:
-                                    platform.kill()
-                                for rectangle in self.game.rectangles:
-                                    rectangle.kill()
-                                for questions in self.game.questionItems:
-                                    questions.kill()
-                                if self.game.player != None:
-                                    self.game.player.kill()
+                            if self.currentScene == "levelComplete":
+                                if not self.updatedHighscore and self.game.majorQuestionCorrect:
+                                    self.updateHighscore(self.nextLevelTagNumber-1, self.game.score)
+                            if button.tag not in ("2", "3", "4", "5", "6"):
+                                self.secondPrevScence = self.prevScence
+                                self.prevScence = self.currentScene
+                                self.currentScene = button.tag
 
-                                self.loadHighscore(int(self.currentScene[-1]))
+                                print("2nd Prev: {}, Prev: {}, Current: {} ButtonTag: {}".format(self.secondPrevScence, self.prevScence, self.currentScene, button.tag))
+                                if button.tag not in ('level1', 'level2', 'level3','level4', 'pause', 'resume', 'levelComplete', 'levelFailed', 'instructions'):
+                                    self.image = pg.transform.scale(self.game.menuImages[self.currentScene], (WIDTH, HEIGHT))
+                                    rect = self.image.get_rect()
+                                    self.game.screen.blit(self.image, rect)
+                                    for inputBox in self.game.userInputBox:
+                                        inputBox.kill()
+                                elif button.tag in (LEVEL_SCREENS):#creation of a new level
+                                    for wall in self.game.walls:
+                                        wall.kill()
+                                    for endWall in self.game.endWalls:
+                                        endWall.kill()
+                                    for platform in self.game.platforms:
+                                        platform.kill()
+                                    for rectangle in self.game.rectangles:
+                                        rectangle.kill()
+                                    for questions in self.game.questionItems:
+                                        questions.kill()
+                                    for coin in self.game.coins:
+                                        coin.kill()
+                                    if self.game.player != None:
+                                        self.game.player.kill()
 
-                                self.game.score = 0
-                                self.coinCollected = 0
-                                self.game.gamesPlayed += 1
+                                    self.loadHighscore(int(self.currentScene[-1]))
 
-                            if button.tag == "startScreen":
-                                self.loadLevel('startScreen')
-                            if button.tag == "levelSelect":
-                                self.loadLevel('levelSelect')
-                            if button.tag == "shop":
-                                self.loadLevel('shop')
-                            if button.tag == 'mainMenu':
-                                if self.game.paused:
+                                    self.game.score = 0
+                                    self.coinCollected = 0
+                                    self.game.gamesPlayed += 1
+                                    self.loadLevel('instructions')
+
+                                if button.tag == "startScreen":
+                                    self.loadLevel('startScreen')
+                                if button.tag == "levelSelect":
+                                    self.loadLevel('levelSelect')
+                                if button.tag == "shop":
+                                    self.loadLevel('shop')
+                                if button.tag == 'mainMenu':
+                                    if self.game.paused:
+                                        self.game.paused = False
+                                    self.loadLevel('mainMenu')
+                                if button.tag == "settingsMenu":
+                                    self.loadLevel('settingsMenu')
+                                if button.tag == 'leaderboard':
+                                    self.loadLevel('leaderboard')
+                                if button.tag == 'stats':
+                                    self.loadLevel('stats')
+                                if button.tag == 'level1':
+                                    self.loadLevel('level1')
+                                if button.tag == 'level2':
+                                    self.loadLevel('level2')
+                                if button.tag == 'level3':
+                                    self.loadLevel('level3')
+                                if button.tag == 'level4':
+                                    self.loadLevel('level4')
+                                if button.tag == "levelComplete":
+                                    self.loadLevel('levelComplete')
+                                if button.tag == "levelFailed":
+                                    self.loadLevel('levelFailed')
+                                if button.tag == 'pause':
+                                    self.loadLevel('pause')
+                                if button.tag == 'instructions':
+                                    self.loadLevel('instructions')
+                                if button.tag == 'resume':
                                     self.game.paused = False
-                                self.loadLevel('mainMenu')
-                            if button.tag == "settingsMenu":
-                                self.loadLevel('settingsMenu')
-                            if button.tag == 'leaderboard':
-                                self.loadLevel('leaderboard')
-                            if button.tag == 'stats':
-                                self.loadLevel('stats')
-                            if button.tag == 'level1':
-                                self.loadLevel('level1')
-                            if button.tag == 'level2':
-                                self.loadLevel('level2')
-                            if button.tag == 'level3':
-                                self.loadLevel('level3')
-                            if button.tag == 'level4':
-                                self.loadLevel('level4')
-                            if button.tag == "levelComplete":
-                                self.loadLevel('levelComplete')
-                            if button.tag == "levelFailed":
-                                self.loadLevel('levelFailed')
-                            if button.tag == 'pause':
-                                self.loadLevel('pause')
-                            if button.tag == 'resume':
-                                self.game.paused = False
+                                    for button in self.game.buttons:
+                                        button.kill()
+                                    self.game.pauseScreenPrinted = False
+                                    self.currentScene = self.prevScence
+                            else:
+                                self.game.answerClicked = True
+                                self.game.selectedAns = self.game.questionData[self.game.questionNumberIndex][int(button.tag)]
+                                if button.tag == "2":
+                                    self.game.answerCorrect = True
+                                else:
+                                    self.game.answerCorrect = False
                                 for button in self.game.buttons:
                                     button.kill()
-                                self.game.pauseScreenPrinted = False
-                                self.currentScene = self.prevScence
+
+                                # self.game.pauseScreen.blit(self.game.pauseScreenImage, self.game.pauseScreenImageRect)
+                                # self.game.pauseScreen.fill((123, 129, 140))
+                            #     self.loadLevel('pause')
+                            button.kill()
                         else:
-                            self.game.answerClicked = True
-                            self.game.selectedAns = self.game.questionData[self.game.questionNumberIndex][int(button.tag)]
-                            if button.tag == "2":
-                                self.game.answerCorrect = True
-                            else:
-                                self.game.answerCorrect = False
+                            if button.tag == "car":
+                                self.game.playerImage = self.game.carImage
+                                self.game.imageType = "car"
+                            elif button.tag == "bike":
+                                self.game.playerImage = self.game.bikeImage
+                                self.game.imageType = "bike"
                             for button in self.game.buttons:
                                 button.kill()
-
-                            # self.game.pauseScreen.blit(self.game.pauseScreenImage, self.game.pauseScreenImageRect)
-                            # self.game.pauseScreen.fill((123, 129, 140))
-                        #     self.loadLevel('pause')
-                        button.kill()
+                            self.loadLevel("shop")
                     else:
                         self.game.settingsQuestionDiff = button.tag
 

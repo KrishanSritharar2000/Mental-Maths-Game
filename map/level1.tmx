@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.07.13" orientation="orthogonal" renderorder="right-down" width="95" height="18" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="1125">
+<map version="1.0" tiledversion="2018.07.13" orientation="orthogonal" renderorder="right-down" width="95" height="18" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="1127">
  <tileset firstgid="1" source="Backgrounds.tsx"/>
  <tileset firstgid="10" source="Grass Ground.tsx"/>
  <tileset firstgid="46" source="colored_desert_small.tsx"/>
@@ -480,5 +480,7 @@
   <object id="1122" name="track" x="1518" y="341" width="2" height="2"/>
   <object id="1123" name="track" x="1499" y="320" width="2" height="2"/>
   <object id="1124" name="track" x="1500" y="321" width="2" height="2"/>
+  <object id="1125" name="wall" x="-31" y="0" width="3035" height="27"/>
+  <object id="1126" name="wall" x="2879" y="1" width="34" height="99"/>
  </objectgroup>
 </map>

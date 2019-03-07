@@ -48,7 +48,19 @@ class Game:
         self.pauseIMGWhite = pg.image.load(path.join(self.imgFolder, 'pauseWhite.png')).convert_alpha()
         self.pauseIMGBlack = pg.image.load(path.join(self.imgFolder, 'pauseBlack.png')).convert_alpha()
 
-        self.playerBikeImage = pg.transform.scale(pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha(), (30, 30))
+        self.carImage = pg.image.load(path.join(self.imgFolder, 'car.png')).convert_alpha()
+        self.carImgSize = self.carImage.get_size()
+        self.carImage = pg.transform.scale(self.carImage, (int(round(self.carImgSize[0]/6,0)), int(round(self.carImgSize[1]/6,0))))
+
+        self.bikeImage = pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha()
+        self.bikeImgSize = self.bikeImage.get_size()
+        self.bikeImage = pg.transform.scale(self.bikeImage, (int(round(self.bikeImgSize[0]/10,0)), int(round(self.bikeImgSize[1]/10,0))))
+        self.playerImage = self.carImage
+
+        if self.playerImage == self.carImage:
+            self.imageType = "car"
+        elif self.playerImage == self.bikeImage:
+            self.imageType = "bike"
 
         self.loadQuestions()
         self.questionSurface = pg.Surface(self.screen.get_size()).convert_alpha()
@@ -214,7 +226,7 @@ class Game:
                 if hitPlatform:
                     # if hitPlatform[0].mode == "track":
                     #     if self.player.vel.x > 0:
-                    #         self.player.pos.y = hitPlatform[-1].rect.topright[1] - self.player.height / 2
+                    #         self.player.pos.y = hitPlatform[-1].rect.topright[1ddd] - self.player.height / 2
                     #     else:
                     #         self.player.pos.y = hitPlatform[-1].rect.topleft[1] - self.player.height / 2
                     #     self.player.vel.y = 0
@@ -224,22 +236,34 @@ class Game:
                     self.player.vel.y = 0
 
                     self.vecToPlayer = self.player.pos - vec(0, HEIGHT)
-                    self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
+                    # if hitPlatform[0].mode == "track":
+                    #     # print("DOING")
+                    #     # print("velx, vely", self.player.vel.x, self.player.vel.y)
+                    #     if self.player.vel.x > 0 and self.player.vel.y > 0:
+                    #         self.player.image = pg.transform.rotate(self.playerImage, 45)
+                    #     elif self.player.vel.x > 0 and self.player.vel.y > 0:
+                    #         self.player.image = pg.transform.rotate(self.playerImage, 315)
+                    # else:
+                    #     self.player.image = self.playerImage
+                    # self.rotate = self.vecToPlayer.angle_to(vec(1, 0))
                     # print(self.player.pos)
                     # print(self.rotate)
-                    if self.prevRotate != round(self.rotate,2):
-                        self.player.image = self.rot_center(self.player.image, self.rotate)
-                        # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
-                        # self.player.rect = self.player.image.get_rect()
-                        # self.player.rect.center = self.player.pos
-                        self.prevRotate = round(self.rotate,2)
+                    # if self.prevRotate != round(self.rotate,2):
+                    #     self.player.image = self.rot_center(self.player.image, self.rotate)
+                    #     # self.player.image = pg.transform.rotate(self.player.image, self.rotate)
+                    #     # self.player.rect = self.player.image.get_rect()
+                    #     # self.player.rect.center = self.player.pos
+                    #     self.prevRotate = round(self.rotate,2)
 
-                hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True)
+                hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, False)
                 if hitQuestion:
-                    self.askQuestion = True
-                    self.paused = True
-                    if hitQuestion[0].major == True:
-                        self.majorQuestion = True
+                    pg.display.update()
+                    hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True, pg.sprite.collide_mask)
+                    if hitQuestion:
+                        self.askQuestion = True
+                        self.paused = True
+                        if hitQuestion[0].major == True:
+                            self.majorQuestion = True
 
                 hitCoin =  pg.sprite.spritecollide(self.player, self.coins, True)
                 if hitCoin:
@@ -316,7 +340,7 @@ class Game:
         chosenAns = [2,]
         print(self.questionID)
         print(questionNumber)
-        self.questionID.remove(questionNumber)
+        # self.questionID.remove(questionNumber)
         print(self.questionID)
         self.questionNumberIndex = questionNumber - 1
         correctAns = self.questionData[self.questionNumberIndex][2]

@@ -9,11 +9,12 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.width = 30
-        self.height = 30
-        self.image = pg.Surface((self.width, self.height))
-        self.image.fill(YELLOW)
-        # self.image = self.game.playerBikeImage.copy()
+        # self.image = pg.Surface((self.width, self.height))
+        # self.image.fill(YELLOW)
+        self.image = self.game.playerImage.copy()
+
+        self.width = self.image.get_size()[0]
+        self.height = self.image.get_size()[1]
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.pos = vec(x,y)

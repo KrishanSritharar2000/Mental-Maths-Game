@@ -32,7 +32,9 @@ MENU_SCREENS = ["settingsMenu",
                 "startScreen",
                 "gameOverScreen",
                 "pause",
-                "levelComplete"]
+                "levelComplete",
+                "levelFailed",
+                "instructions"]
 
 LEVEL_SCREENS = ["level1",
                 "level2",
