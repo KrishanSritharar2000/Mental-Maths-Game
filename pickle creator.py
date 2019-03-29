@@ -14,6 +14,16 @@ def statistics():
     pickle.dump(statsDict, exportDict)
     exportDict.close()
 
+def statisticsRead():
+
+    exportDict = open("stats.pickle", "rb")
+    dict = pickle.load(exportDict)
+    exportDict.close()
+    print(dict)
+    print(dict["vehicleUnlock"])
+
+
+
 def createScoreDict(level):
     # levelDict = {0:[100, "name100","date100"], 1:[90, "test90", "date90"], 2:[80, "name80", "date80"], 3:[70, "test70", "date70"], \
     #               4:[60, "name60", "date60"], 5:[50, "test50", "date50"], 6:[40, "name40", "date40"],   7:[30, "test30", "date30"], \
@@ -35,9 +45,20 @@ def loadLevel(level):
     exportDict = open(pickleFile, "rb")
     dict = pickle.load(exportDict)
     print(dict)
-    print(dict[0][0])
-    print(dict[0][1])
-    print(dict[0][2])
+    # print(dict[1][0])
+    # print(dict[1][1])
+    # print(dict[1][2])
+    print(dict[2])
+    # dict[5][0] = dict[6][0]
+    dict[2][1] = "Ayub"
+    # dict[5][2] = dict[6][2]
+    # dict[6][0] = 0
+    # dict[6][1] = ""
+    # dict[6][2] = ""
+
+    # exportDict = open(pickleFile, "wb")
+    # pickle.dump(dict, exportDict)
+    # exportDict.close()
 
 def loadHighscore(level):
     fileNameList = ["l","e","v","e","l",".","p","i","c","k","l","e"]
@@ -54,7 +75,7 @@ def loadHighscore(level):
 # createScoreDict(3)
 # loadLevel(3)
 # createScoreDict(4)
-# loadLevel(4)
+# loadLevel(1)
 # createScoreDict(5)
 # loadLevel(5)
 # createScoreDict(6)
@@ -67,3 +88,4 @@ def loadHighscore(level):
 # loadLevel(0)
 
 # statistics()
+statisticsRead()

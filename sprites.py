@@ -9,10 +9,10 @@ class Player(pg.sprite.Sprite):
         self.groups = game.allSprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        # self.width = self.height = 30
         # self.image = pg.Surface((self.width, self.height))
         # self.image.fill(YELLOW)
         self.image = self.game.playerImage.copy()
-
         self.width = self.image.get_size()[0]
         self.height = self.image.get_size()[1]
         self.rect = self.image.get_rect()
@@ -74,12 +74,22 @@ class Player(pg.sprite.Sprite):
             keys = pg.key.get_pressed()
 
             if keys[pg.K_RIGHT] or keys[pg.K_d]:
+                if keys[pg.K_RIGHT]:
+                    print("Pressed Right Arrow Key")
+                else:
+                    print("Pressed D Key")
+
                 if self.direction == "forward" or self.direction == "stopped":
                     if self.braking == False:
                         self.acc.x = PLAYER_ACC
                         self.direction = "forward"
 
             if keys[pg.K_LEFT] or keys[pg.K_a]:
+                if keys[pg.K_LEFT]:
+                    print("Pressed Left Arrow Key")
+                else:
+                    print("Pressed A Key")
+
                 if self.direction == "reverse" or self.direction == "stopped":
                     if self.braking == False:
                         self.acc.x = -PLAYER_ACC
@@ -89,6 +99,11 @@ class Player(pg.sprite.Sprite):
                 self.direction = "stopped"
 
             if keys[pg.K_DOWN] or keys[pg.K_s]:
+                if keys[pg.K_DOWN]:
+                    print("Pressed Down Arrow Key")
+                else:
+                    print("Pressed S Key")
+
                 if self.direction != "stopped":
                     if self.vel.x > 0:
                         self.acc.x = -BRAKE_ACC
@@ -113,7 +128,6 @@ class Player(pg.sprite.Sprite):
             self.collideWithWalls('y')
 
             # self.pos = self.rect.center
-
 
 class Platform(pg.sprite.Sprite):
     def __init__(self, game, x, y, width, height, colour, mode="platform", show=True):
@@ -202,11 +216,13 @@ class Question(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         # self.image = pg.Surface((self.width, self.height))
         # self.image.fill(LIGHT_BLUE)
+
         self.image = game.questionImage.copy()
         self.image = pg.transform.scale(self.image, (64, 64))
         size = self.image.get_size()
         self.width, self.height = size[0], size[1]
         self.rect = self.image.get_rect()
+
         self.x, self.y = x, y
         self.rect.center = (self.x, self.y)
         self.velY = 1
@@ -218,8 +234,6 @@ class Question(pg.sprite.Sprite):
             self.velY = -1
         if self.rect.bottom < self.y + self.height/4:
             self.velY = 1
-
-
 
 class Coin(pg.sprite.Sprite):
     def __init__(self, game, x, y):

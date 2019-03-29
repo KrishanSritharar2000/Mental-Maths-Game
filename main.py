@@ -23,6 +23,7 @@ class Game:
         self.gameFolder = path.dirname(__file__)
         self.imgFolder = path.join(self.gameFolder, 'img')
         self.mapFolder = path.join(self.gameFolder, 'map')
+        self.sndFolder = path.join(self.gameFolder, 'snd')
         self.interfaceFont = path.join(self.imgFolder, 'Future.ttf')
         self.interfaceFont2 = path.join(self.imgFolder, 'FutureNarrow.ttf')
         self.buttonFont = path.join(self.imgFolder, 'PixelSquare.ttf')
@@ -55,6 +56,7 @@ class Game:
         self.bikeImage = pg.image.load(path.join(self.imgFolder, 'bike.png')).convert_alpha()
         self.bikeImgSize = self.bikeImage.get_size()
         self.bikeImage = pg.transform.scale(self.bikeImage, (int(round(self.bikeImgSize[0]/10,0)), int(round(self.bikeImgSize[1]/10,0))))
+
         self.playerImage = self.carImage
 
         if self.playerImage == self.carImage:
@@ -66,6 +68,15 @@ class Game:
         self.questionSurface = pg.Surface(self.screen.get_size()).convert_alpha()
 
         self.loadstatsData()
+
+        self.menuMusic = path.join(self.sndFolder, 'backgroundMusic.ogg')
+        self.pauseMusic1 = path.join(self.sndFolder, 'PauseMusic.ogg')
+        self.pauseMusic2 = path.join(self.sndFolder, 'PauseMusic2.ogg')
+        self.levelMusic1 = path.join(self.sndFolder, 'LevelMusic.ogg')
+        self.levelMusic2 = path.join(self.sndFolder, 'LevelMusic2.ogg')
+        self.levelMusic = self.levelMusic2
+        self.currentLevelMusic = "electric"
+        self.musicOn = True
 
         self.coinImages = {}
         for img in range(len(COIN_IMAGES)):
@@ -110,6 +121,7 @@ class Game:
 
     def loadQuestions(self):
         questionCSV = path.join(self.gameFolder, 'questions.csv')
+        print("Question Data")
         with open(questionCSV, 'r') as questionFile:
             reader = csv.reader(questionFile)
             next(questionFile)
@@ -127,8 +139,9 @@ class Game:
                 self.questionID.append(questionID)
                 temp.extend((questionID,question,cAns,wAns1,wAns2,wAns3,wAns4,diff,level,isMaj))
                 self.questionData.append(temp)
+                print(temp)
         questionFile.close()
-        print(self.questionData)
+        print("Question Data", self.questionData)
 
                 # line = [QuestionID, Questtion, CAns, WAns1, Wans2, Wans3, Wans4, Diff, level, isMaj]
 
@@ -190,6 +203,12 @@ class Game:
                     print("This is the Question:", self.questionData[i][1], self.questionData[i][9])
         self.majorQuestion = False
         self.majorQuestionCorrect = True
+        if self.musicOn:
+            pg.mixer.music.load(self.menuMusic)
+            pg.mixer.music.play(loops=-1)
+        self.menuMusicStarted = True
+        self.pauseMusicStarted = False
+        self.levelMusicStarted = False
         self.sceneMan.loadLevel('startScreen')
         self.run()
 
@@ -220,6 +239,14 @@ class Game:
             self.allSprites.update()#Updates all of the sprties at once
             self.userInputBox.update()
             if self.sceneMan.currentScene not in MENU_SCREENS:
+                if self.musicOn and self.levelMusicStarted == False:
+                    if self.musicOn:
+                        pg.mixer.music.fadeout(500)
+                        pg.mixer.music.load(self.levelMusic)
+                        pg.mixer.music.play(loops=-1)
+                        self.levelMusicStarted = True
+                if self.musicOn:
+                    self.menuMusicStarted = False
                 self.camera.update(self.player)
 
                 hitPlatform = pg.sprite.spritecollide(self.player, self.platforms, False)
@@ -257,6 +284,7 @@ class Game:
 
                 hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, False)
                 if hitQuestion:
+                    print("Collided with Question Object")
                     pg.display.update()
                     hitQuestion = pg.sprite.spritecollide(self.player, self.questionItems, True, pg.sprite.collide_mask)
                     if hitQuestion:
@@ -270,14 +298,15 @@ class Game:
                     print("A Coin has been hit")
                     self.coinAmount += 1
                     self.sceneMan.coinCollected += 1
+                    self.calculateScore("coin")
                     print("Total Coins: {}".format(self.coinAmount))
 
                 hitLevelEnd = pg.sprite.spritecollide(self.player, self.endWalls, True)
                 if hitLevelEnd:
                     self.totalScore += self.score
+                    self.majorQuestion = False
                     print("Hit Wall")
                     print("Total Score", self.totalScore)
-                    self.majorQuestion = False
 
                     self.sceneMan.secondPrevScence = self.sceneMan.prevScence
                     self.sceneMan.prevScence = self.sceneMan.currentScene
@@ -285,6 +314,16 @@ class Game:
                     self.sceneMan.showPlayer = False
                     self.sceneMan.loadLevel("levelComplete")
 
+            else:
+                if self.musicOn == False:
+                    pg.mixer.music.fadeout(500)
+                    self.menuMusicStarted = False
+                if self.musicOn and self.menuMusicStarted == False:
+                    self.levelMusicStarted = False
+                    pg.mixer.music.fadeout(500)
+                    self.menuMusicStarted = True
+                    pg.mixer.music.load(self.menuMusic)
+                    pg.mixer.music.play(loops=-1)
 
     def events(self):
         #Game loop - Events1
@@ -301,23 +340,32 @@ class Game:
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
-                    self.player.jump()
+                    if self.sceneMan.currentScene in LEVEL_SCREENS:
+                        self.player.jump()
+                        print("Pressed Space Bar")
                 if event.key == pg.K_p:
                     if self.sceneMan.currentScene in LEVEL_SCREENS:
-                        self.paused = not self.paused
-                        if self.paused == False:
-                            for button in self.buttons:
-                                button.kill()
-                        self.pauseScreenPrinted = False
-                if event.key == pg.K_q:
-                    print("Q button pressed")
-                    print("self.askQuestion is: ", self.askQuestion)
-                    self.askQuestion = not self.askQuestion
-                    if self.askQuestion:
-                        self.paused = True
-                    else:
-                        self.paused = False
-                        self.questionScreenPrinted = False
+                        if not self.askQuestion:
+                            self.paused = not self.paused
+                            print("P button pressed -- Paused")
+                            if self.paused == False:
+                                for button in self.buttons:
+                                    button.kill()
+                                self.pauseScreenPrinted = False
+                                if self.musicOn:
+                                    pg.mixer.music.fadeout(500)
+                                    self.pauseMusicStarted = False
+                                    self.levelMusicStarted = False
+
+                # if event.key == pg.K_q:
+                #     print("Q button pressed")
+                #     print("self.askQuestion is: ", self.askQuestion)
+                #     self.askQuestion = not self.askQuestion
+                #     if self.askQuestion:
+                #         self.paused = True
+                #     else:
+                #         self.paused = False
+                #         self.questionScreenPrinted = False
 
     def getQuestion(self):
         self.answerCorrect = False
@@ -328,29 +376,36 @@ class Game:
 
         if self.majorQuestion == True:
             self.questionID = []
-
             for i in range(len(self.questionData)):
                 if self.questionData[i][9] == 'TRUE':
                     if self.questionData[i][7] == self.settingsQuestionDiff:
                         print("This is the Question:", self.questionData[i][1], self.questionData[i][9])
                         self.questionID.append(self.questionData[i][0])
+        else:
+            self.questionID = []
+            for i in range(len(self.questionData)):
 
+                if self.questionData[i][7] == self.settingsQuestionDiff:
+
+                    self.questionID.append(self.questionData[i][0])
+        print("These are the QuestionID: {}".format(self.questionID))
         questionNumber = random.choice(self.questionID)
+        print("This is the chosen QuestionID: {}".format(questionNumber))
         wrongAns = [3,4,5,6]
         chosenAns = [2,]
         print(self.questionID)
         print(questionNumber)
-        # self.questionID.remove(questionNumber)
+        self.questionID.remove(questionNumber)
         print(self.questionID)
         self.questionNumberIndex = questionNumber - 1
         correctAns = self.questionData[self.questionNumberIndex][2]
-        print(correctAns)
-
         for i in range(3):
             randomIndex = random.choice(wrongAns)
             wrongAns.remove(randomIndex)
             chosenAns.append(randomIndex)
+        print("Chosen answers: ", chosenAns)
         random.shuffle(chosenAns)
+        print("Chosen answers after randomising order: ", chosenAns)
 
         self.drawText(str(self.questionData[self.questionNumberIndex][1]), 30, HUD_COLOUR, WIDTH/2, HEIGHT*2/9, surf=self.questionSurface)
         print("text to be printed {}".format(str(self.questionData[self.questionNumberIndex][1])))
@@ -373,15 +428,18 @@ class Game:
         self.timeRemaining = self.timeAllowed
         self.timeOut = False
 
-    def calculateScore(self):
-        self.timeTaken = int(round((self.endTime - self.startTime) / 1000, 0))
+    def calculateScore(self, type):
+        if type == "answer":
+            self.timeTaken = int(round((self.endTime - self.startTime) / 1000, 0))
+            multiplier = random.choice([2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,7,7,7,7,8,8,8,8,9,9,10,15])
+            scoreIncrease = int(round((self.timeAllowed - self.timeTaken) * multiplier, 0))
+            self.score += scoreIncrease
+            print("The time take to answer that question was: ", self.timeTaken)
+            print("The random number chosen is: {}".format(multiplier))
+            print("The score given for this question is: {}".format(scoreIncrease))
+        elif type == "coin":
+            self.score += 10
 
-        print("The time take to answer that question was: ", self.timeTaken)
-
-        multiplier = random.choice([2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,7,7,7,7,8,8,8,8,9,9,10,15])
-
-        scoreIncrease = int(round((self.timeAllowed - self.timeTaken) * multiplier, 0))
-        self.score += scoreIncrease
         print(self.score)
 
     def countdownTimer(self):
@@ -401,6 +459,16 @@ class Game:
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         if self.paused:
+            if self.musicOn and self.pauseMusicStarted == False and self.askQuestion == False:
+                self.pauseMusicStarted = True
+                self.levelMusicStarted = False
+                option = random.choice([0,1])
+                if option == 1:
+                    pg.mixer.music.load(self.pauseMusic1)
+                else:
+                    pg.mixer.music.load(self.pauseMusic2)
+                pg.mixer.music.play(loops=-1)
+
             if self.askQuestion:
                 if self.questionScreenPrinted == False:
                     self.questionSurface.fill(0)
@@ -425,7 +493,7 @@ class Game:
                         elif self.questionDiff == "hard":
                             self.correctAnswerQuesHard += 1
                         print("CORRECT ANSWER CHOSEN: {}".format(self.selectedAns))
-                        self.calculateScore()
+                        self.calculateScore("answer")
                         self.drawText("Correct Answer", 35, GREEN, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
                     elif self.timeOut:
                         self.drawText("Time Out", 25, RED, WIDTH/2, HEIGHT*5/6, surf=self.questionSurface)
@@ -448,6 +516,7 @@ class Game:
                     self.askQuestion = False
                     self.questionScreenPrinted = False
                     self.paused = False
+
 
                 else:
                     self.countdownTimer()

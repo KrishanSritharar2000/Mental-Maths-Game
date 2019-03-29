@@ -1192,7 +1192,7 @@
   <object id="1349" name="track" x="3455" y="517" width="2" height="2"/>
   <object id="1350" name="wall" x="-22" y="-1" width="24" height="550"/>
   <object id="1351" name="wall" x="-18" y="-2" width="3704" height="23"/>
-  <object id="1352" name="wall" x="3597" y="1" width="37" height="373"/>
+  <object id="1352" name="wall" x="3597" y="1" width="37" height="325"/>
   <object id="1353" name="player" x="86" y="446" width="32" height="32"/>
  </objectgroup>
 </map>

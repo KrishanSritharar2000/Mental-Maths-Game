@@ -173,6 +173,8 @@ class sceneManager():
         for tileObject in self.game.tiledMap.tiledMapFile.objects:
             if tileObject.name == "player":
                 self.game.player = Player(self.game, tileObject.x, tileObject.y)
+                print("Player X Coordinate: {}".format(tileObject.x))
+                print("Player Y Coordinate: {}".format(tileObject.y))
             elif tileObject.name == "wall":
                 print("A wall has been added")
                 Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled")
@@ -181,12 +183,16 @@ class sceneManager():
                 Wall(self.game, tileObject.x, tileObject.y, colour=ORANGE, width=tileObject.width, height=tileObject.height, mode="tiled", mode2="end")
             elif tileObject.name == "coin":
                 Coin(self.game, tileObject.x, tileObject.y)
+                print("Coin X Coordinate: {} Coin Y Coordinate {}".format(tileObject.x, tileObject.y))
             elif tileObject.name == "question":
                 Question(self.game, tileObject.x, tileObject.y)
+                print("Question X Coordinate: {} Question Y Coordinate {}".format(tileObject.x, tileObject.y))
             elif tileObject.name == "majorQuestion":
                 Question(self.game, tileObject.x, tileObject.y, major=True)
+                print("Major Question X Coordinate: {} Major Question Y Coordinate {}".format(tileObject.x, tileObject.y))
             elif tileObject.name == "track":
                 Platform(self.game, tileObject.x, tileObject.y, tileObject.width, tileObject.height, LIGHT_BLUE, "track", show=False)
+
 
         # for row, tiles in enumerate(self.game.map.data):
         #     for col, tile in enumerate(tiles):
@@ -538,10 +544,10 @@ class sceneManager():
         for j in range(10):
             if score > self.highscoreDict[9-j][0]:
                 index = 9-j
-        if index == 0:
-            self.game.drawText("Congratulations, new High Score", 28, WHITE, WIDTH/2, HEIGHT*5/11, fontName=self.game.interfaceFont)
-        else:
-            self.game.drawText("Congratulations, new top {} Score".format(index+1), 28, WHITE, WIDTH/2, HEIGHT*5/11, fontName=self.game.interfaceFont)
+        # if index == 0:
+        #     self.game.drawText("Congratulations, new High Score", 28, WHITE, WIDTH/2, HEIGHT*5/11, fontName=self.game.interfaceFont)
+        # else:
+        #     self.game.drawText("Congratulations, new top {} Score".format(index+1), 28, WHITE, WIDTH/2, HEIGHT*5/11, fontName=self.game.interfaceFont)
 
 
         print("Before Update: ", self.highscoreDict)
@@ -616,6 +622,16 @@ class sceneManager():
         self.easyButton = Button(self.game, "easy", WIDTH*7/10, HEIGHT*4/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Easy")
         self.mediumButton = Button(self.game, "medium", WIDTH*7/10, HEIGHT*5/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Medium")
         self.hardButton = Button(self.game, "hard", WIDTH*7/10, HEIGHT*6/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Hard")
+        self.funkyMusicButton = Button(self.game, "upbeat", WIDTH/4, HEIGHT*8/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Upbeat")
+        self.electricMusicButton = Button(self.game, "electric", WIDTH/4, HEIGHT*9/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Electric")
+        self.noMusicButton = Button(self.game, "noMusic", WIDTH/4, HEIGHT*10/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "No Music")
+        if self.game.currentLevelMusic == "electric":
+            music = "electric"
+        elif self.game.currentLevelMusic == "upbeat":
+            music = "upbeat"
+        else:
+            music = "no music"
+        self.game.drawText("Current Music: {}".format(music.capitalize()), 18, WHITE, WIDTH/4, HEIGHT*7/12, fontName=self.game.interfaceFont2)
 
 
         print("this is the question dificuly: ", self.game.settingsQuestionDiff)
@@ -659,7 +675,7 @@ class sceneManager():
         self.game.drawText("Easy: {}     Medium: {}     Hard: {}".format(self.game.correctAnswerQuesEasy, self.game.correctAnswerQuesMed,\
                                     self.game.correctAnswerQuesHard), 18, WHITE, WIDTH*3/4, HEIGHT*6/11, fontName=self.game.interfaceFont2)
         self.game.drawText("Total Vehicles Unlocked:", 18, WHITE, WIDTH*3/8, HEIGHT*7/11, fontName=self.game.interfaceFont2)
-        self.game.drawText("{}".format("0"), 18, WHITE, WIDTH*3/4, HEIGHT*7/11, fontName=self.game.interfaceFont2)
+        self.game.drawText("{}".format(self.game.vehicleUnlock), 18, WHITE, WIDTH*3/4, HEIGHT*7/11, fontName=self.game.interfaceFont2)
         self.game.drawText("Total Games Played:", 18, WHITE, WIDTH*3/8, HEIGHT*8/11, fontName=self.game.interfaceFont2)
         self.game.drawText("{}".format(self.game.gamesPlayed), 18, WHITE, WIDTH*3/4, HEIGHT*8/11, fontName=self.game.interfaceFont2)
         self.game.drawText("Total Coins Collected:", 18, WHITE, WIDTH*3/8, HEIGHT*9/11, fontName=self.game.interfaceFont2)
@@ -709,7 +725,8 @@ class sceneManager():
         self.image = pg.transform.scale(self.game.menuImages['shop'], (WIDTH, HEIGHT))
         rect = self.image.get_rect()
         self.game.screen.blit(self.image, rect)
-        self.game.drawText("Spend your coins in the shop", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
+        # self.game.drawText("Spend your coins in the shop", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
+        self.game.drawText("Vehicles", 25, WHITE, WIDTH/2, HEIGHT*1/9, fontName=self.game.interfaceFont)
         self.mainMenuButton = Button(self.game, "mainMenu", WIDTH*1/8, HEIGHT*1/12, 60, 25, YELLOW, LIGHT_BLUE, "Back", 18)
         self.carButton = Button(self.game, "car", WIDTH*2/5, HEIGHT*5/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Car")
         self.bikeButton = Button(self.game, "bike", WIDTH*2/5, HEIGHT*8/12, WIDTH/6, HEIGHT/14, YELLOW, LIGHT_BLUE, "Bike")
@@ -719,7 +736,7 @@ class sceneManager():
             currentVehicle = "Car"
         if self.game.imageType == "bike":
             currentVehicle = "Bike"
-        self.game.drawText("Current Vehicle: {}".format(currentVehicle), 25, WHITE, WIDTH/2, HEIGHT*3/12, surf=None, align=None, fontName=self.game.interfaceFont2)
+        self.game.drawText("Current Vehicle: {}".format(currentVehicle), 25, WHITE, WIDTH/2, HEIGHT*3/12, fontName=self.game.interfaceFont2)
 
 
 
@@ -733,7 +750,7 @@ class sceneManager():
         self.game.drawText("Main Menu", 30, WHITE, WIDTH/2, HEIGHT*1/8, fontName=self.game.interfaceFont)
         self.levelSelectButton = Button(self.game, "levelSelect", WIDTH*1/2, HEIGHT*3/8, WIDTH/3, HEIGHT/6, YELLOW, LIGHT_BLUE, "Select Level")
         self.settingsMenuButton = Button(self.game, "settingsMenu", WIDTH/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Settings")
-        self.shopButton = Button(self.game, "shop", WIDTH*3/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Shop")
+        self.shopButton = Button(self.game, "shop", WIDTH*3/4, HEIGHT*5/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Vehicles")
         self.leaderboardButton = Button(self.game, "stats", WIDTH/4, HEIGHT*7/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Stats")
         self.statsButton = Button(self.game, "leaderboard", WIDTH*3/4, HEIGHT*7/8, WIDTH/6, HEIGHT/12, YELLOW, LIGHT_BLUE, "Leaderboard")
 
@@ -742,8 +759,9 @@ class sceneManager():
         self.image = pg.transform.scale(self.game.menuImages["startScreen"], (WIDTH, HEIGHT))
         rect = self.image.get_rect()
         self.game.screen.blit(self.image, rect)
-        self.game.drawText("Game Title", 32, WHITE, WIDTH/2, HEIGHT*1/4)
-        self.game.drawText("Press A Button To Continue!", 22, WHITE, WIDTH/2, HEIGHT*3/4)
+        self.game.drawText("Welcome to the", 32, WHITE, WIDTH/2, HEIGHT*1/4, fontName= self.game.interfaceFont2)
+        self.game.drawText("Mental Maths Game", 32, WHITE, WIDTH/2, HEIGHT*3/8, fontName= self.game.interfaceFont2)
+        self.game.drawText("Press A Button To Continue!", 22, WHITE, WIDTH/2, HEIGHT*3/4, fontName= self.game.interfaceFont2)
         pg.display.flip()
         self.waitForKey()
         self.loadLevel('mainMenu')
@@ -825,6 +843,7 @@ class sceneManager():
                                     self.game.score = 0
                                     self.coinCollected = 0
                                     self.game.gamesPlayed += 1
+                                    self.game.majorQuestionCorrect = True
                                     self.loadLevel('instructions')
 
                                 if button.tag == "startScreen":
@@ -863,11 +882,14 @@ class sceneManager():
                                     self.game.paused = False
                                     for button in self.game.buttons:
                                         button.kill()
+                                    pg.mixer.music.fadeout(500)
+                                    self.game.pauseMusicStarted = False
                                     self.game.pauseScreenPrinted = False
                                     self.currentScene = self.prevScence
                             else:
                                 self.game.answerClicked = True
                                 self.game.selectedAns = self.game.questionData[self.game.questionNumberIndex][int(button.tag)]
+                                print("Selected Answer: {}".format(self.game.selectedAns))
                                 if button.tag == "2":
                                     self.game.answerCorrect = True
                                 else:
@@ -890,20 +912,34 @@ class sceneManager():
                                 button.kill()
                             self.loadLevel("shop")
                     else:
-                        self.game.settingsQuestionDiff = button.tag
+                        if button.tag == "electric" or button.tag == "upbeat" or button.tag == "noMusic":
+                            if button.tag == "electric":
+                                self.game.currentLevelMusic = "electric"
+                                self.game.levelMusic = self.game.levelMusic2
+                                self.game.musicOn = True
+                            elif button.tag == "upbeat":
+                                self.game.currentLevelMusic = "upbeat"
+                                self.game.levelMusic = self.game.levelMusic1
+                                self.game.musicOn = True
+                            elif button.tag == "noMusic":
+                                self.game.currentLevelMusic = "noMusic"
+                                self.game.musicOn = False
+                                print("MUSIC", self.game.musicOn)
+                        else:
+                            self.game.settingsQuestionDiff = button.tag
+
+
+                            self.game.questionID = []
+                            for i in range(len(self.game.questionData)):
+                                if self.game.questionData[i][7] == self.game.settingsQuestionDiff:
+                                    if self.game.questionData[i][9] == 'FALSE':
+                                        self.game.questionID.append(self.game.questionData[i][0])
+
+
+                            print(self.game.questionID)
 
                         for button in self.game.buttons:
                             button.kill()
-
-                        self.game.questionID = []
-                        for i in range(len(self.game.questionData)):
-                            if self.game.questionData[i][7] == self.game.settingsQuestionDiff:
-                                if self.game.questionData[i][9] == 'FALSE':
-                                    self.game.questionID.append(self.game.questionData[i][0])
-
-
-                        print(self.game.questionID)
-
                         self.loadLevel("settingsMenu")
                 else:
                     self.leaderboardLoadLevel = button.tag

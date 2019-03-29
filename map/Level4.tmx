@@ -953,6 +953,6 @@
   <object id="1665" name="coin" x="2836" y="468" width="32" height="32"/>
   <object id="1666" name="coin" x="2976" y="468" width="32" height="32"/>
   <object id="1667" name="wall" x="0" y="0" width="4218" height="32"/>
-  <object id="1668" name="wall" x="4044" y="-2" width="26" height="461"/>
+  <object id="1668" name="wall" x="4044" y="-2" width="26" height="412"/>
  </objectgroup>
 </map>

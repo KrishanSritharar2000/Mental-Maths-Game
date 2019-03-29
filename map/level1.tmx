@@ -481,6 +481,6 @@
   <object id="1123" name="track" x="1499" y="320" width="2" height="2"/>
   <object id="1124" name="track" x="1500" y="321" width="2" height="2"/>
   <object id="1125" name="wall" x="-31" y="0" width="3035" height="27"/>
-  <object id="1126" name="wall" x="2879" y="1" width="34" height="99"/>
+  <object id="1126" name="wall" x="2879" y="1" width="34" height="87"/>
  </objectgroup>
 </map>
