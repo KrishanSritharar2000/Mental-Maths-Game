@@ -16,3 +16,8 @@ An A Level project that ws developed over the course of 6 months completly from 
 - Nice graphics in the menu and levels to complement the game
 - Awesome animations to liven up the coins and question boxes
 - Optional and selectable soundtrack to be played during the levels  
+
+---
+
+## Images
+<img src="images/car.png" alt="car" height="250"/> <img src="images/truck.png" alt="truck" height="250"/> <img src="images/completeSquare.png" alt="question" height="250"/> <img src="images/hardQuestion.png" alt="hardQuestion" height="250"/> <img src="images/menu.png" alt="menu" height="250"/> <img src="images/levelSelect.png" alt="levelSelect" height="250"/> <img src="images/settings.png" alt="settings" height="250"/> <img src="images/shop.png" alt="shop" height="250"/> <img src="images/stats.png" alt="stats" height="250"/> <img src="images/leaderboard1.png" alt="leaderboard1" height="250"/> <img src="images/leaderboard2.png" alt="leaderboard2" height="250"/> <img src="images/pause.png" alt="pause" height="250"/> 
