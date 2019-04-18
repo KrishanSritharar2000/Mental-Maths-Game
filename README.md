@@ -13,10 +13,11 @@ An A Level project that ws developed over the course of 6 months completly from 
 - Shop 🛒 allowing different vehicles to be selected
 - Leaderboard 💯 to compare and display your scores with your friends
 - Statistics 📊 to learn about your progress whilst playing the game
+- Optional and selectable soundtrack 🎵 to be played during the levels  
 - Nice graphics in the menu and levels to complement the game
 - Awesome animations to liven up the coins and question boxes
-- Optional and selectable soundtrack 🎵 to be played during the levels  
 
+<img src="images/coin.gif" alt="coin" height="100"/> <img src="images/question.gif" alt="question" height="100"/> 
 ---
 
 ## How to run 
@@ -31,5 +32,11 @@ An A Level project that ws developed over the course of 6 months completly from 
 
 ---
 
+## Documentation
+
+As part of my A Level coursework, I wrote up a detailed documentation of this project, outlining all stages of development including requirements, design, iterative development, testing, evaluation and maintenance. The **248 page**, **90,000 word** documentation can be found here -> [Krishan-Sritharar-Computer-Science-Coursework](../main/Krishan-Sritharar-Computer-Science-Coursework.pdf)
+
+---
+
 ## Images of the game
-<img src="images/car.png" alt="car" height="250"/> <img src="images/truck.png" alt="truck" height="250"/> <img src="images/completeSquare.png" alt="question" height="250"/> <img src="images/hardQuestion.png" alt="hardQuestion" height="250"/> <img src="images/menu.png" alt="menu" height="250"/> <img src="images/levelSelect.png" alt="levelSelect" height="250"/> <img src="images/settings.png" alt="settings" height="250"/> <img src="images/shop.png" alt="shop" height="250"/> <img src="images/stats.png" alt="stats" height="250"/> <img src="images/leaderboard1.png" alt="leaderboard1" height="250"/> <img src="images/leaderboard2.png" alt="leaderboard2" height="250"/> <img src="images/pause.png" alt="pause" height="250"/> <img src="images/coin.gif" alt="coin" height="250"/> <img src="images/question.gif" alt="question" height="250"/> 
+<img src="images/car.png" alt="car" height="250"/> <img src="images/truck.png" alt="truck" height="250"/> <img src="images/completeSquare.png" alt="question" height="250"/> <img src="images/hardQuestion.png" alt="hardQuestion" height="250"/> <img src="images/menu.png" alt="menu" height="250"/> <img src="images/levelSelect.png" alt="levelSelect" height="250"/> <img src="images/settings.png" alt="settings" height="250"/> <img src="images/shop.png" alt="shop" height="250"/> <img src="images/stats.png" alt="stats" height="250"/> <img src="images/leaderboard1.png" alt="leaderboard1" height="250"/> <img src="images/leaderboard2.png" alt="leaderboard2" height="250"/> <img src="images/pause.png" alt="pause" height="250"/>
