@@ -74,11 +74,6 @@ Performed by Smash Mouth and Ayub Salah
 Written by Ayub Salah
 Produced by Interscope Records
 
-"F*** me like a man!"
-Performed by Taulent Kosovo
-Written by Taulent Kosovo
-Produced by Warley Records
-
                   Detective Productions
 
 Detective, Commissioner, King,... You already know it: Ayub Salah
