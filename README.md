@@ -1,10 +1,16 @@
 # Mental-Maths-Game
 
-A platformer-style game intended to assist students in secondary school with developing  their mental maths skills. Drive your bike or car through the levels, collecting all the coins as you go along and answering all the questions as quick as you can. Chose an appropriate difficulty for questions, rank up in the leaderboard and see if you can improve your statistics. 
+A platformer-style game intended to assist students in secondary school with developing their mental maths skills. Drive your bike or car through the levels, collecting all the coins as you go along and answering all the questions as quick as you can. Chose an appropriate difficulty for questions, rank up in the leaderboard and see if you can improve your statistics. 
+
+An A Level project that was developed over the course of 6 months completely from scratch. Built using Python and the pygame engine and Tiled with pytmx to create and run the graphical maps. Simple management of the questions using the "question.csv" spreadsheet, and has permanent storage of the leaderboard and statistics data using pickle object structures.
 
 ---
 
-An A Level project that ws developed over the course of 6 months completly from scratch. Built using Python and the pygame engine and Tiled with pytmx to create and run the graphical maps. 
+## Documentation
+
+As part of my A Level coursework, I wrote up a detailed documentation of this project, outlining all stages of development including requirements, design, iterative development, testing, evaluation and maintenance. The **248 page**, **90,000 word** documentation can be found here 👉 [Krishan-Sritharar-Computer-Science-Coursework](../main/Krishan-Sritharar-Computer-Science-Coursework.pdf)
+
+---
 
 ## Features
 - Custom platformer style levels with an interactive character 
@@ -18,23 +24,19 @@ An A Level project that ws developed over the course of 6 months completly from 
 - Awesome animations to liven up the coins and question boxes
 
 <img src="images/coin.gif" alt="coin" height="100"/> <img src="images/question.gif" alt="question" height="100"/> 
+
 ---
 
 ## How to run 
 
 1. Clone the repository locally
-2. Install any verison of Python 🐍 you like
-3. Install the following dependancies using pip
+2. Install any version of Python 🐍 you like
+3. Install the following dependencies using pip
    - pygame
    - pymtx
-4. Run "python main.py"
-5. Enjoy the game 😃
-
----
-
-## Documentation
-
-As part of my A Level coursework, I wrote up a detailed documentation of this project, outlining all stages of development including requirements, design, iterative development, testing, evaluation and maintenance. The **248 page**, **90,000 word** documentation can be found here -> [Krishan-Sritharar-Computer-Science-Coursework](../main/Krishan-Sritharar-Computer-Science-Coursework.pdf)
+4. Run "**python main.py**"
+5. Add new question by editing "**questions.csv**"
+6. Enjoy the game 😃
 
 ---
 
